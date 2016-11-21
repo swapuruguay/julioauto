@@ -11,13 +11,14 @@ function listar(where, order, callback) {
             orden = order
         }
 
-  con.query('SELECT * FROM clientes ' + cond + orden, function(err, rows) {
+  con.query('SELECT * FROM unidades ' + cond + orden, function(err, rows) {
       if(err) {
         callback(err)
       } else {
         callback(null, rows)
       }
-      })
+
+    })
 }
 
 module.exports.listar = listar
