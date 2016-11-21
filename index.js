@@ -3,6 +3,7 @@ var hbs = require('express-handlebars')
 var handleb = require('handlebars')
 var fs = require('fs')
 var app = express()
+var bd = require('./bd')
 
 app.engine('hbs', hbs({extname: 'hbs', defaultLayout: 'layout', layoutsDir: __dirname + '/views/layouts/'}))
 app.set('view engine', 'hbs')
@@ -16,7 +17,27 @@ app.get('/', function(req, res) {
 })
 
 app.get('/senias', function(req, res) {
-  res.render('senias', {titulo: 'Formulario de señas'})
+  var date = new Date()
+  var fecha = date.getDate() + '/' + date.getMonth() + '/' + date.getFullYear()
+  res.render('senias', {titulo: 'Formulario de señas', fecha: fecha})
+})
+
+app.get('/clientes/nuevo', function(req, res) {
+
+  var nro = 0
+  res.render('clientes', {titulo: 'Formulario de Clientes', nro: nro})
+})
+
+app.get('/clientes/listar', function(req, res) {
+        bd.query('SELECT * FROM clientes ', function(err, rows) {
+            if(err) {
+                console.log(err)
+            } else {
+            //  console.log(rows)
+                res.render('clientes-listar', {titulo: 'Formulario de Clientes', clientes: rows})
+            }
+        })
+
 })
 
 app.listen(3000, function() {

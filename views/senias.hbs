@@ -2,19 +2,26 @@
     <h1>{{titulo}}</h1>
     <p>&nbsp;</p>
     <div class="row">
-     <form action="">
+     <form class="form-horizontal" action="">
        <div class="form-group">
-         <label for="fecha">Fecha</label>
-         <input type="text" class="form-control" id="fecha" name="fecha">
+         <label for="fecha" class="col-sm-2 control-label">Fecha</label>
+         <div class="col-sm-2">
+           <input type="text" class="form-control text-center" id="fecha" name="fecha" value="{{ fecha }}" readonly>
+         </div>
        </div>
        <div class="form-group">
-         <label for="comprador">Cliente</label>
-         <input type="text" class="form-control" id="comprador" name="comprador">
+         <label for="cliente" class="col-sm-2 control-label">Cliente</label>
+         <div class="col-sm-4">
+           <input type="text" class="form-control" id="cliente" name="cliente">
+         </div>
        </div>
        <div class="form-group">
-         <label for="importe">Importe</label>
-         <input type="text" class="form-control" >
+         <label for="importe" class="col-sm-2 control-label">Importe</label>
+         <div class="col-sm-4">
+           <input type="text" class="form-control" id="importe" name="importe">
+         </div>
        </div>
+
        <input type="button" class="btn btn-default" value="Guardar">
      </form>
     </div>

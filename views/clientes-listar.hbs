@@ -1,0 +1,14 @@
+<table class="table table-striped table-condensed">
+  <tr>
+    <th>Nro. Cliente</th>
+    <th>Nombre</th>
+    <th>Apellido</th>
+    <th>Documento</th>
+    <th>Celular</th>
+  </tr>
+  {{#each clientes}}
+    <tr>
+      <td><a href="/clientes/editar/{{ id_cliente }}">{{ id_cliente}}</a></td><td>{{ nombre }}</td><td> {{ apellido }}</td><td>{{ documento }}</td><td>{{ celular }}</td>
+    </tr>
+  {{/each}}
+</table>

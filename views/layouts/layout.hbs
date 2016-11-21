@@ -5,13 +5,18 @@
   <title>Julio Automóviles</title>
   <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-  <link rel="stylesheet" href="css/app.css">
+  <link rel="stylesheet" href="/css/app.css">
 </head>
 <body>
-  {{> header }}
-  <div class="container">
-    {{{ body }}}
+  <div class="wrapper">
+
+    {{> header }}
+    <div class="container">
+      {{{ body }}}
+    </div>
+    <div class="push"></div>
   </div>
-  {{> footer }}
+    {{> footer }}
+
 </body>
 </html>
