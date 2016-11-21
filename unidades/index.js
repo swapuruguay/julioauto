@@ -1,7 +1,7 @@
 var con = require('../bd')
 
 function listar(where, order, callback) {
-
+  console.log(where)
   var orden = '', cond = ''
         if(where) {
             cond = where

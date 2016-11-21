@@ -3,6 +3,7 @@ var hbs = require('express-handlebars')
 var handleb = require('handlebars')
 var fs = require('fs')
 var app = express()
+var bodyParser = require('body-parser')
 var bd = require('./bd')
 var clientes = require('./clientes')
 var unidades = require('./unidades')
@@ -12,7 +13,10 @@ app.set('view engine', 'hbs')
 handleb.registerPartial('footer', fs.readFileSync(__dirname + '/views/partials/footer.hbs', 'utf8'))
 handleb.registerPartial('header', fs.readFileSync(__dirname + '/views/partials/header.hbs', 'utf8'))
 
+app.use(bodyParser.urlencoded({extended:true}))
+
 app.use(express.static(__dirname + '/public'))
+
 app.get('/', function(req, res) {
   res.render('index', { titulo: "Julio Automóviles"})
 })
@@ -56,14 +60,20 @@ app.get('/unidades/listar', function(req, res) {
         if(err) {
           console.log(err)
         } else {
-          console.log(rows)
+        //  console.log(rows)
           res.render('unidades-listar', {titulo: 'Formulario de Unidades', unidades: rows})
-          
+
         }
       })
 
+})
 
-
+app.post('/unidades/', function(req, res) {
+  var criterio = req.body.criterio
+  var texto = req.body.texto
+  unidades.listar(' WHERE ' + criterio +' LIKE \'%' + texto + '%\' and estado=1', null, function(err, rows) {
+    res.send({unidades: rows})
+  })
 })
 
 app.listen(3000, function() {
