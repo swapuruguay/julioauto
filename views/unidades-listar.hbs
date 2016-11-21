@@ -1,5 +1,20 @@
-
-<table class="table table-striped table-condensed">
+<form class="form-inline" action="" method="post">
+      <div class="form-group">
+      <label for="find-unidad">Buscar</label>
+      <input type="text" class="form-control" id="find-unidad" name="find-unidad">
+    </div>
+    
+    <div class="form-group">
+      <label for="criterio">Criterio de búsqueda</label>
+        <select class="form-control" id="criterio" name="criterio">
+          <option value="marca">Marca</option>
+          <option value="nro_motor">Nro.Motor</option>
+          <option value="matricula">Matrícula</option>
+          <option value="anio">Año</option>
+      </div>
+</form>
+<p>&nbsp;</p>
+<table id="tabla-unidades" class="table table-striped table-condensed">
   <tr>
     <th>Nro. Unidad</th>
     <th>Marca</th>
