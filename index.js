@@ -71,7 +71,7 @@ app.get('/unidades/listar', function(req, res) {
 app.post('/unidades/', function(req, res) {
   var criterio = req.body.criterio
   var texto = req.body.texto
-  unidades.listar(' WHERE ' + criterio +' LIKE \'%' + texto + '%\' and estado=1', null, function(err, rows) {
+  unidades.listar(' WHERE ' + criterio +' LIKE \'' + texto + '%\' and estado=1', null, function(err, rows) {
     res.send({unidades: rows})
   })
 })
