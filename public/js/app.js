@@ -1,6 +1,6 @@
-$('#find-unidad').keyup(function(evt) {
-  var valor = this.value
-  var criterio = $('#criterio').val();
+$('#find-unidad').click(function(evt) {
+  var valor = $('#busquedau').val()
+  var criterio = $('#criterio').val()
   var data = 'texto=' +valor+'&criterio='+criterio
   $.post('/unidades', data, function(res) {
      var obj = $('#resultado')
