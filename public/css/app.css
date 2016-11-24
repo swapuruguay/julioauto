@@ -19,3 +19,11 @@ html, body {
 .push {
   height: 4em;
 }
+
+.oculto {
+  display: none;
+}
+
+.visto {
+  display: inline;
+}

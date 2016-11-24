@@ -1,0 +1,32 @@
+2016-11-23T14:12:24.837823728 0.270864s notice: Recursively removing directory /home/walter/julio/rethinkdb_data/tmp
+2016-11-23T14:12:24.880971150 0.314011s notice: Initializing directory /home/walter/julio/rethinkdb_data
+2016-11-23T14:12:24.881046127 0.314085s info: Creating a default database for your convenience. (This is because you ran 'rethinkdb' without 'create', 'serve', or '--join', and the directory '/home/walter/julio/rethinkdb_data' did not already exist or is empty.)
+2016-11-23T14:12:24.881107981 0.314147s notice: Running rethinkdb 2.3.5~0xenial (GCC 5.3.1)...
+2016-11-23T14:12:24.883438035 0.316479s notice: Running on Linux 4.4.0-47-generic x86_64
+2016-11-23T14:12:24.883482092 0.316521s notice: Loading data from directory /home/walter/julio/rethinkdb_data
+2016-11-23T14:12:25.327433891 0.760473s info: Automatically using cache size of 5463 MB
+2016-11-23T14:12:25.382200429 0.815240s notice: Listening for intracluster connections on port 29015
+2016-11-23T14:12:25.436523358 0.869563s notice: Listening for client driver connections on port 28015
+2016-11-23T14:12:25.436594408 0.869634s notice: Listening for administrative HTTP connections on port 8080
+2016-11-23T14:12:25.436595711 0.869635s notice: Listening on cluster addresses: 127.0.0.1, 127.0.1.1, ::1
+2016-11-23T14:12:25.436597031 0.869636s notice: Listening on driver addresses: 127.0.0.1, 127.0.1.1, ::1
+2016-11-23T14:12:25.436597476 0.869637s notice: Listening on http addresses: 127.0.0.1, 127.0.1.1, ::1
+2016-11-23T14:12:25.436598977 0.869638s notice: To fully expose RethinkDB on the network, bind to all addresses by running rethinkdb with the `--bind all` command line option.
+2016-11-23T14:12:25.436599486 0.869639s notice: Server ready, "Satellite_S55t_gpd" 2196e564-37f5-4f18-8da7-ac3d2e4ad6ba
+2016-11-23T14:12:33.635130371 9.068171s notice: Server got SIGINT from pid 0, uid 0; shutting down...
+2016-11-23T14:12:33.635349519 9.068390s notice: Shutting down client connections...
+2016-11-23T14:12:33.635881173 9.068921s notice: All client connections closed.
+2016-11-23T14:12:33.635897683 9.068937s notice: Shutting down storage engine... (This may take a while if you had a lot of unflushed data in the writeback cache.)
+2016-11-23T14:12:33.673035717 9.106076s notice: Storage engine shut down.
+2016-11-23T14:12:41.958985868 0.195754s notice: Running rethinkdb 2.3.5~0xenial (GCC 5.3.1)...
+2016-11-23T14:12:41.961144247 0.197914s notice: Running on Linux 4.4.0-47-generic x86_64
+2016-11-23T14:12:41.961194457 0.197962s notice: Loading data from directory /home/walter/julio/rethinkdb_data
+2016-11-23T14:12:42.045725827 0.282494s info: Automatically using cache size of 5467 MB
+2016-11-23T14:12:42.046169247 0.282937s notice: Listening for intracluster connections on port 29015
+2016-11-23T14:12:42.046912248 0.283680s notice: Listening for client driver connections on port 28015
+2016-11-23T14:12:42.047014779 0.283783s notice: Listening for administrative HTTP connections on port 8080
+2016-11-23T14:12:42.047015715 0.283783s notice: Listening on cluster addresses: 127.0.0.1, 127.0.1.1, ::1
+2016-11-23T14:12:42.047016845 0.283785s notice: Listening on driver addresses: 127.0.0.1, 127.0.1.1, ::1
+2016-11-23T14:12:42.047019132 0.283787s notice: Listening on http addresses: 127.0.0.1, 127.0.1.1, ::1
+2016-11-23T14:12:42.047022429 0.283790s notice: To fully expose RethinkDB on the network, bind to all addresses by running rethinkdb with the `--bind all` command line option.
+2016-11-23T14:12:42.047024731 0.283792s notice: Server ready, "Satellite_S55t_gpd" 2196e564-37f5-4f18-8da7-ac3d2e4ad6ba

@@ -1,3 +1,5 @@
+<div class="row">
+<div class="col col-sm-12">
 <form class="form-inline" action="" method="post">
       <div class="form-group">
       <label for="busquedau">Buscar</label>
@@ -6,15 +8,28 @@
     
     <div class="form-group">
       <label for="criterio">Criterio de búsqueda</label>
-        <select class="form-control" id="criterio" name="criterio">
+        <select class="form-control" id="criterio" name="criterio" onchange="mostrar()">
+          <option value="sucursal">Sucursal</option>
           <option value="marca">Marca</option>
           <option value="nro_motor">Nro.Motor</option>
           <option value="matricula">Matrícula</option>
           <option value="anio">Año</option>
         </select>
+        <div class="oculto" id="oculto">
+          <select name="sucursales" id="sucursales" class="form-control" onchange="cambiarTexto()">
+          {{#each sucursales}}
+            <option value="{{ id_sucursal}}">{{ nombre }}</option>
+          {{/each}}
+        </select>
+        </div>
+        
       </div>
       <input type="button" id="find-unidad" value="Buscar" class="btn btn-default">  
 </form>
+</div>
+
+</div>
+
 <p>&nbsp;</p>
 <div id="resultado">
 
