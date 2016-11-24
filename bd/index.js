@@ -68,8 +68,46 @@ class Bd {
     
 
     getCliente(id) {
-      
+      let connection = this.con
+        let task = co.wrap(function * () {
+            let conn = yield connection
+            let cliente = yield conn.query("SELECT * FROM clientes WHERE id_cliente = " + id)
+
+            if (!cliente) {
+                return Promise.reject(new Error(`Cliente ${id} not found`))
+            }
+
+            return Promise.resolve(cliente)
+        })
+
+        return Promise.resolve(task())
     }
+
+    getClientes(where, order) {
+        let orden = '', cond = ''
+        if(where) {
+            cond = where
+        }
+
+        if(order) {
+            orden = order
+        }
+
+        let connection = this.con
+        let task = co.wrap(function * () {
+            let conn = yield connection
+            let clientes = yield conn.query("SELECT * FROM clientes " + cond + orden)
+
+            if (!clientes) {
+                return Promise.reject(new Error(`not found`))
+            }
+
+            return Promise.resolve(clientes)
+        })
+
+        return Promise.resolve(task()) 
+      }
+    
 
     getSucursales() {
        let connection = this.con

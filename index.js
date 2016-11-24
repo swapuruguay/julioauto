@@ -34,21 +34,36 @@ app.get('/clientes/nuevo', function(req, res) {
   res.render('clientes', {titulo: 'Formulario de Clientes', nro: nro})
 })
 
-app.get('/clientes/listar', function(req, res) {
-  clientes.listar(null, null, function(err, rows) {
-    if(err) {
-      console.log(err)
-      res.end()
-    } else {
-      //  console.log(rows)
-      res.render('clientes-listar', {titulo: 'Formulario de Clientes', clientes: rows})
+app.get('/clientes/listar', async(function(req, res) {
+  let db = new Db()
 
-    }
+  let clientes = await(db.getClientes(null,' ORDER BY apellido, nombre'))
+  
+      res.render('clientes-listar', {titulo: 'Formulario de Clientes', clientes: clientes})
 
-  })
+   
 
+}))
 
-})
+app.get('/cliente/:id', async(function (req, res) {
+  let db = new Db()
+  let id = req.params.id
+  let fila = await(db.getCliente(id))
+  let row = fila[0]
+  let cliente = {
+    id_cliente: id,
+    nombre: row.nombre,
+    apellido: row.apellido,
+    domicilio: row.domicilio,
+    telefono: row.telefono,
+    documento: row.documento,
+    celular: row.celular,
+    ciudad: row.ciudad
+  }
+
+  res.render('clientes-edit', {titulo: 'Formulario de clientes', cliente: cliente} )
+
+}))
 
 app.get('/unidades/nuevo', function(req, res) {
 
