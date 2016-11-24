@@ -7,6 +7,7 @@ const bodyParser = require('body-parser')
 const async = require('asyncawait/async');
 const await = require('asyncawait/await');
 const Db = require('./bd')
+const request = require('request')
 
 app.engine('hbs', hbs({extname: 'hbs', defaultLayout: 'layout', layoutsDir: __dirname + '/views/layouts/'}))
 app.set('view engine', 'hbs')
@@ -122,6 +123,33 @@ app.get('/unidad/:id', async(function(req, res) {
     
     
     
+}))
+
+app.get('/unidades/stock/:sucursal', async(function (req, res) {
+  let db = new Db()
+  let suc = req.params.sucursal
+
+  var unidades = await (db.getUnidades(` WHERE estado = 1 AND sucursal = ${suc}`, ` ORDER BY nuevo`))
+
+    
+
+  let data = {
+    template: {shortid:'Skyx99Nzl'}, data: {
+      fecha: '24/11/2016',
+      sucursal: 'Lascano',
+      unidades
+    }
+        
+  }
+
+  let options = {
+    url: 'http://localhost:5488/api/report',
+    json: data,
+    method: 'POST'
+  }
+  
+  request(options).pipe(res)
+ 
 }))
 
 app.listen(3000, function() {
