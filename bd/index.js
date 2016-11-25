@@ -124,6 +124,47 @@ class Bd {
 
         return Promise.resolve(task()) 
     }
+
+    getSucursal(id) {
+      let connection = this.con
+        let task = co.wrap(function * () {
+            let conn = yield connection
+            let sucursal = yield conn.query(`SELECT * FROM sucursales WHERE id_sucursal = ${id}`)
+
+            if (!sucursal) {
+                return Promise.reject(new Error(`not found`))
+            }
+
+            return Promise.resolve(sucursal)
+        })
+
+        return Promise.resolve(task()) 
+    }
+
+    getUser(where, order) {
+        let orden = '', cond = ''
+        if(where) {
+            cond = where
+        }
+
+        if(order) {
+            orden = order
+        }
+
+        let connection = this.con
+        let task = co.wrap(function * () {
+            let conn = yield connection
+            let user = yield conn.query(`SELECT * FROM usuarios_web  ${cond} ${orden}`)
+
+            if (!user) {
+                return Promise.reject(new Error(`not found`))
+            }
+
+            return Promise.resolve(user)
+        })
+
+        return Promise.resolve(task())    
+    }
 }
 
 module.exports = Bd

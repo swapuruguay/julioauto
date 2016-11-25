@@ -8,6 +8,23 @@ const async = require('asyncawait/async');
 const await = require('asyncawait/await');
 const Db = require('./bd')
 const request = require('request')
+var passport = require('passport')
+var auth = require('./auth')
+var session = require('express-session')
+var cookie = require('cookie-parser')
+
+app.use(session({
+    secret: 'abc12345',
+    resave: false,
+    saveUninitialized: true
+}))
+app.use(passport.initialize());
+app.use(passport.session());
+
+
+passport.use(auth.strategy)
+passport.serializeUser(auth.serialize)
+passport.deserializeUser(auth.deserialize)
 
 app.engine('hbs', hbs({extname: 'hbs', defaultLayout: 'layout', layoutsDir: __dirname + '/views/layouts/'}))
 app.set('view engine', 'hbs')
@@ -19,23 +36,45 @@ app.use(bodyParser.urlencoded({extended:true}))
 
 app.use(express.static(__dirname + '/public'))
 
-app.get('/', function(req, res) {
-  res.render('index', { titulo: "Julio Automóviles"})
+function ensureAuth(req, res, next) {
+    if(req.isAuthenticated()) {
+
+        return next()
+    }
+    res.redirect('/login')
+}
+
+app.get('/', ensureAuth, function(req, res) {
+  res.render('index', { titulo: "Julio Automóviles", user: req.user})
 })
 
-app.get('/senias', function(req, res) {
+app.get('/login', function(req, res) {
+
+    res.render('login', {layout: 'login'})
+})
+
+app.post('/login', passport.authenticate('local', { successRedirect: '/',failureRedirect: '/login',failureFlash: true})
+
+)
+
+app.get('/logout', function(req, res) {
+    req.logout()
+    res.redirect('/login')
+})
+
+app.get('/senias', ensureAuth, function(req, res) {
   var date = new Date()
   var fecha = date.getDate() + '/' + date.getMonth() + '/' + date.getFullYear()
   res.render('senias', {titulo: 'Formulario de señas', fecha: fecha})
 })
 
-app.get('/clientes/nuevo', function(req, res) {
+app.get('/clientes/nuevo', ensureAuth, function(req, res) {
 
   var nro = 0
   res.render('clientes', {titulo: 'Formulario de Clientes', nro: nro})
 })
 
-app.get('/clientes/listar', async(function(req, res) {
+app.get('/clientes/listar', ensureAuth, async(function(req, res) {
   let db = new Db()
 
   let clientes = await(db.getClientes(null,' ORDER BY apellido, nombre'))
@@ -46,7 +85,7 @@ app.get('/clientes/listar', async(function(req, res) {
 
 }))
 
-app.get('/cliente/:id', async(function (req, res) {
+app.get('/cliente/:id', ensureAuth, async(function (req, res) {
   let db = new Db()
   let id = req.params.id
   let fila = await(db.getCliente(id))
@@ -66,13 +105,13 @@ app.get('/cliente/:id', async(function (req, res) {
 
 }))
 
-app.get('/unidades/nuevo', function(req, res) {
+app.get('/unidades/nuevo', ensureAuth, function(req, res) {
 
   var nro = 0
   res.render('unidades', {titulo: 'Formulario de Unidades', nro: nro})
 })
 
-app.get('/unidades/listar', async(function(req, res) {
+app.get('/unidades/listar', ensureAuth, async(function(req, res) {
    let db = new Db()
    let sucursales = await(db.getSucursales())
 
@@ -91,7 +130,7 @@ app.post('/unidades/', async(function(req, res) {
  
 }))
 
-app.get('/unidad/:id', async(function(req, res) {
+app.get('/unidad/:id', ensureAuth, async(function(req, res) {
     let id = req.params.id
     let db = new Db()
     let rows = await(db.getUnidad(id))
@@ -125,18 +164,21 @@ app.get('/unidad/:id', async(function(req, res) {
     
 }))
 
-app.get('/unidades/stock/:sucursal', async(function (req, res) {
+app.get('/unidades/stock/:sucursal', ensureAuth, async(function (req, res) {
   let db = new Db()
   let suc = req.params.sucursal
 
-  var unidades = await (db.getUnidades(` WHERE estado = 1 AND sucursal = ${suc}`, ` ORDER BY nuevo`))
+  let sucursal = await(db.getSucursal(suc))
+  sucursal = sucursal[0]
 
+  var unidades = await (db.getUnidades(` WHERE estado = 1 AND sucursal = ${suc}`, ` ORDER BY nuevo, marca, modelo`))
+  let fecha = new Date()
     
 
   let data = {
     template: {shortid:'Skyx99Nzl'}, data: {
-      fecha: '24/11/2016',
-      sucursal: 'Lascano',
+      fecha: fecha.getDate() + '/' + (fecha.getMonth() + 1) + '/' + fecha.getFullYear(),
+      sucursal: sucursal.nombre,
       unidades
     }
         

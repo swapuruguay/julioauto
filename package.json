@@ -10,13 +10,18 @@
   "license": "MIT",
   "dependencies": {
     "asyncawait": "^1.0.6",
+    "bcrypt-nodejs": "0.0.3",
     "bluebird": "^3.4.6",
     "body-parser": "^1.15.2",
     "co": "^4.6.0",
+    "cookie-parser": "^1.4.3",
     "express": "^4.14.0",
     "express-handlebars": "^3.0.0",
+    "express-session": "^1.14.2",
     "handlebars": "^4.0.6",
     "node-mysql": "^0.4.2",
+    "passport": "^0.3.2",
+    "passport-local": "^1.0.0",
     "promise-mysql": "^2.0.0",
     "request": "^2.79.0"
   },

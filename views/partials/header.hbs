@@ -10,7 +10,12 @@
     </button>
     <a class="navbar-brand" href="#">JA</a>
   </div>
-
+  <form class="navbar-form pull-right" role="search">
+            <a href="/logout" class="btn btn-info">
+                <span class="glyphicon glyphicon-log-out"></span> Cerrar
+            </a>
+          </form>
+            <p class="navbar-text pull-right" >Bienvenido {{ user.nombre}} {{user.apellido}}</p>
   <!-- Collect the nav links, forms, and other content for toggling -->
   <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
     <ul class="nav navbar-nav">
@@ -29,6 +34,7 @@
        <ul class="dropdown-menu">
          <li><a href="/unidades/nuevo">Nuevo</a></li>
          <li><a href="/unidades/listar">Listar</a>
+         <li><a href="/unidades/stock/{{ user.sucursal }}">Imprimir Stock</a></li>
        </ul>
      </li>
        <li class="dropdown">
