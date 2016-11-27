@@ -165,6 +165,29 @@ class Bd {
 
         return Promise.resolve(task())    
     }
-}
+
+    saveUnidad(unidad) {
+      let connection = this.con
+        let task = co.wrap(function * () {
+            let conn = yield connection
+            let sql;
+            if(unida.id_unidad == 0) {
+                sql = 'INSERT INTO unidades SET ? '
+            } else {
+                sql = `UPDATE unidades SET ? WHERE id_unidad = ${unidad.id_unidad}`
+            }
+            
+            let user = yield conn.query(sql, unidad)
+
+            if (!user) {
+                return Promise.reject(new Error(`not found`))
+            }
+
+            return Promise.resolve(user)
+        })
+
+        return Promise.resolve(task())     
+    }
+ }
 
 module.exports = Bd
