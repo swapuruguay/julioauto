@@ -2,6 +2,7 @@
 const express = require('express');
 const router = express.Router();
 const Db = require('../bd')
+const config = require('../config')
 const async = require('asyncawait/async')
 const await = require('asyncawait/await')
 const request = require('request')
@@ -131,7 +132,7 @@ router.get('/stock/:sucursal', ensureAuth, async(function (req, res) {
     
 
   let data = {
-    template: {shortid:'Skyx99Nzl'}, data: {
+    template: {shortid: config.reportes.stock}, data: {
       fecha: fecha.getDate() + '/' + (fecha.getMonth() + 1) + '/' + fecha.getFullYear(),
       sucursal: sucursal.nombre,
       unidades
