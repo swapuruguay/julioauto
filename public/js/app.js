@@ -12,10 +12,18 @@ $('#find-unidad').click(function(evt) {
                 <th>Nro.Motor</th>
                 <th>Matrícula</th>
                 <th>Año</th>
-                </tr>`
-                
-      res.unidades.forEach(function(un) {
-        elemento += `<tr><td><a href="/unidad/${un.id_unidad}">${un.id_unidad}</a></td><td>${un.marca}</td><td>${un.nro_motor}</td><td>${un.matricula}</td><td>${un.anio}</td></tr>`
+                <th>Sucursal</th>
+                <th>Traspasar</th></tr>`
+                                
+      res.res.unidades.forEach(function(un) {
+        elemento += `<tr><td><a href="/unidades/${un.id_unidad}">${un.id_unidad}</a></td><td>${un.marca}</td><td>${un.nro_motor}</td>
+        <td>${un.matricula}</td><td>${un.anio}</td><td>${un.nombre}</td>`
+        if(un.sucursal == res.res.user.sucursal) {
+          elemento += `<td><a href="/unidades/traspaso/${un.id_unidad}">Traspasar</a></td>`
+        } else {
+          elemento += `<td>No permitido</td>`
+        }
+        elemento += `</tr>`
       })
       elemento += `</table>`
       obj.html(elemento)
@@ -27,7 +35,7 @@ function mostrar() {
   let oculto = document.getElementById('oculto')
     
   if(document.getElementById('criterio').value == 'sucursal') {
-    console.log('Aca estoy')
+   // console.log('Aca estoy')
     oculto.classList.remove('oculto')
     oculto.classList.add('visto')
     let sucursales = document.getElementById('sucursales')
@@ -43,3 +51,60 @@ function cambiarTexto() {
     document.getElementById('busquedau').value = sucursales.options[sucursales.selectedIndex].text
     document.getElementById('busquedau').value = sucursales.value
 }
+
+function clearForm(myFormElement) {
+
+  var elements = myFormElement.elements;
+
+  myFormElement.reset();
+
+  for(i=0; i<elements.length; i++) {
+
+  field_type = elements[i].type.toLowerCase();
+
+  switch(field_type) {
+
+    case "text":
+    case "password":
+    case "textarea":
+          case "hidden":
+
+      elements[i].value = "";
+      break;
+
+    case "radio":
+    case "checkbox":
+        if (elements[i].checked) {
+          elements[i].checked = false;
+      }
+      break;
+
+    case "select-one":
+    case "select-multi":
+            //    elements[i].selectedIndex = 0;
+      break;
+
+    default:
+      break;
+  }
+    }
+}
+
+
+ 
+document.getElementById("form-unidades").addEventListener("submit", function(event){
+    event.preventDefault()
+    let form = document.getElementById('form-unidades')
+    let formData = new FormData(form)
+    let data = {marca: 'Fiat', modelo: 'Fiorino'}
+    superagent
+    .post('/unidades/save')
+    .send(formData)
+    .end(function(err, res){
+      clearForm(form)
+   });
+
+    
+});
+
+

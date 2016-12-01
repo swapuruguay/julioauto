@@ -9,15 +9,15 @@
     <div class="form-group">
       <label for="criterio">Criterio de búsqueda</label>
         <select class="form-control" id="criterio" name="criterio" onchange="mostrar()">
-          <option value="sucursal">Sucursal</option>
           <option value="marca">Marca</option>
+          <option value="sucursal">Sucursal</option>
           <option value="nro_motor">Nro.Motor</option>
           <option value="matricula">Matrícula</option>
           <option value="anio">Año</option>
         </select>
         <div class="oculto" id="oculto">
           <select name="sucursales" id="sucursales" class="form-control" onchange="cambiarTexto()">
-          {{#each sucursales}}
+          {{#each datos.sucursales}}
             <option value="{{ id_sucursal}}">{{ nombre }}</option>
           {{/each}}
         </select>

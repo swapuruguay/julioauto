@@ -2,15 +2,15 @@
   <h1>{{titulo}}</h1>
   <p>&nbsp;</p>
   <div class="row">
-   <form class="form-horizontal" action="">
+   <form class="form-horizontal" id="form-unidades" enctype="multipart/form-data">
      <div class="form-group">
        <label for="nro" class="col-sm-2 control-label">Nro.</label>
        <div class="col-sm-2">
-         <input type="text" class="form-control text-center" id="nro" name="nro" value="{{ nro }}" readonly>
+         <input type="text" class="form-control text-center" id="id" name="id" value="{{ nro }}" readonly>
        </div>
      </div>
      <div class="form-group">
-       <label for="marca" class="col-sm-2 control-label">Nombre</label>
+       <label for="marca" class="col-sm-2 control-label">Marca</label>
        <div class="col-sm-4">
          <input type="text" class="form-control" id="marca" name="marca">
        </div>
@@ -58,28 +58,51 @@
        </div>
      </div>
      <div class="form-group">
+       <label for="tipo" class="col-sm-2 control-label">Tipo</label>
+       <div class="col-sm-4">
+         <select id="tipo" name="tipo" class="form-control">
+           <option value="1">Auto</option>
+           <option value="2">Camineta</option>
+           <option value="3">Camión</option>
+           <option value="4">Moto</option>
+           <option value="5">Triciclo</option>
+           <option value="6">Cuatriciclo</option>
+         </select>
+       </div>
+       </div>
+     <div class="form-group">
        <label for="combustible" class="col-sm-2 control-label">Combustible</label>
        <div class="col-sm-4">
-         <select name="" id="combustible" name="combustible" class="form-control">
+         <select id="combustible" name="combustible" class="form-control">
            <option value="N">Nafta</option>
            <option value="D">Diesel</option>
          </select>
        </div>
      </div>
      <div class="form-group">
+    <div class="col-sm-offset-2 col-sm-10">
+      <div class="checkbox">
+        <label>
+          <input type="checkbox" id="nuevo" name="nuevo" > 0Km?
+        </label>
+      </div>
+    </div>
+     
+  </div>
+     <div class="form-group">
        <label for="sucursal" class="col-sm-2 control-label">Sucursal</label>
        <div class="col-sm-4">
          <select class="form-control" name="sucursales">
-           <option value="1">Lascano</option>
-           <option value="Rocha">Rocha</option>
-           <option value=""></option>
-           <option value=""></option>
+           {{#each datos.sucursales}}
+              <option value="{{ id_sucursal}}" {{ selected }}>{{ nombre }}</option>
+           {{/each}}
          </select>
 
        </div>
      </div>
      
-     <input type="button" class="btn btn-default" value="Guardar">
+     <button class="btn btn-default" id="boton">Guardar</a>
    </form>
   </div>
+
 </div>

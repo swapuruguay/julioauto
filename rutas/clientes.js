@@ -19,7 +19,7 @@ router.get('/listar', ensureAuth, async(function(req, res) {
 
   let clientes = await(db.getClientes(null,' ORDER BY apellido, nombre'))
   
-      res.render('clientes-listar', {titulo: 'Formulario de Clientes', clientes: clientes})
+      res.render('clientes-listar', {titulo: 'Formulario de Clientes', datos:{clientes: clientes, user: req.user}})
 
    
 
@@ -28,7 +28,7 @@ router.get('/listar', ensureAuth, async(function(req, res) {
 router.get('/nuevo', ensureAuth, function(req, res) {
 
   var nro = 0
-  res.render('clientes', {titulo: 'Formulario de Clientes', nro: nro})
+  res.render('clientes', {titulo: 'Formulario de Clientes', datos: {user: req.user}})
 })
 
 
@@ -52,7 +52,7 @@ router.get('/:id', ensureAuth,  async(function (req, res) {
     ciudad: row.ciudad
   }
 
-  res.render('clientes-edit', {titulo: 'Formulario de clientes', cliente: cliente} )
+  res.render('clientes-edit', {titulo: 'Formulario de clientes', datos:{cliente: cliente, user: req.user}} )
 
 }))
 

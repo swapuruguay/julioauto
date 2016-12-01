@@ -6,7 +6,7 @@
     <th>Documento</th>
     <th>Celular</th>
   </tr>
-  {{#each clientes}}
+  {{#each datos.clientes}}
     <tr>
       <td><a href="/clientes/{{ id_cliente }}">{{ id_cliente}}</a></td><td>{{ nombre }}</td><td> {{ apellido }}</td><td>{{ documento }}</td><td>{{ celular }}</td>
     </tr>

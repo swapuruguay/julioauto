@@ -1,0 +1,10 @@
+<div class="container">
+  <form action="/unidades/traspasar" method="POST">
+  <input type="hidden" name="idsucursal" value="{{datos.sucursal.id_sucursal}}">
+  <input type="hidden" name="idunidad" value="{{datos.unidad.id_unidad}}">
+    Seguro desea traspasar esta unidad: {{ datos.unidad.marca}} {{datos.unidad.modelo}} a {{ datos.sucursal.nombre}}?
+    <button type="submit" class="btn btn-default">Sí</button>
+    <a href="/unidades/listar" type="button" class="btn btn-warning">No</a>
+    
+  </form>
+</div>

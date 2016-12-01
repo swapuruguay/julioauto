@@ -3,7 +3,6 @@ var hbs = require('express-handlebars')
 var handleb = require('handlebars')
 const fs = require('fs')
 const app = express()
-const bodyParser = require('body-parser')
 var passport = require('passport')
 var auth = require('./auth')
 var session = require('express-session')
@@ -11,6 +10,12 @@ var cookie = require('cookie-parser')
 const cli = require('./rutas/clientes')
 const un = require('./rutas/unidades')
 const senias = require('./rutas/senias')
+const bodyParser = require('body-parser')
+const multer = require('multer')
+
+
+app.use(bodyParser.urlencoded({extended:false}))
+app.use(bodyParser.json());
 
 app.use(session({
     secret: 'abc12345',
@@ -31,8 +36,6 @@ app.set('view engine', 'hbs')
 handleb.registerPartial('footer', fs.readFileSync(__dirname + '/views/partials/footer.hbs', 'utf8'))
 handleb.registerPartial('header', fs.readFileSync(__dirname + '/views/partials/header.hbs', 'utf8'))
 
-app.use(bodyParser.urlencoded({extended:true}))
-
 app.use(express.static(__dirname + '/public'))
 
 function ensureAuth(req, res, next) {
@@ -48,7 +51,7 @@ app.use('/clientes', cli)
 app.use('/senias', senias)
 
 app.get('/', ensureAuth, function(req, res) {
-  res.render('index', { titulo: "Julio Automóviles", user: req.user})
+  res.render('index', { titulo: "Julio Automóviles", datos: {user: req.user}})
 })
 
 app.get('/login', function(req, res) {

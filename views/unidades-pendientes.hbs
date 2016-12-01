@@ -1,0 +1,21 @@
+<div class="container">
+  <table class="table table-striped table-condensed">
+    <tr>
+      <th>Nro</th>
+      <th>Marca</th>
+      <th>Modelo</th>
+      <th>Origen</th>
+      <th>Confirmar</th>
+    </tr>
+    {{#each datos.pendientes }}
+      <tr>
+        <td>{{ id_unidad_fk }}</td>
+        <td>{{ marca }}</td>
+        <td>{{ modelo }}</td>
+        <td>{{ nombre }}</td>
+        <td><a href="/unidades/accept/{{id_unidad_fk}}">Aceptar</a></td>
+      </tr>
+      
+    {{/each}}
+  </table>
+</div>

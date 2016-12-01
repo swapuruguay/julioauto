@@ -15,7 +15,7 @@
                 <span class="glyphicon glyphicon-log-out"></span> Cerrar
             </a>
           </form>
-            <p class="navbar-text pull-right" >Bienvenido {{ user.nombre}} {{user.apellido}}</p>
+            <p class="navbar-text pull-right" >Bienvenido {{ datos.user.nombre}} {{datos.user.apellido}}</p>
   <!-- Collect the nav links, forms, and other content for toggling -->
   <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
     <ul class="nav navbar-nav">
@@ -34,7 +34,10 @@
        <ul class="dropdown-menu">
          <li><a href="/unidades/nuevo">Nuevo</a></li>
          <li><a href="/unidades/listar">Listar</a>
-         <li><a href="/unidades/stock/{{ user.sucursal }}">Imprimir Stock</a></li>
+         <li><a href="/unidades/stock/1">Stock Lascano</a></li>
+         <li><a href="/unidades/stock/2">Stock Rocha</a></li>
+         <li><a href="/unidades/stock/3">Stock Montevideo</a></li>
+         <li><a href="/unidades/stock/4">Stock Migues</a></li>
        </ul>
      </li>
        <li class="dropdown">
