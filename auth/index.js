@@ -13,13 +13,29 @@ exports.strategy = new LocalStrategy( async(function(username, password, done) {
       //console.log(hash)
       //console.log(bcrypt.compareSync(password, hash))
     if(bcrypt.compareSync(password, user[0].password)) {
-      return done(null, user[0])
+        if(user[0].perfil > 2) {
+          let rango = new Date()
+          rango.setHours(8)
+          rango.setMinutes(30)
+          let rango2 = new Date()
+          rango2.setHours(19)
+          rango2.setMinutes(0)
+          let hora = new Date()
+          if( hora < rango || hora > rango2 ) {
+            return done(null, false, {message: 'Fuera de horario'})
+          } else {
+            return done(null, user[0])
+          }
+        } else {
+          return done(null, user[0])
+        }
+        
     } else {
-                //req.flash({error_msg: 'Usuario no encuentra'})
-      return done(false, false, {mesage: 'No se encuetra usuario'})
+        console.log('VA mal')
+            return done(null, false, {message: 'Usuario o Password Incorrecto'})
     }
   } else {
-    return done(false, false, {message: 'Usuario desconocido'})
+    return done(null, false, {message: 'Usuario o Password Incorrecto'})
   }
   
 }))

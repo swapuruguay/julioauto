@@ -96,7 +96,6 @@ document.getElementById("form-unidades").addEventListener("submit", function(eve
     event.preventDefault()
     let form = document.getElementById('form-unidades')
     let formData = new FormData(form)
-    let data = {marca: 'Fiat', modelo: 'Fiorino'}
     superagent
     .post('/unidades/save')
     .send(formData)

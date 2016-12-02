@@ -17,6 +17,10 @@
           </span>
        
       </form>
+      <p>&nbsp;</p>
+      {{#each errors}}
+        <p class="alert alert-warning">{{this}}</p>
+      {{/each}}
     </div>
   </div>
 
