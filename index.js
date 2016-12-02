@@ -10,9 +10,15 @@ const auth = require('./auth')
 const session = require('express-session')
 const cookie = require('cookie-parser')
 const flash = require('connect-flash');
+<<<<<<< HEAD
 const cli = require('./rutas/clientes')
 const un = require('./rutas/unidades')(io)
 const senias = require('./rutas/senias')
+=======
+//const cli = require('./rutas/clientes')(io)
+const un = require('./rutas/unidades')(io)
+//const senias = require('./rutas/senias')(io)
+>>>>>>> 856556f06237778700c5f21fde3fab51de196f68
 const bodyParser = require('body-parser')
 const multer = require('multer')
 
@@ -51,8 +57,8 @@ function ensureAuth(req, res, next) {
 }
 
 app.use('/unidades', un)
-app.use('/clientes', cli)
-app.use('/senias', senias)
+//app.use('/clientes', cli)
+//app.use('/senias', senias)
 
 app.get('/', ensureAuth, function(req, res) {
   res.render('index', { titulo: "Julio Automóviles", datos: {user: req.user}})
