@@ -3,12 +3,15 @@ var hbs = require('express-handlebars')
 var handleb = require('handlebars')
 const fs = require('fs')
 const app = express()
-var passport = require('passport')
-var auth = require('./auth')
-var session = require('express-session')
-var cookie = require('cookie-parser')
+const http = require('http').Server(app)
+const io = require('socket.io')(http)
+const passport = require('passport')
+const auth = require('./auth')
+const session = require('express-session')
+const cookie = require('cookie-parser')
+const flash = require('connect-flash');
 const cli = require('./rutas/clientes')
-const un = require('./rutas/unidades')
+const un = require('./rutas/unidades')(io)
 const senias = require('./rutas/senias')
 const bodyParser = require('body-parser')
 const multer = require('multer')
@@ -22,6 +25,7 @@ app.use(session({
     resave: false,
     saveUninitialized: true
 }))
+app.use(flash())
 app.use(passport.initialize());
 app.use(passport.session());
 
@@ -55,12 +59,26 @@ app.get('/', ensureAuth, function(req, res) {
 })
 
 app.get('/login', function(req, res) {
-
-    res.render('login', {layout: 'login'})
+    res.locals.errors = req.flash();
+    console.log(res.locals.errors);
+    res.render('login', { 
+        errors: res.locals.errors, layout: 'login'
+    });
+    //res.render('login', {layout: 'login'})
 })
 
-app.post('/login', passport.authenticate('local', { successRedirect: '/',failureRedirect: '/login',failureFlash: true})
+ 
+/*app.post('/login', passport.authenticate('local', { successRedirect: '/',failureRedirect: '/login',failureFlash: 'Invalid username or password.' })
+   
+)*/
 
+app.post('/login',
+    passport.authenticate('local', { 
+        successRedirect: '/',
+        failureRedirect: '/login',
+        failureFlash: true,
+        //failureFlash: 'Invalid username or password.'
+    })
 )
 
 app.get('/logout', function(req, res) {
@@ -68,6 +86,6 @@ app.get('/logout', function(req, res) {
     res.redirect('/login')
 })
 
-app.listen(3000, function() {
+http.listen(3000, function() {
   console.log(' Escuchando el puerto 3000')
 })

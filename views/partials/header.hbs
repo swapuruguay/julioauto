@@ -20,8 +20,30 @@
   <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
     <ul class="nav navbar-nav">
        <li>
-         <a href="/">Inicio</a>
+         <a href="/">Inicio <span class="badge" id="messages"></span></a>
        </li>
+       <script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
+       <script>
+          function render(pend) {
+            let html = pend.length
+            if(pend.length > 0) {
+              html = pend.length              
+            } else {
+              html = ''
+            }
+            document.getElementById('messages').innerHTML = html;
+            
+          }
+        
+        let socket = io.connect('http://localhost:3000', { 'forceNew': true });
+        
+        socket.on('ver', function(data) {
+            render(data)
+        })
+        
+        
+
+       </script>
        <li class="dropdown">
         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Clientes <span class="caret"></span></a>
         <ul class="dropdown-menu">
@@ -34,6 +56,7 @@
        <ul class="dropdown-menu">
          <li><a href="/unidades/nuevo">Nuevo</a></li>
          <li><a href="/unidades/listar">Listar</a>
+         <li><a href="/unidades/pendientes">Aprobar Traspasos</a></li>
          <li><a href="/unidades/stock/1">Stock Lascano</a></li>
          <li><a href="/unidades/stock/2">Stock Rocha</a></li>
          <li><a href="/unidades/stock/3">Stock Montevideo</a></li>
