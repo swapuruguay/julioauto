@@ -121,9 +121,6 @@ let returnRouter = function(io) {
       
     }))
 
-
-
-
     router.get('/stock/:sucursal', ensureAuth, async(function (req, res) {
       let db = new Db()
       let suc = req.params.sucursal
@@ -206,9 +203,7 @@ let returnRouter = function(io) {
         let db = new Db()
         let rows = await(db.getUnidad(id))
         let fila = rows[0]
-        if(req.user.sucursal != fila.sucursal) {
-
-        }
+        
         let unidad = {
           id_unidad: id,
           marca: fila.marca,
@@ -223,6 +218,8 @@ let returnRouter = function(io) {
           nuevo: (fila.nuevo == 1)? 'CHECKED': '',
           disabled: ''
         }
+
+        console.log(unidad)
 
         if(req.user.sucursal != fila.sucursal) {
           unidad.disabled = 'DISABLED'
@@ -268,7 +265,7 @@ let returnRouter = function(io) {
       let criterio = req.body.criterio
       let texto = req.body.texto
       let db = new Db()
-      let unidades = await(db.getUnidadesSuc(` WHERE estado = 1 AND ${criterio} LIKE '${texto}%'`, null))
+      let unidades = await(db.getUnidadesSuc(` WHERE estado = 1 AND sucursal != 5 AND ${criterio} LIKE '${texto}%'`, null))
     
         let resultado = {
           user: req.user,

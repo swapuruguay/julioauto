@@ -132,6 +132,29 @@ class Bd {
 
         return Promise.resolve(task()) 
       }
+
+      saveCliente(cliente) {
+      let connection = this.con
+        let task = co.wrap(function * () {
+            let conn = yield connection
+            let sql;
+            if(cliente.id_cliente == 0) {
+                sql = 'INSERT INTO clientes SET ? '
+            } else {
+                sql = `UPDATE clientes SET ? WHERE id_cliente = ${cliente.id_cliente}`
+            }
+            
+            let result = yield conn.query(sql, cliente)
+
+            if (!result) {
+                return Promise.reject(new Error(`not found`))
+            }
+
+            return Promise.resolve(result)
+        })
+
+        return Promise.resolve(task())     
+    }
     
 
     getSucursales() {

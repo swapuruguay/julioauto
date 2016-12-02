@@ -1,0 +1,153 @@
+commit cc6c4ea42bc2ec76c65f48c93fa60a1d9d269da9
+Merge: 3731318 856556f
+Author: Walter Sosa <sosa.tizon@gmail.com>
+Date:   Fri Dec 2 11:23:52 2016 -0300
+
+    Arreglo de clientes
+
+commit 37313180f166bfcb1ad4e67ea678ac18f3c04774
+Author: Walter Sosa <sosa.tizon@gmail.com>
+Date:   Fri Dec 2 02:13:19 2016 -0300
+
+    Rango de horarios y UpperCase Unidades
+
+commit 856556f06237778700c5f21fde3fab51de196f68
+Author: Walter Sosa <sosa.tizon@gmail.com>
+Date:   Fri Dec 2 02:13:19 2016 -0300
+
+    Rango de horarios y UpperCase Unidades
+
+commit 84722ea2963bd9a16d720cbeafb197a52c7ce63f
+Author: Walter Sosa <sosa.tizon@gmail.com>
+Date:   Thu Dec 1 12:44:44 2016 -0300
+
+    Id de reportes parametrizado
+
+commit adae68d04cc9ba12778263d71ce4c7845940c296
+Author: Walter Sosa <sosa.tizon@gmail.com>
+Date:   Thu Dec 1 01:24:49 2016 -0300
+
+    Unidades con traspaso completo
+
+commit d65e6fc4f192fa66e6467b690cfd717b5559b565
+Author: Walter Sosa <sosa.tizon@gmail.com>
+Date:   Sat Nov 26 21:31:40 2016 -0300
+
+    Rutas modulares con Router
+
+commit 7f1268a3a8d3f4c8cfc18f15957d7fbab05aa92f
+Author: Walter Sosa <sosa.tizon@gmail.com>
+Date:   Fri Nov 25 00:23:06 2016 -0300
+
+    Login de usuarios
+
+commit 3a45a216199dc1f5e47f0e070e4a4fed5ef7beaf
+Author: Walter Sosa <sosa.tizon@gmail.com>
+Date:   Thu Nov 24 18:38:37 2016 -0300
+
+    Stock unidades en pdf
+
+commit 155ee6fffa8647b8fad0fcaddfe1d54697340208
+Author: Walter Sosa <sosa.tizon@gmail.com>
+Date:   Thu Nov 24 01:59:22 2016 -0300
+
+    Listado de Clientes incompleto con asyncawait
+
+commit a33bba9d3a0dd6cceafad88594ee4e103c9a32b8
+Author: Walter Sosa <sosa.tizon@gmail.com>
+Date:   Wed Nov 23 22:23:15 2016 -0300
+
+    Listado Unidades con Promises y asyncawait
+
+commit 7d82cc86b9014a02548f590043006c8fe963a94a
+Author: Walter Sosa <sosa.tizon@gmail.com>
+Date:   Tue Nov 22 12:56:20 2016 -0300
+
+    Update listado unidades
+
+commit 21d38bdd6ac6598710d41ab63eb828f4d7690471
+Author: Walter Sosa <sosa.tizon@gmail.com>
+Date:   Mon Nov 21 22:29:01 2016 -0300
+
+    Listado Ajax
+
+commit 47d2471ad440551456e094039f00d009358e3da5
+Author: Walter Sosa <sosa.tizon@gmail.com>
+Date:   Mon Nov 21 22:20:11 2016 -0300
+
+    Listado Ajax
+
+commit 579519534b96565d38f4b93852bfec74ceab33e3
+Merge: 5f4b4a2 8c7822b
+Author: Walter Sosa <sosa.tizon@gmail.com>
+Date:   Mon Nov 21 20:58:49 2016 -0300
+
+     Merge branch 'master' of github.com:swapuruguay/julioauto
+
+commit 5f4b4a2a75c6a90a6b3898e2b89469602c75e33f
+Author: Walter Sosa <sosa.tizon@gmail.com>
+Date:   Mon Nov 21 20:58:18 2016 -0300
+
+    Update listados
+
+commit 84b1e442bbadc5d228f07eedfe00213a43767c6a
+Merge: 7fc3b2b 3592244
+Author: Walter Sosa <sosa.tizon@gmail.com>
+Date:   Mon Nov 21 20:57:07 2016 -0300
+
+    Update listados
+
+commit 8c7822b8a88e015721cf21f453b03132faa267d4
+Merge: 7fc3b2b 3592244
+Author: Walter Sosa <sosa.tizon@gmail.com>
+Date:   Mon Nov 21 20:57:07 2016 -0300
+
+    Merge branch 'master' of github.com:swapuruguay/julioauto
+
+commit 7fc3b2b066bcd27558e5bf63ee2f05c024c0a7be
+Author: Walter Sosa <sosa.tizon@gmail.com>
+Date:   Mon Nov 21 20:42:04 2016 -0300
+
+    Update listados
+
+commit 3592244227011849ea7cc824e0198e40b5c8b2f3
+Author: Walter Sosa <sosa.tizon@gmail.com>
+Date:   Mon Nov 21 20:42:04 2016 -0300
+
+    Udate listados
+
+commit 0a4c5cfadf92068ea5e5b1f955c31f1c862147e2
+Author: Ubuntu <ubuntu@ip-172-31-41-117.us-west-2.compute.internal>
+Date:   Mon Nov 21 23:29:35 2016 +0000
+
+    Base de datos
+
+commit d2f1f01bf348828b6c0c6819bcf3162d090276a5
+Author: Walter Sosa <sosa.tizon@gmail.com>
+Date:   Mon Nov 21 16:30:13 2016 -0300
+
+    Form y listado de Unidades
+
+commit 95aecb33c73351deeff82d352afb2400aa24fe2b
+Author: Walter Sosa <sosa.tizon@gmail.com>
+Date:   Mon Nov 21 14:30:46 2016 -0300
+
+    Footer Arreglado
+
+commit 68a11c7b949f9285b3d5cbe0480746b28a2c0f5d
+Author: Walter Sosa <sosa.tizon@gmail.com>
+Date:   Thu Nov 17 22:37:25 2016 -0300
+
+    Agregando layout y Partials
+
+commit 73916a65ee4d760aac148490e342e587069dfb8c
+Author: Walter Sosa <sosa.tizon@gmail.com>
+Date:   Thu Nov 17 17:34:10 2016 -0300
+
+    Inicio del proyecto
+
+commit 58807503e0a7960bfefdf6a5c33b47eac059e729
+Author: Walter Sosa <sosa.tizon@gmail.com>
+Date:   Thu Nov 17 17:28:30 2016 -0300
+
+    Initial commit

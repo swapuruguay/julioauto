@@ -2,11 +2,11 @@
   <h1>{{titulo}}</h1>
   <p>&nbsp;</p>
   <div class="row">
-   <form class="form-horizontal" action="">
+   <form class="form-horizontal" id="form-clientes" >
      <div class="form-group">
        <label for="nro" class="col-sm-2 control-label">Nro.</label>
        <div class="col-sm-2">
-         <input type="text" class="form-control text-center" id="nro" name="nro" value="{{ nro }}" readonly>
+         <input type="text" class="form-control text-center" id="id" name="id" readonly>
        </div>
      </div>
      <div class="form-group">
@@ -19,6 +19,12 @@
        <label for="apellido" class="col-sm-2 control-label">Apellido</label>
        <div class="col-sm-4">
          <input type="text" class="form-control" id="apellido" name="apellido">
+       </div>
+     </div>
+     <div class="form-group">
+       <label for="aclaraciones" class="col-sm-2 control-label">Aclaraciones</label>
+       <div class="col-sm-4">
+         <input type="text" class="form-control" id="aclaraciones" name="aclaraciones">
        </div>
      </div>
      <div class="form-group">
@@ -51,7 +57,7 @@
          <input type="text" class="form-control" id="ciudad" name="ciudad">
        </div>
      </div>
-     <input type="button" class="btn btn-default" value="Guardar">
+     <input type="submit" class="btn btn-default" value="Guardar">
    </form>
   </div>
 </div>

@@ -16,7 +16,7 @@ $('#find-unidad').click(function(evt) {
                 <th>Traspasar</th></tr>`
                                 
       res.res.unidades.forEach(function(un) {
-        elemento += `<tr><td><a href="/unidades/${un.id_unidad}">${un.id_unidad}</a></td><td>${un.marca}</td><td>${un.nro_motor}</td>
+        elemento += `<tr><td><a href="/unidades/${un.id_unidad}">${un.id_unidad}</a></td><td>${un.marca}</td><td>${un.modelo}</td>
         <td>${un.matricula}</td><td>${un.anio}</td><td>${un.nombre}</td>`
         if(un.sucursal == res.res.user.sucursal) {
           elemento += `<td><a href="/unidades/traspaso/${un.id_unidad}">Traspasar</a></td>`
@@ -24,6 +24,33 @@ $('#find-unidad').click(function(evt) {
           elemento += `<td>No permitido</td>`
         }
         elemento += `</tr>`
+      })
+      elemento += `</table>`
+      obj.html(elemento)
+  }, 'json')
+        
+})
+
+$('#find-cliente').click(function(evt) {
+  var valor = $('#busquedac').val()
+  var criterio = $('#criterio').val()
+  //console.log(valor + ' ' + criterio)
+  var data = 'texto=' +valor+'&criterio='+criterio
+  $.post('/clientes', data, function(res) {
+     var obj = $('#resultado')
+     var elemento = '<table class="table table-striped table-condensed">'
+     elemento += `<tr>
+                <th>Id.Cliente</th>
+                <th>Nombre</th>
+                <th>Apellido</th>
+                <th>Documento</th>
+                <th>Celular </th>
+                </tr>`
+                                
+      res.res.clientes.forEach(function(cli) {
+        elemento += `<tr><td><a href="/clientes/${cli.id_cliente}">${cli.id_cliente}</a></td><td>${cli.nombre}</td><td>${cli.apellido}</td>
+        <td>${cli.documento}</td><td>${cli.celular}</td></tr>`
+        
       })
       elemento += `</table>`
       obj.html(elemento)
@@ -91,19 +118,39 @@ function clearForm(myFormElement) {
 }
 
 
- 
-document.getElementById("form-unidades").addEventListener("submit", function(event){
+let funi =  document.getElementById("form-unidades")
+let fcli = document.getElementById('form-clientes')
+if(funi) {
+  funi.addEventListener("submit", function(event){
     event.preventDefault()
-    let form = document.getElementById('form-unidades')
-    let formData = new FormData(form)
+    let formData = new FormData(funi)
     superagent
     .post('/unidades/save')
     .send(formData)
     .end(function(err, res){
-      clearForm(form)
-   });
+      clearForm(funi)
+    });
 
     
-});
+  });
+}
+
+if(fcli) {
+  fcli.addEventListener("submit", function(event){
+    event.preventDefault()
+    
+    let formData = new FormData(fcli)
+    superagent
+    .post('/clientes/save')
+    .send(formData)
+    .end(function(err, res){
+      clearForm(fcli)
+    });
+
+    
+  });
+}
+
+
 
 
