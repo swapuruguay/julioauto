@@ -33,13 +33,29 @@ let returnRouter = function(io) {
       next();
     });
 
-    
+    io.on('connection', function(socket) {
+      
+      socket.on('unir', async(function(sala) {
+        let db = new Db()
+        let autos = await (db.getPendientes(sala))
+        let regs = autos.length
+        socket.emit('devolver', regs)
+        socket.join(sala)
+        //console.log(socket.room)
+        
+      }))
+     
+      /*console.log(socket.id)*/
+      socket.on('enviar', function(msg) {
+        socket.broadcast.to(msg).emit('devolver', 1)
+      })
+    })
 
     router.get('/nuevo', ensureAuth, async(function(req, res) {
 
       let nro = ''
       let db = new Db()
-      console.log(res.user)
+      
       let suc = await(db.getSucursales())
       datosVista.sucursales = suc
       res.render('unidades', {titulo: 'Formulario de Unidades',datos: datosVista})
@@ -121,14 +137,24 @@ let returnRouter = function(io) {
       
     }))
 
-    router.get('/stock/:sucursal', ensureAuth, async(function (req, res) {
+    router.get('/stock', ensureAuth, async(function(req, res) {
+      let db = new Db()
+      let sucursales = await(db.getSucursales())
+      datosVista.sucursales = sucursales
+      res.render('unidades-stock', {titulo: 'Stock de Unidades', datos: datosVista})
+
+    }))
+
+    router.get('/stock/:sucursal/:tipo', ensureAuth, async(function (req, res) {
       let db = new Db()
       let suc = req.params.sucursal
+      let tipo = req.params.tipo
+      let operador = (tipo == 1) ? '<' : '>='
 
       let sucursal = await(db.getSucursal(suc))
       sucursal = sucursal[0]
 
-      var unidades = await (db.getUnidades(` WHERE estado = 1 AND sucursal = ${suc}`, ` ORDER BY nuevo, marca, modelo`))
+      var unidades = await (db.getUnidades(` WHERE estado = 1 AND sucursal = ${suc} and tipo ${operador} 4 `, ` ORDER BY nuevo, marca, modelo`))
       let fecha = new Date()
         
 

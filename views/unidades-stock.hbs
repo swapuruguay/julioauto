@@ -1,0 +1,29 @@
+<div class="container">
+  
+  <form id="form-stock" class="form-inline" >
+    <label for="">Seleccione lo que desea listar</label>
+    <select name="sucursales" id="sucursales" class="form-control" onchange="modificarEnlace()">
+      {{#each datos.sucursales}}
+        <option value="{{ id_sucursal }}">{{ nombre }}</option>
+      {{/each}}
+    </select>
+    <select name="tipo" id="tipo" class="form-control" onchange="modificarEnlace()">
+      <option value="1">Autos</option>
+      <option value="2">Motos</option>
+    </select>
+    <a href="/unidades/stock/1/1" id="btn-stock" class="btn btn-success">Descargar</a>
+  </form>
+</div>
+<script>
+  
+ 
+ function modificarEnlace() {
+   let s = document.getElementById('sucursales')
+  let t = document.getElementById('tipo')
+    let suc = s.value
+    let tipo = t.value
+    let a = document.getElementById('btn-stock')
+    a.href = `/unidades/stock/${suc}/${tipo}`
+  }
+  
+</script>

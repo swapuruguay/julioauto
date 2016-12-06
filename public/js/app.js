@@ -9,7 +9,7 @@ $('#find-unidad').click(function(evt) {
      elemento += `<tr>
                 <th>Id.Unidad</th>
                 <th>Marca</th>
-                <th>Nro.Motor</th>
+                <th>Modelo</th>
                 <th>Matrícula</th>
                 <th>Año</th>
                 <th>Sucursal</th>

@@ -1,6 +1,6 @@
 <div class="container">
-  <form action="/unidades/traspasar" method="POST">
-  <input type="hidden" name="idsucursal" value="{{datos.sucursal.id_sucursal}}">
+  <form action="/unidades/traspasar" method="POST" id="form-traspaso" >
+  <input type="hidden" name="idsucursal" id="idsucursal" value="{{datos.sucursal.id_sucursal}}">
   <input type="hidden" name="idunidad" value="{{datos.unidad.id_unidad}}">
     Seguro desea traspasar esta unidad: {{ datos.unidad.marca}} {{datos.unidad.modelo}} a {{ datos.sucursal.nombre}}?
     <button type="submit" class="btn btn-default">Sí</button>
@@ -8,3 +8,15 @@
     
   </form>
 </div>
+<script>
+  let fun = document.getElementById('form-traspaso')
+   fun.addEventListener("submit", function(event){
+    event.preventDefault()
+    let suc = document.getElementById('idsucursal').value
+    
+      socket.emit('enviar', parseInt(suc))
+       this.submit()
+    })
+   
+ 
+</script>

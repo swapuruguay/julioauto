@@ -1,3 +1,7 @@
+<script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
+<script>
+     var socket = io()
+</script>
 <nav class="navbar navbar-default">
 <div class="container-fluid">
   <!-- Brand and toggle get grouped for better mobile display -->
@@ -22,28 +26,7 @@
        <li>
          <a href="/">Inicio <span class="badge" id="messages"></span></a>
        </li>
-       <script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
-       <script>
-          function render(pend) {
-            let html = pend.length
-            if(pend.length > 0) {
-              html = pend.length              
-            } else {
-              html = ''
-            }
-            document.getElementById('messages').innerHTML = html;
-            
-          }
-        
-        let socket = io.connect('http://localhost:3000', { 'forceNew': true });
-        
-        socket.on('ver', function(data) {
-            render(data)
-        })
-        
-        
-
-       </script>
+       
        <li class="dropdown">
         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Clientes <span class="caret"></span></a>
         <ul class="dropdown-menu">
@@ -56,11 +39,7 @@
        <ul class="dropdown-menu">
          <li><a href="/unidades/nuevo">Nuevo</a></li>
          <li><a href="/unidades/listar">Listar</a>
-         <li><a href="/unidades/pendientes">Aprobar Traspasos</a></li>
-         <li><a href="/unidades/stock/1">Stock Lascano</a></li>
-         <li><a href="/unidades/stock/2">Stock Rocha</a></li>
-         <li><a href="/unidades/stock/3">Stock Montevideo</a></li>
-         <li><a href="/unidades/stock/4">Stock Migues</a></li>
+         <li><a href="/unidades/stock">Stock</a></li>
        </ul>
      </li>
        <li class="dropdown">
@@ -70,8 +49,26 @@
 
         </ul>
       </li>
+      <li>
+         <a href="/unidades/pendientes">Pendientes <span class="badge" id="pendientes"></span></a>
+       </li>
+      
     </ul>
+     <span style="display:none" id="socket" data-suc="{{ datos.user.sucursal }}" ></span>
 
   </div><!-- /.navbar-collapse -->
 </div><!-- /.container-fluid -->
 </nav>
+<script>
+
+    let suc = document.getElementById('socket').dataset.suc
+    socket.emit('unir', suc)
+
+  socket.on('devolver', function(msg) {
+      let pend = document.getElementById('pendientes')
+      let actual = parseInt(pend.innerHTML)
+      if(!actual) { actual = 0}
+      let total = actual + msg
+      pend.innerHTML = (total > 0) ? total : ''
+    })
+</script>
