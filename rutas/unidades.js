@@ -37,6 +37,7 @@ let returnRouter = function(io) {
       
       socket.on('unir', async(function(sala) {
         let db = new Db()
+        console.log(sala)
         let autos = await (db.getPendientes(sala))
         let regs = autos.length
         socket.emit('devolver', regs)
@@ -96,7 +97,8 @@ let returnRouter = function(io) {
 
       let result = await(db.saveTraspaso(datos))
        
-        res.render('unidades-ok-traspaso')
+
+        res.render('unidades-ok-traspaso', {datos: datosVista})
     
         
 
