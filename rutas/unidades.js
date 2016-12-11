@@ -39,6 +39,7 @@ let returnRouter = function(io) {
         let db = new Db()
         console.log(sala)
         let autos = await (db.getPendientes(sala))
+        db.disconnect()
         let regs = autos.length
         socket.emit('devolver', regs)
         socket.join(sala)
@@ -46,11 +47,11 @@ let returnRouter = function(io) {
         
       }))
      
-      /*console.log(socket.id)*/
+      /*console.log(socket.id) */
       socket.on('enviar', function(msg) {
         socket.broadcast.to(msg).emit('devolver', 1)
       })
-    })
+    }) 
 
     router.get('/nuevo', ensureAuth, async(function(req, res) {
 
@@ -58,6 +59,7 @@ let returnRouter = function(io) {
       let db = new Db()
       
       let suc = await(db.getSucursales())
+      db.disconnect()
       datosVista.sucursales = suc
       res.render('unidades', {titulo: 'Formulario de Unidades',datos: datosVista})
     }))
@@ -67,6 +69,7 @@ let returnRouter = function(io) {
     router.get('/listar', ensureAuth, async(function(req, res) {
       let db = new Db()
       let sucursales = await(db.getSucursales())
+      db.disconnect()
       datosVista.sucursales = sucursales
           
 
@@ -96,7 +99,7 @@ let returnRouter = function(io) {
       await(db.saveUnidad(un))
 
       let result = await(db.saveTraspaso(datos))
-       
+      db.disconnect()
 
         res.render('unidades-ok-traspaso', {datos: datosVista})
     
@@ -109,13 +112,14 @@ let returnRouter = function(io) {
     router.get('/pendientes', ensureAuth, async(function(req, res) {
       let db = new Db()
       let pend = await(db.getPendientes(req.user.sucursal))
+      db.disconnect()
       datosVista.pendientes = pend
       res.render('unidades-pendientes', {titulo: 'Unidades en tránsito', datos: datosVista})
     }))
 
     router.post('/save', async(function(req, res) {
       let db = new Db()
-      console.log(req.body)
+      //console.log(req.body)
       let nuevo = ((req.body.nuevo == 'on') ? 1 : 0)
       let id = (req.body.id == '')? 0 : req.body.id
       let unidad = {
@@ -134,14 +138,29 @@ let returnRouter = function(io) {
         estado: 1,
         tipo: req.body.tipo
       }
-
-      res.send(await(db.saveUnidad(unidad)))
+      try {
+         await(db.saveUnidad(unidad)) 
+         db.disconnect()
+         res.send('Ok')
+      } catch(err) {
+        
+        if(err.message == 'ER_DUP_ENTRY') {
+          db.disconnect()
+          res.send('Registro duplicado')
+        } else {
+          db.disconnect()
+          res.send('Ocurrió un error, intente de nuevo')
+        }
+  
       
+    }
+
     }))
 
     router.get('/stock', ensureAuth, async(function(req, res) {
       let db = new Db()
       let sucursales = await(db.getSucursales())
+      db.disconnect()
       datosVista.sucursales = sucursales
       res.render('unidades-stock', {titulo: 'Stock de Unidades', datos: datosVista})
 
@@ -157,6 +176,7 @@ let returnRouter = function(io) {
       sucursal = sucursal[0]
 
       var unidades = await (db.getUnidades(` WHERE estado = 1 AND sucursal = ${suc} and tipo ${operador} 4 `, ` ORDER BY nuevo, marca, modelo`))
+      db.disconnect()
       let fecha = new Date()
         
 
@@ -184,6 +204,7 @@ let returnRouter = function(io) {
       let id = req.body.id
       let sucursal = await(db.getSucursal(req.body.destino))[0]
       let unidad = await(db.getUnidad(id))[0]
+      db.disconnect()
       datosVista.unidad = unidad
       datosVista.sucursal = sucursal
       res.render('unidades-confirm-traspaso', {titulo: 'Confirmar', datos: datosVista})
@@ -198,6 +219,7 @@ let returnRouter = function(io) {
       let sucursal = await(db.getSucursal(req.user.sucursal))[0]
       console.log(sucursal)
       let sucursales = await(db.getSucursales())
+      db.disconnect()
       sucursales = sucursales.filter(function(s) {
         
         return s.id_sucursal != req.user.sucursal
@@ -222,7 +244,7 @@ let returnRouter = function(io) {
       
       await(db.saveUnidad(unidad))
       await(db.delPendiente(req.params.id))
-
+      db.disconnect()
       res.redirect('/unidades/pendientes')
     }))
 
@@ -247,7 +269,7 @@ let returnRouter = function(io) {
           disabled: ''
         }
 
-        console.log(unidad)
+        //console.log(unidad)
 
         if(req.user.sucursal != fila.sucursal) {
           unidad.disabled = 'DISABLED'
@@ -269,7 +291,7 @@ let returnRouter = function(io) {
         
         
         let suc = await(db.getSucursales())
-
+        db.disconnect()
         suc = suc.map(function(s) {
           s.selected = ''
           if(s.id_sucursal == unidad.sucursal)
@@ -294,7 +316,7 @@ let returnRouter = function(io) {
       let texto = req.body.texto
       let db = new Db()
       let unidades = await(db.getUnidadesSuc(` WHERE estado = 1 AND sucursal != 5 AND ${criterio} LIKE '${texto}%'`, null))
-    
+      db.disconnect()
         let resultado = {
           user: req.user,
           unidades: unidades

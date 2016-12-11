@@ -35,6 +35,7 @@ router.use(formData.stream());
 router.use(formData.union());
 
   let clientes = await(db.getClientes(null,' ORDER BY apellido, nombre'))
+  db.disconnect()
   
       res.render('clientes-listar', {titulo: 'Formulario de Clientes', datos:{clientes: clientes, user: req.user}})
 
@@ -65,6 +66,7 @@ router.post('/save', async(function(req, res) {
       }
 
       res.send(await(db.saveCliente(cliente)))
+      db.disconnect()
      //res.send({ok: 'OK'})
       
     }))

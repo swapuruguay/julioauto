@@ -123,12 +123,18 @@ let fcli = document.getElementById('form-clientes')
 if(funi) {
   funi.addEventListener("submit", function(event){
     event.preventDefault()
+    
     let formData = new FormData(funi)
     superagent
     .post('/unidades/save')
     .send(formData)
     .end(function(err, res){
-      clearForm(funi)
+      if(res.text == 'Ok') {
+        clearForm(funi)
+      } else {
+        document.getElementById('errores').innerHTML = res.text
+      }
+      
     });
 
     
@@ -144,8 +150,12 @@ if(fcli) {
     .post('/clientes/save')
     .send(formData)
     .end(function(err, res){
+      if(res.text == 'Ok') {
       clearForm(fcli)
-    });
+      } else {
+        document.getElementById('errores').innerHTML = res.text
+      }
+    })
 
     
   });

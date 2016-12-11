@@ -24,6 +24,17 @@ class Bd {
       return Promise.resolve(setup())
     }
 
+    disconnect() {
+        let connection = this.con
+       let setup = co.wrap(function *() {
+         //  console.log(mysql)
+           let conn = yield  connection
+           conn.destroy()
+           return conn
+       }) 
+      return Promise.resolve(setup())
+    }
+
     getUnidad(id) {
         let connection = this.con
         let task = co.wrap(function * () {
@@ -225,13 +236,14 @@ class Bd {
                 sql = `UPDATE unidades SET ? WHERE id_unidad = ${unidad.id_unidad}`
             }
             
-            let result = yield conn.query(sql, unidad)
-
-            if (!result) {
-                return Promise.reject(new Error(`not found`))
+            let result
+            try {
+                result = yield conn.query(sql, unidad)
+                return Promise.resolve(result)
+            } catch(err) {
+                //console.log(err)
+                return Promise.reject(new Error(err.code))
             }
-
-            return Promise.resolve(result)
         })
 
         return Promise.resolve(task())     
