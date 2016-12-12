@@ -90,6 +90,7 @@ let returnRouter = function(io) {
         id_usuario_fk: req.user.id_usuario,
         fecha: fecha
       }
+      
 
       let un = {
         id_unidad: idUnidad,
@@ -97,8 +98,8 @@ let returnRouter = function(io) {
       }
 
       await(db.saveUnidad(un))
+      await(db.saveTraspaso(datos))
 
-      let result = await(db.saveTraspaso(datos))
       db.disconnect()
 
         res.render('unidades-ok-traspaso', {datos: datosVista})
