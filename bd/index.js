@@ -163,7 +163,7 @@ class Bd {
 
             return Promise.resolve(result)
         })
-      user: config.user,
+    
 
         return Promise.resolve(task())     
     }
