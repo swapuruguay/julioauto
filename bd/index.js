@@ -26,9 +26,9 @@ class Bd {
 
     disconnect() {
         let connection = this.con
-       let setup = co.wrap(function *() {
+       let setup = co.wrap(function * () {
          //  console.log(mysql)
-           let conn = yield  connection
+           let conn = yield connection
            conn.destroy()
            return conn
        }) 
@@ -163,6 +163,7 @@ class Bd {
 
             return Promise.resolve(result)
         })
+      user: config.user,
 
         return Promise.resolve(task())     
     }

@@ -81,7 +81,7 @@ router.post('/', async(function(req, res) {
       let texto = req.body.texto
       let db = new Db()
       let clientes = await(db.getClientes(` WHERE ${criterio} LIKE '${texto}%'`, null))
-    
+      db.disconnect()
         let resultado = {
           clientes: clientes
         }
@@ -93,6 +93,7 @@ router.get('/:id', ensureAuth,  async(function (req, res) {
   let db = new Db()
   let id = req.params.id
   let row = await(db.getCliente(id))[0]
+  db.disconnect()
   let cliente = {
     id_cliente: id,
     nombre: row.nombre,

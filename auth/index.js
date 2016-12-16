@@ -32,7 +32,7 @@ exports.strategy = new LocalStrategy( async(function(username, password, done) {
         }
         
     } else {
-        console.log('VA mal')
+        
             return done(null, false, {message: 'Usuario o Password Incorrecto'})
     }
   } else {
