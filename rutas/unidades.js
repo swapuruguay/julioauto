@@ -20,10 +20,20 @@ router.use(formData.union());
 
 function ensureAuth(req, res, next) {
     if(req.isAuthenticated()) {
+      if(req.user.perfil == 1) {
+        req.user.habilitado = true
+      }
 
         return next()
     }
     res.redirect('/login')
+}
+
+function admin(req, res, next) {
+    if(req.user.perfil == 1) {
+      return next()
+    }
+    res.redirect('/')
 }
 
 let returnRouter = function(io) {
@@ -64,7 +74,38 @@ let returnRouter = function(io) {
       res.render('unidades', {titulo: 'Formulario de Unidades',datos: datosVista})
     }))
 
+    router.get('/retorno', ensureAuth, admin, async(function(req, res) {
+      let db = new Db()
+      let sucursales = await(db.getSucursales())
+      db.disconnect() 
+      sucursales = sucursales.filter(function(s) {
+        return s.id_sucursal != 5
+      })
+      datosVista.sucursales = sucursales
+      res.render('unidades-retorno', {titulo: 'Formulario de Unidades',datos: datosVista})
     
+  }))
+
+    router.post('/retornables', async(function(req, res) {
+      let db = new Db()
+      let nro = req.body.nro
+     //console.log(nro)
+      let uni = await(db.getUnidades(` WHERE sucursal = 5 AND nro_motor = ${nro}`))[0]
+      db.disconnect()
+      res.send({uni: uni})
+    }))
+    
+    router.post('/retornar', ensureAuth, admin, async(function(req, res) {
+      let db = new Db()
+      let unidad = {
+        id_unidad: req.body.id,
+        sucursal: req.body.suc 
+      }
+      await(db.saveUnidad(unidad))
+      db.disconnect()
+      res.send('Retornado con éxito')
+      
+    }))
 
     router.get('/listar', ensureAuth, async(function(req, res) {
       let db = new Db()

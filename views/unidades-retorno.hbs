@@ -1,0 +1,81 @@
+<div class="row">
+<div class="col col-sm-12">
+<form class="form-inline">
+          
+    <div class="form-group">
+      <label for="nro_motor">Nro. Motor</label>
+        <input type="text" class="form-control" id="nro_motor" name="nro_motor">
+               
+        
+      </div>
+      
+      <input type="button" id="find-traspasos" value="Buscar" class="btn btn-default" onclick="buscar()">  
+       <div class="form-group">
+      <label for="destino">Destino</label>
+        <select class="form-control" id="destino" name="destino">
+          {{#each datos.sucursales}}
+          <option value="{{id_sucursal}}">{{nombre}}</option>
+          {{/each}}
+        </select>       
+        
+      </div>
+</form>
+</div>
+
+</div>
+
+<p>&nbsp;</p>
+<div id="resultado">
+
+</div>
+
+<script>  
+  function buscar() {
+    
+    let nro = document.getElementById('nro_motor').value
+    superagent
+      .post('/unidades/retornables')
+      .set('Accept', 'application/json')
+      .send({nro: nro})
+      .end(function(err, res){
+        //console.log(res.body.uni)
+          var obj = $('#resultado')
+          var elemento = '<table class="table table-striped table-condensed">'
+          elemento += `<tr>
+                <th>Id.Unidad</th>
+                <th>Marca</th>
+                <th>Modelo</th>
+                <th>Matrícula</th>
+                <th>Nro.Motor</th>
+                
+                </tr>`
+                                
+         if(res.body.uni) {
+          elemento += `<tr><td>${res.body.uni.id_unidad}</td><td>${res.body.uni.marca}</td><td>${res.body.uni.modelo}</td>
+          
+          <td>${res.body.uni.matricula}</td><td><button class="btn btn-warning" onclick="retornar()">Retornar</button></td></tr>`
+        
+              elemento += `</table>`
+         
+              elemento+= `<input type="hidden" id="id" value="${res.body.uni.id_unidad}">`
+               } else {
+                  elemento += `</table>`
+               }
+        obj.html(elemento)
+      })
+  }
+
+  function retornar() {
+   let suc = document.getElementById('destino').value
+   let id = document.getElementById('id').value
+   let result = document.getElementById('resultado')
+   superagent
+    .post('/unidades/retornar')
+    .send({id: id, suc: suc})
+    .end(function(err, res) {
+      result.innerHTML = res.text
+    })
+   
+  }
+</script>
+

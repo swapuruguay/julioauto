@@ -44,10 +44,20 @@ app.use(express.static(__dirname + '/public'))
 
 function ensureAuth(req, res, next) {
     if(req.isAuthenticated()) {
-
+        if(req.user.perfil == 1) {
+        req.user.habilitado = true
+      }
         return next()
     }
     res.redirect('/login')
+}
+
+function admin() {
+    if(req.user.perfil == 1) {
+
+        return next()
+    }
+    res.redirect('/')
 }
 
 app.use('/unidades', un)
@@ -57,6 +67,8 @@ app.use('/senias', senias)
 app.get('/', ensureAuth, function(req, res) {
   res.render('index', { titulo: "Julio Automóviles", datos: {user: req.user}})
 })
+
+
 
 app.get('/login', function(req, res) {
     res.locals.errors = req.flash();

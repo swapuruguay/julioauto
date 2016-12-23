@@ -52,6 +52,11 @@
       <li>
          <a href="/unidades/pendientes">Pendientes <span class="badge" id="pendientes"></span></a>
        </li>
+       {{#if datos.user.habilitado}}
+          <li>
+            <a href="/unidades/retorno">Retorno Unidades</a>
+          </li>
+       {{/if}}
       
     </ul>
      <span style="display:none" id="socket" data-suc="{{ datos.user.sucursal }}" ></span>
