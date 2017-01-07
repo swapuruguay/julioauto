@@ -163,6 +163,7 @@ let returnRouter = function(io) {
       let db = new Db()
       //console.log(req.body)
       let nuevo = ((req.body.nuevo == 'on') ? 1 : 0)
+      let estado = ((req.body.vendido == 'on')? 3 : 1)
       let id = (req.body.id == '')? 0 : req.body.id
       let unidad = {
         id_unidad: id,
@@ -177,11 +178,17 @@ let returnRouter = function(io) {
         padron: req.body.padron,
         precio: req.body.precio,
         combustible: req.body.combustible,
-        estado: 1,
+        estado: estado,
         tipo: req.body.tipo
       }
       try {
          await(db.saveUnidad(unidad)) 
+         if(estado == 3) {
+           
+           let fecha = new Date().toJSON().slice(0,10)
+           let vnt = {id_unidad_fk: id, id_sucursal_fk: req.user.sucursal, fecha: fecha }
+           await(db.saveVenta(vnt))
+         }
          db.disconnect()
          res.send('Ok')
       } catch(err) {

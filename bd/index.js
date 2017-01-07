@@ -250,6 +250,24 @@ class Bd {
         return Promise.resolve(task())     
     }
 
+    saveVenta(venta) {
+        let connection = this.con
+            let task = co.wrap(function * () {
+                let conn = yield connection
+                let sql = 'INSERT INTO ventas SET ? '
+                let result
+                try {
+                    result = yield conn.query(sql, venta)
+                    return Promise.resolve(result)
+                } catch (err) {
+                    console.log(err)
+                    return Promise.reject(new Error(err.code))
+                }
+                
+            })
+            return Promise.resolve(task())
+    }   
+
     saveTraspaso(datos) {
       let connection = this.con
         let task = co.wrap(function * () {
