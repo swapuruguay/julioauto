@@ -90,7 +90,7 @@ let returnRouter = function(io) {
       let db = new Db()
       let nro = req.body.nro
      //console.log(nro)
-      let uni = await(db.getUnidades(` WHERE sucursal = 5 AND nro_motor = ${nro}`))[0]
+      let uni = await(db.getUnidades(` WHERE sucursal = 5 AND nro_motor = '${nro}'`))[0]
       db.disconnect()
       res.send({uni: uni})
     }))
