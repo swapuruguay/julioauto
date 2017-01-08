@@ -272,7 +272,7 @@ let returnRouter = function(io) {
       db.disconnect()
       sucursales = sucursales.filter(function(s) {
         
-        return s.id_sucursal != req.user.sucursal
+        return s.id_sucursal != req.user.sucursal && s.id_sucursal != 5
       })
       let fecha = new Date()
       datosVista.suc = sucursal
