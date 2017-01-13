@@ -242,7 +242,7 @@ class Bd {
                 result = yield conn.query(sql, unidad)
                 return Promise.resolve(result)
             } catch(err) {
-                //console.log(err)
+                console.log(err)
                 return Promise.reject(new Error(err.code))
             }
         })
@@ -323,6 +323,34 @@ class Bd {
             return Promise.resolve(result)
         })
 
+        return Promise.resolve(task())    
+    }
+
+    getSenias() {
+        let connection = this.con
+        let task = co.wrap(function * () {
+            let conn = yield connection
+            let list = conn.query('SELECT * FROM senias')
+            if(!list) {
+                return Promise.reject(new Error('No existen señas'))
+            }
+            return Promise.resolve(list)
+        })
+        return Promise.resolve(task())
+    }
+
+    saveSenia(senia) {
+        let connection = this.con
+        let task = co.wrap(function * () {
+            let conn = yield connection
+            let sql = 'INSERT INTO senias SET ? '
+            let result = conn.query(sql, senia)
+            if(!result) {
+                return Promise.reject(new Error('No existen señas'))
+            }
+
+            return Promise.resolve(result)
+        })
         return Promise.resolve(task())    
     }
  }
