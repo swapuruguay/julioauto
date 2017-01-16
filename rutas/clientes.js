@@ -5,13 +5,13 @@ const async = require('asyncawait/async')
 const await = require('asyncawait/await')
 const formData = require("express-form-data")
 
-// parsing data with connect-multiparty. Result set on req.body and req.files 
+// parsing data with connect-multiparty. Result set on req.body and req.files
 router.use(formData.parse());
-// clear all empty files 
+// clear all empty files
 router.use(formData.format());
-// change file objects to node stream.Readable  
+// change file objects to node stream.Readable
 router.use(formData.stream());
-// union body and files 
+// union body and files
 router.use(formData.union());
 
 function ensureAuth(req, res, next) {
@@ -25,21 +25,21 @@ function ensureAuth(req, res, next) {
 
 
 router.get('/listar', ensureAuth, async(function(req, res) {
-  let db = new Db()// parsing data with connect-multiparty. Result set on req.body and req.files 
+  let db = new Db()// parsing data with connect-multiparty. Result set on req.body and req.files
 router.use(formData.parse());
-// clear all empty files 
+// clear all empty files
 router.use(formData.format());
-// change file objects to node stream.Readable  
+// change file objects to node stream.Readable
 router.use(formData.stream());
-// union body and files 
+// union body and files
 router.use(formData.union());
 
   let clientes = await(db.getClientes(null,' ORDER BY apellido, nombre'))
   db.disconnect()
-  
+
       res.render('clientes-listar', {titulo: 'Formulario de Clientes', datos:{clientes: clientes, user: req.user}})
 
-   
+
 
 }))
 
@@ -68,7 +68,7 @@ router.post('/save', async(function(req, res) {
       res.send(await(db.saveCliente(cliente)))
       db.disconnect()
      //res.send({ok: 'OK'})
-      
+
     }))
 
 
@@ -86,8 +86,9 @@ router.post('/', async(function(req, res) {
           clientes: clientes
         }
         res.send({res: resultado})
-    
+
     }))
+    
 
 router.get('/:id', ensureAuth,  async(function (req, res) {
   let db = new Db()

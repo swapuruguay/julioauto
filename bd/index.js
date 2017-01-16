@@ -7,7 +7,7 @@ class Bd {
     constructor() {
         this.connect()
     }
-    
+
     connect() {
        let datos = {
            host: config.host,
@@ -20,7 +20,7 @@ class Bd {
        let setup = co.wrap(function *() {
            let conn = yield connection
            return conn
-       }) 
+       })
       return Promise.resolve(setup())
     }
 
@@ -31,7 +31,7 @@ class Bd {
            let conn = yield connection
            conn.destroy()
            return conn
-       }) 
+       })
       return Promise.resolve(setup())
     }
 
@@ -49,18 +49,12 @@ class Bd {
         })
 
         return Promise.resolve(task())
-     
+
     }
 
     getUnidades(where, order) {
-        let orden = '', cond = ''
-        if(where) {
-            cond = where
-        }
-
-        if(order) {
-            orden = order
-        }
+        let orden = order || ''
+        let cond = where || ''
 
         let connection = this.con
         let task = co.wrap(function * () {
@@ -74,7 +68,7 @@ class Bd {
             return Promise.resolve(unidades)
         })
 
-        return Promise.resolve(task()) 
+        return Promise.resolve(task())
       }
 
       getUnidadesSuc(where, order) {
@@ -99,9 +93,9 @@ class Bd {
             return Promise.resolve(unidades)
         })
 
-        return Promise.resolve(task())   
+        return Promise.resolve(task())
       }
-    
+
 
     getCliente(id) {
       let connection = this.con
@@ -141,7 +135,7 @@ class Bd {
             return Promise.resolve(clientes)
         })
 
-        return Promise.resolve(task()) 
+        return Promise.resolve(task())
       }
 
       saveCliente(cliente) {
@@ -154,7 +148,7 @@ class Bd {
             } else {
                 sql = `UPDATE clientes SET ? WHERE id_cliente = ${cliente.id_cliente}`
             }
-            
+
             let result = yield conn.query(sql, cliente)
 
             if (!result) {
@@ -163,11 +157,11 @@ class Bd {
 
             return Promise.resolve(result)
         })
-    
 
-        return Promise.resolve(task())     
+
+        return Promise.resolve(task())
     }
-    
+
 
     getSucursales() {
        let connection = this.con
@@ -182,7 +176,7 @@ class Bd {
             return Promise.resolve(sucursales)
         })
 
-        return Promise.resolve(task()) 
+        return Promise.resolve(task())
     }
 
     getSucursal(id) {
@@ -198,7 +192,7 @@ class Bd {
             return Promise.resolve(sucursal)
         })
 
-        return Promise.resolve(task()) 
+        return Promise.resolve(task())
     }
 
     getUser(where, order) {
@@ -223,7 +217,7 @@ class Bd {
             return Promise.resolve(user)
         })
 
-        return Promise.resolve(task())    
+        return Promise.resolve(task())
     }
 
     saveUnidad(unidad) {
@@ -236,7 +230,7 @@ class Bd {
             } else {
                 sql = `UPDATE unidades SET ? WHERE id_unidad = ${unidad.id_unidad}`
             }
-            
+
             let result
             try {
                 result = yield conn.query(sql, unidad)
@@ -247,7 +241,7 @@ class Bd {
             }
         })
 
-        return Promise.resolve(task())     
+        return Promise.resolve(task())
     }
 
     saveVenta(venta) {
@@ -263,10 +257,10 @@ class Bd {
                     console.log(err)
                     return Promise.reject(new Error(err.code))
                 }
-                
+
             })
             return Promise.resolve(task())
-    }   
+    }
 
     saveTraspaso(datos) {
       let connection = this.con
@@ -274,7 +268,7 @@ class Bd {
             let conn = yield connection
             let sql;
             sql = 'INSERT INTO traspasos SET ? '
-                       
+
             let result = yield conn.query(sql, datos)
 
             if (!result) {
@@ -284,16 +278,16 @@ class Bd {
             return Promise.resolve(result)
         })
 
-        return Promise.resolve(task())     
+        return Promise.resolve(task())
     }
 
     getPendientes(idSucursal) {
-       
+
 
         let connection = this.con
         let task = co.wrap(function * () {
             let conn = yield connection
-            let user = yield conn.query(`SELECT traspasos.id_unidad_fk, unidades.marca, unidades.modelo, sucursales.nombre FROM traspasos 
+            let user = yield conn.query(`SELECT traspasos.id_unidad_fk, unidades.marca, unidades.modelo, sucursales.nombre FROM traspasos
             JOIN unidades ON unidades.id_unidad = traspasos.id_unidad_fk
             JOIN sucursales ON traspasos.sucursal_origen=sucursales.id_sucursal WHERE sucursal_destino = ${idSucursal}`)
 
@@ -304,7 +298,7 @@ class Bd {
             return Promise.resolve(user)
         })
 
-        return Promise.resolve(task())    
+        return Promise.resolve(task())
     }
 
     delPendiente(idUnidad) {
@@ -313,7 +307,7 @@ class Bd {
             let conn = yield connection
             let sql;
             sql = `DELETE FROM traspasos WHERE id_unidad_fk = ${idUnidad}`
-                       
+
             let result = yield conn.query(sql)
 
             if (!result) {
@@ -323,14 +317,27 @@ class Bd {
             return Promise.resolve(result)
         })
 
-        return Promise.resolve(task())    
+        return Promise.resolve(task())
     }
 
     getSenias() {
         let connection = this.con
         let task = co.wrap(function * () {
             let conn = yield connection
-            let list = conn.query('SELECT * FROM senias')
+            let list = conn.query('SELECT senias.* FROM senias JOIN unidades ON senias.id_unidad_fk = unidades.id_unidad WHERE unidades.estado = 2')
+            if(!list) {
+                return Promise.reject(new Error('No existen señas'))
+            }
+            return Promise.resolve(list)
+        })
+        return Promise.resolve(task())
+    }
+
+    getSenia(id) {
+        let connection = this.con
+        let task = co.wrap(function * () {
+            let conn = yield connection
+            let list = conn.query(`SELECT senias.* FROM senias JOIN unidades ON senias.id_unidad_fk = unidades.id_unidad WHERE id_senia = ${id} and unidades.estado = 2`)
             if(!list) {
                 return Promise.reject(new Error('No existen señas'))
             }
@@ -351,7 +358,7 @@ class Bd {
 
             return Promise.resolve(result)
         })
-        return Promise.resolve(task())    
+        return Promise.resolve(task())
     }
  }
 

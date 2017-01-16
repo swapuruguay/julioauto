@@ -1,6 +1,6 @@
 <div class="row">
 <div class="col col-sm-12">
-
+  <h1>{{titulo}}</h1>
 </div>
 
 </div>
@@ -14,15 +14,79 @@
       <th>Marca</th>
       <th>Modelo</th>
       <th>Color</th>
+      <th>
+        Asignar Seña
+      </th>
+      <th>
+        Detalle
+      </th>
     </tr>
     {{#each senias}}
         <tr>
           <td>{{cliente.nombre}} {{cliente.apellido}}</td>
-          <td>{{sucursal}}</td>
+          <td>{{sucursal.nombre}}</td>
           <td>{{unidad.marca}}</td>
           <td>{{unidad.modelo}}</td>
           <td>{{unidad.color}}</td>
+          <td><button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#myModal" data-whatever="{{unidad.nro_motor}}">Asignar</button></td>
+          <td>
+            <a href='/senias/{{id_senia}}' class="btn btn-info btn-sm">Ver Detalle</a>
+          </td>
         </tr>
     {{/each}}
   </table>
+
 </div>
+
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModal">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Asignar Vehículo a Seña</h4>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="form-group">
+            <label for="recipient-name" class="control-label">Nro. de motor provisorio:</label>
+            <input type="text" class="form-control ficticio" id="ficticio" readonly="true">
+          </div>
+          <div class="form-group">
+            <label for="message-text" class="control-label">Nro de motor real:</label>
+            <input type="text" class="form-control" id="motor">
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+        <button type="button" id="btn" class="btn btn-primary">Guardar Cambios</button>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+  $('#myModal').on('show.bs.modal', function (event) {
+  var button = $(event.relatedTarget) // Button that triggered the modal
+  var recipient = button.data('whatever') // Extract info from data-* attributes
+   // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
+  // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
+  var modal = $(this)
+  //modal.find('.modal-title').text('New message to ' + recipient)
+  modal.find('.modal-body .ficticio').val(recipient)
+})
+
+  let btn = $('#btn')
+  btn.click(function() {
+    let motor = $('#motor')
+    let ficticio = $('#ficticio').val()
+    $('#myModal').modal('hide')
+    superagent
+      .post('/senias/asignar')
+      .send({old: ficticio, nromotor: motor.val()})
+      .end(function(err, res) {
+        $('#myModal').modal('hide')
+        window.location.replace('/senias/listar')
+      })
+  })
+</script>

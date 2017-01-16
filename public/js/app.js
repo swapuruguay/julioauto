@@ -14,7 +14,7 @@ $('#find-unidad').click(function(evt) {
                 <th>Año</th>
                 <th>Sucursal</th>
                 <th>Traspasar</th></tr>`
-                                
+
       res.res.unidades.forEach(function(un) {
         elemento += `<tr><td><a href="/unidades/${un.id_unidad}">${un.id_unidad}</a></td><td>${un.marca}</td><td>${un.modelo}</td>
         <td>${un.matricula}</td><td>${un.anio}</td><td>${un.nombre}</td>`
@@ -28,7 +28,7 @@ $('#find-unidad').click(function(evt) {
       elemento += `</table>`
       obj.html(elemento)
   }, 'json')
-        
+
 })
 
 $('#find-cliente').click(function(evt) {
@@ -46,21 +46,21 @@ $('#find-cliente').click(function(evt) {
                 <th>Documento</th>
                 <th>Celular </th>
                 </tr>`
-                                
+
       res.res.clientes.forEach(function(cli) {
         elemento += `<tr><td><a href="/clientes/${cli.id_cliente}">${cli.id_cliente}</a></td><td>${cli.nombre}</td><td>${cli.apellido}</td>
         <td>${cli.documento}</td><td>${cli.celular}</td></tr>`
-        
+
       })
       elemento += `</table>`
       obj.html(elemento)
   }, 'json')
-        
+
 })
 
 function mostrar() {
   let oculto = document.getElementById('oculto')
-    
+
   if(document.getElementById('criterio').value == 'sucursal') {
    // console.log('Aca estoy')
     oculto.classList.remove('oculto')
@@ -123,7 +123,7 @@ let fcli = document.getElementById('form-clientes')
 if(funi) {
   funi.addEventListener("submit", function(event){
     event.preventDefault()
-    
+
     let formData = new FormData(funi)
     superagent
     .post('/unidades/save')
@@ -134,17 +134,17 @@ if(funi) {
       } else {
         document.getElementById('errores').innerHTML = res.text
       }
-      
+
     });
 
-    
+
   });
 }
 
 if(fcli) {
   fcli.addEventListener("submit", function(event){
     event.preventDefault()
-    
+
     let formData = new FormData(fcli)
     superagent
     .post('/clientes/save')
@@ -157,10 +157,6 @@ if(fcli) {
       }
     })
 
-    
+
   });
 }
-
-
-
-
