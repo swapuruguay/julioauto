@@ -80,7 +80,7 @@ router.post('/new', co.wrap(function * (req, res) {
 router.post('/asignar', co.wrap(function * (req, res) {
   let db = new Db()
   let unidad = (yield db.getUnidades(` WHERE nro_motor = '${req.body.old}'`))[0]
-  unidad.nro_motor = req.body.nromotor,
+  unidad.nro_motor = req.body.nromotor.toUpperCase(),
   unidad.estado= 3
   yield db.saveUnidad(unidad)
   res.send('ok')
