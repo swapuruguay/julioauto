@@ -2,7 +2,7 @@
     <h1>{{titulo}}</h1>
     <p>&nbsp;</p>
     <div class="row">
-     <form class="form-horizontal" id="nueva-senia" >
+     <form class="form-horizontal" id="nueva-senia">
        <div class="form-group">
          <label for="fecha" class="col-sm-2 control-label">Fecha</label>
          <div class="col-sm-2">
@@ -13,8 +13,9 @@
          <label for="cliente" class="col-sm-2 control-label">Cliente</label>
          <div class="col-sm-4">
            <input type="text" class="form-control" id="cliente" name="cliente">
-           <div id="res" class="alert-danger"></div>
+            <div id="res" class="alert-danger"></div>
          </div>
+
        </div>
        <div class="form-group">
          <label for="importe" class="col-sm-2 control-label">Importe</label>
@@ -35,9 +36,9 @@
          <label for="negocio" class="col-sm-2 control-label">Negocio</label>
          <div class="col-sm-4">
            <select name="negocio" id="negocio" class="form-control">
-             <option value="C">Contado</option>
-             <option value="F">Financiado</option>
-             <option value="L">Leasing</option>
+            <option value="C">Contado</option>
+            <option value="F">Financiado</option>
+            <option value="L">Leasing</option>
            </select>
          </div>
        </div>
@@ -62,7 +63,7 @@
        <div class="form-group">
        <label for="precio" class="col-sm-2 control-label">Precio</label>
        <div class="col-sm-4">
-         <input type="text" class="form-control" id="precio" name="precio">
+         <input type="text" class="form-control" id="precio" name="precio" required title="campo requerido">
        </div>
      </div>
        <div class="form-group">
@@ -99,103 +100,104 @@
       <div class="form-group">
       <label for="observaciones" class="col-sm-2 control-label">Observaciones</label>
       <div class="col-sm-4">
-        <textarea class="form-control" id="observaciones" name="observaciones"></textarea>
+        <textarea class="form-control" id="observaciones" name="observaciones">{{datos.senia.observaciones}}</textarea>
       </div>
     </div>
+
        <input type="submit" class="btn btn-default" value="Guardar">
      </form>
     </div>
   </div>
-  <script>
-    let cli = document.getElementById('cliente')
-    cli.addEventListener('keyup', function(evt) {
-      superagent
-      .post('/clientes/')
-      .send({criterio: 'apellido', texto: cli.value})
-      .end(function(err, res){
-      //  console.log(res.body.res.clientes)
+<script>
+let cli = document.getElementById('cliente')
+cli.addEventListener('keyup', function(evt) {
+  superagent
+  .post('/clientes/')
+  .send({criterio: 'apellido', texto: cli.value})
+  .end(function(err, res){
+  //  console.log(res.body.res.clientes)
 
-        let text = ''
-        let divres = document.getElementById('res')
-        divres.innerHTML = ''
-        divres.style.display = 'block'
-        res.body.res.clientes.forEach(function(el) {
-          var parrafo = document.createElement('p')
-          var texto = document.createTextNode(el.nombre + ' ' + el.apellido)
-          parrafo.appendChild(texto)
-          parrafo.id = el.id_cliente
-          parrafo.style.cursor = 'pointer'
-          parrafo.addEventListener('click', assign)
+    let text = ''
+    let divres = document.getElementById('res')
+    divres.innerHTML = ''
+    divres.style.display = 'block'
+    res.body.res.clientes.forEach(function(el) {
+      var parrafo = document.createElement('p')
+      var texto = document.createTextNode(el.nombre + ' ' + el.apellido)
+      parrafo.appendChild(texto)
+      parrafo.id = el.id_cliente
+      parrafo.style.cursor = 'pointer'
+      parrafo.addEventListener('click', assign)
 
-          document.getElementById('res').appendChild(parrafo)
-      })
-      })
+      document.getElementById('res').appendChild(parrafo)
   })
-
-  function assign() {
-    let texto = this.innerHTML
-    let cli = document.getElementById('cliente')
-    cli.value = texto
-    cli.dataset.id = this.id
-    let res = document.getElementById('res')
-    res.innerHTML = ''
-    res.style.display = 'none'
-  }
-
-  let formulario = document.getElementById('nueva-senia')
-  formulario.addEventListener('submit', function(evt) {
-    evt.preventDefault()
-    let formData = new FormData(formulario)
-    let id = document.getElementById('cliente').dataset.id
-    formData.append("id", id)
-    superagent
-      .post('/senias/new')
-      .send(formData)
-      .end(function(err, res){
-      //  if(res.text == 'Ok') {
-          clearForm(formulario)
-    //    } else {
-      //    document.getElementById('errores').innerHTML = res.text
-    //    }
-
-      })
   })
+})
 
-  function clearForm(myFormElement) {
+function assign() {
+let texto = this.innerHTML
+let cli = document.getElementById('cliente')
+cli.value = texto
+cli.dataset.id = this.id
+let res = document.getElementById('res')
+res.innerHTML = ''
+res.style.display = 'none'
+}
 
-    var elements = myFormElement.elements;
+let formulario = document.getElementById('nueva-senia')
+formulario.addEventListener('submit', function(evt) {
+evt.preventDefault()
+let formData = new FormData(formulario)
+let id = document.getElementById('cliente').dataset.id
+formData.append("id", id)
+superagent
+  .post('/senias/new')
+  .send(formData)
+  .end(function(err, res){
+  //  if(res.text == 'Ok') {
+      clearForm(formulario)
+//    } else {
+  //    document.getElementById('errores').innerHTML = res.text
+//    }
 
-    myFormElement.reset();
+  })
+})
 
-    for(i=0; i<elements.length; i++) {
+function clearForm(myFormElement) {
 
-    field_type = elements[i].type.toLowerCase();
+var elements = myFormElement.elements;
 
-    switch(field_type) {
+myFormElement.reset();
 
-      case "text":
-      case "password":
-      case "textarea":
-      case "hidden":
+for(i=0; i<elements.length; i++) {
 
-        elements[i].value = "";
-        break;
+field_type = elements[i].type.toLowerCase();
 
-      case "radio":
-      case "checkbox":
-          if (elements[i].checked) {
-            elements[i].checked = false;
-        }
-        break;
+switch(field_type) {
 
-      case "select-one":
-      case "select-multi":
-              //    elements[i].selectedIndex = 0;
-        break;
+  case "text":
+  case "password":
+  case "textarea":
+        case "hidden":
 
-      default:
-        break;
+    elements[i].value = "";
+    break;
+
+  case "radio":
+  case "checkbox":
+      if (elements[i].checked) {
+        elements[i].checked = false;
     }
-      }
+    break;
+
+  case "select-one":
+  case "select-multi":
+          //    elements[i].selectedIndex = 0;
+    break;
+
+  default:
+    break;
+}
   }
-  </script>
+}
+</script>

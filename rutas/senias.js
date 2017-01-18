@@ -53,7 +53,7 @@ router.post('/new', co.wrap(function * (req, res) {
         nuevo: nuevo,
         tipo: req.body.tipo,
         precio: req.body.precio,
-nro_motor: 'sen_'+req.user.sucursal+'_'+(fec.getMonth()+1)+fec.getFullYear()+Math.round(Math.random()*1000)
+        nro_motor: 'sen_'+req.user.sucursal+'_'+(fec.getMonth()+1)+fec.getFullYear()+Math.round(Math.random()*1000)
 
     }
 
@@ -71,7 +71,8 @@ nro_motor: 'sen_'+req.user.sucursal+'_'+(fec.getMonth()+1)+fec.getFullYear()+Mat
         fecha:  new Date().toJSON().slice(0,10)
     }
 
-    let rs = db.saveSenia(senia)
+    let rs = yield db.saveSenia(senia)
+    console.log(rs)
     db.disconnect()
     res.redirect('/senias/nueva')
 }))
