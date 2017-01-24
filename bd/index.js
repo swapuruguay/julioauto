@@ -360,6 +360,21 @@ class Bd {
         })
         return Promise.resolve(task())
     }
+
+    saveUnidadSenia(senia) {
+        let connection = this.con
+        let task = co.wrap(function * () {
+            let conn = yield connection
+            let sql = 'INSERT INTO unidades_senias SET ? '
+            let result = conn.query(sql, senia)
+            if(!result) {
+                return Promise.reject(new Error('No existen señas'))
+            }
+
+            return Promise.resolve(result)
+        })
+        return Promise.resolve(task())
+    }
  }
 
 module.exports = Bd

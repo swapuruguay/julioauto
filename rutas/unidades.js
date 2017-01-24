@@ -164,7 +164,13 @@ let returnRouter = function(io) {
       let db = new Db()
       //console.log(req.body)
       let nuevo = ((req.body.nuevo == 'on') ? 1 : 0)
-      let estado = ((req.body.vendido == 'on')? 3 : 1)
+      let estado
+      if(req.body.vendido) {
+        estado = ((req.body.vendido == 'on')? 3 : 1)
+      } else {
+        estado = 1
+      }
+      
       let id = (req.body.id == '')? 0 : req.body.id
       let unidad = {
         id_unidad: id,
@@ -183,7 +189,7 @@ let returnRouter = function(io) {
         tipo: req.body.tipo
       }
       try {
-         await(db.saveUnidad(unidad)) 
+         let result = await(db.saveUnidad(unidad)) 
          if(estado == 3) {
            
            let fecha = new Date().toJSON().slice(0,10)
@@ -191,7 +197,7 @@ let returnRouter = function(io) {
            await(db.saveVenta(vnt))
          }
          db.disconnect()
-         res.send('Ok')
+         res.send(result)
       } catch(err) {
         
         if(err.message == 'ER_DUP_ENTRY') {

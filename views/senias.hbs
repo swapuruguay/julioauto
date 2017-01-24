@@ -30,6 +30,7 @@
              <option value="E">Efectivo</option>
              <option value="U">Unidad</option>
            </select>
+           <input type="hidden" id="oculto" name="oculto">
          </div>
        </div>
        <div class="form-group">
@@ -104,8 +105,118 @@
       </div>
     </div>
 
-       <input type="submit" class="btn btn-default" value="Guardar">
+       <input id="btn-suc" type="submit" class="btn btn-default" data-nombre="{{datos.sucursal.nombre}}" data-domicilio="{{datos.sucursal.domicilio}}" data-telefono="{{datos.sucursal.telefono}}" value="Guardar">
      </form>
+     <script src="/js/jspdf.min.js"></script>
+     <script src="/js/nros.letras.js"></script>
+     
+    </div>
+  </div>
+  
+  <!-- Modal -->
+  <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModal">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title" id="myModalLabel">Unidad como seña</h4>
+        </div>
+        <form class="form-horizontal" id="unitoma">
+        <div class="modal-body">
+          
+
+            <input type="hidden" name="sucursal" id="sucursal" value="{{datos.user.sucursal}}">
+            <div class="form-group">
+              <label for="marca" class="col-sm-3 control-label">Marca</label>
+              <div class="col-sm-9">
+                <input type="hidden" id="id" name="id" value="">
+                <input type="text" class="form-control" id="marca" name="marca">
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="modelo" class="col-sm-3 control-label">Modelo</label>
+              <div class="col-sm-9">
+                <input type="text" class="form-control" id="modelo" name="modelo">
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="nromotor" class="col-sm-3 control-label">Nro. de motor</label>
+              <div class="col-sm-9">
+                <input type="text" class="form-control" id="nromotor" name="nromotor">
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="padron" class="col-sm-3 control-label">Padrón</label>
+              <div class="col-sm-9">
+                <input type="text" class="form-control" id="padron" name="padron">
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="matricula" class="col-sm-3 control-label">Matrícula</label>
+              <div class="col-sm-9">
+                <input type="text" class="form-control" id="matricula" name="matricula">
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="anio" class="col-sm-3 control-label">Año</label>
+              <div class="col-sm-9">
+                <input type="text" class="form-control" id="anio" name="anio">
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="precio" class="col-sm-3 control-label">Precio</label>
+              <div class="col-sm-9">
+                <input type="text" class="form-control" id="precio" name="precio">
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="color" class="col-sm-3 control-label">Color</label>
+              <div class="col-sm-9">
+                <input type="text" class="form-control" id="color" name="color">
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="tipo" class="col-sm-3 control-label">Tipo</label>
+              <div class="col-sm-9">
+                <select id="tipo" name="tipo" class="form-control">
+                  <option value="1">Auto</option>
+                  <option value="2">Camineta</option>
+                  <option value="3">Camión</option>
+                  <option value="4">Moto</option>
+                  <option value="5">Triciclo</option>
+                  <option value="6">Cuatriciclo</option>
+                </select>
+              </div>
+              </div>
+            <div class="form-group">
+              <label for="combustible" class="col-sm-3 control-label">Combustible</label>
+              <div class="col-sm-9">
+                <select id="combustible" name="combustible" class="form-control">
+                  <option value="N">Nafta</option>
+                  <option value="D">Diesel</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group">
+           <div class="col-sm-offset-2 col-sm-10">
+             <div class="checkbox">
+               <label>
+                 <input type="checkbox" id="nuevo" name="nuevo" > 0Km?
+               </label>
+             </div>
+           </div>
+
+         </div>
+
+          
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+          <button type="submit" id="btn" class="btn btn-primary">Guardar Cambios</button>
+
+        </div>
+        </form>
+      </div>
     </div>
   </div>
 <script>
@@ -125,6 +236,10 @@ cli.addEventListener('keyup', function(evt) {
       var parrafo = document.createElement('p')
       var texto = document.createTextNode(el.nombre + ' ' + el.apellido)
       parrafo.appendChild(texto)
+      parrafo.dataset.documento = el.documento
+      parrafo.dataset.domicilio = el.domicilio
+      parrafo.dataset.telefono = el.telefono
+      parrafo.dataset.nombre = el.nombre + ' ' + el.apellido
       parrafo.id = el.id_cliente
       parrafo.style.cursor = 'pointer'
       parrafo.addEventListener('click', assign)
@@ -134,11 +249,89 @@ cli.addEventListener('keyup', function(evt) {
   })
 })
 
+
+
+function imprimeRecibo() {
+  let meses = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'setiembre', 'octubre', 'noviembre', 'diciembre']
+  let cliente = {}
+  let elCliente = document.getElementById('cliente')
+  cliente.nombre = elCliente.dataset.nombre
+  cliente.documento = elCliente.dataset.documento
+  cliente.domicilio = elCliente.dataset.domicilio
+  cliente.telefono = elCliente.dataset.telefono
+  let sucu = document.getElementById('btn-suc')
+  let sucursal = {
+    nombre: sucu.dataset.nombre,
+    domicilio: sucu.dataset.domicilio,
+    telefono: sucu.dataset.telefono
+  }
+  
+  let date = new Date()
+  let fecha = date.getDate()+ ' de ' +meses[date.getMonth()] + ' de ' + date.getFullYear()
+  let importe = document.getElementById('importe').value
+  let unidad = {}
+  unidad.marca = document.getElementById('marca').value.toUpperCase()
+  unidad.modelo = document.getElementById('modelo').value.toUpperCase()
+  unidad.color = document.getElementById('color').value.toUpperCase()
+  let cerok = document.getElementById('nuevo')
+  let anio = '0KM'
+  if(!cerok.checked) {
+   anio = '---'
+  }
+  unidad.padron = '---'
+  unidad.matricula = '---'
+  unidad.anio = anio
+  
+  var doc = new jsPDF();
+  
+   /* console.log(res.columns)  
+    let columns = [{title: 'ID', dataKey: 'id'}, {title:'Nombre', dataKey: 'nombre'},{ title:'Apellido', dataKey:'apellido'}]
+    let rows = [{id: 1, nombre: 'Walter', apellido: 'Sosa'},
+                {id: 2, nombre: 'Fiorella', apellido: 'Sosa'}]
+    doc.autoTable(columns, rows, {
+    styles: {fillColor: [100, 255, 255]},
+    columnStyles: {
+        id: {fillColor: 0}
+    }});*/
+  
+  let medida = 150
+  let via = ['Cliente', 'Archivo']
+for(let i = 0; i < 2; i++) {
+  doc.setFontSize(8)
+  doc.setFontType('italic')
+  doc.setTextColor(0,0,255)
+  doc.text('Julio Automoviles', 10,10+medida*i)
+  doc.setTextColor(0,0,0)
+  doc.text(`${sucursal.domicilio} Telefax: ${sucursal.telefono}`, 10,15+medida*i)
+  doc.setFontSize(12)
+  doc.setFontType('bold')
+  doc.text('RECIBO DE SEÑA', 70,35+medida*i)
+  doc.setFontSize(10)
+  doc.setFontType('normal')
+  let texto = `En la ciudad de ${sucursal.nombre}, el día ${fecha}, se recibe del Sr/a. ${cliente.nombre} con 
+  CI: ${cliente.documento} domiciliado/a en ${cliente.domicilio} tel: ${cliente.telefono} la suma de dólares americanos ${NumeroALetras(importe)}
+  (U$S ${importe}) por un vehículo marca ${unidad.marca}, modelo ${unidad.modelo} año ${unidad.anio}, 
+  matrícula ${unidad.matricula}, padrón ${unidad.padron}, color: ${unidad.color}.
+
+  La compra deberá ser completada en un plazo máximo de 7 días a partir de hoy. Si el comprador no lo hiciera
+  perderá todo derecho al dinero entregado, sin nada que reclamar.`
+doc.text(texto, 10,45+medida*i)
+doc.text('POR AUTOMOTORA DEL PRADO',100,90+medida*i)
+doc.text(`Vía ${via[i]}`, 10,110+medida*i)
+}
+doc.line(10, 140, 200, 140)
+  doc.save('table.pdf');
+}
+
 function assign() {
 let texto = this.innerHTML
 let cli = document.getElementById('cliente')
 cli.value = texto
 cli.dataset.id = this.id
+cli.dataset.documento = this.dataset.documento
+cli.dataset.domicilio = this.dataset.domicilio
+cli.dataset.telefono = this.dataset.telefono
+cli.dataset.nombre = this.dataset.nombre
 let res = document.getElementById('res')
 res.innerHTML = ''
 res.style.display = 'none'
@@ -155,6 +348,7 @@ superagent
   .send(formData)
   .end(function(err, res){
   //  if(res.text == 'Ok') {
+      imprimeRecibo()
       clearForm(formulario)
 //    } else {
   //    document.getElementById('errores').innerHTML = res.text
@@ -162,6 +356,15 @@ superagent
 
   })
 })
+
+let btnModal =$('#entrega')
+btnModal.change(function() {
+  if(btnModal.val() == 'U') {
+
+    $('#myModal').modal('show')
+  }
+})
+
 
 function clearForm(myFormElement) {
 
@@ -200,4 +403,29 @@ switch(field_type) {
 }
   }
 }
+
+let fsen = document.getElementById('unitoma')
+
+fsen.addEventListener("submit", function(event){
+    event.preventDefault()
+
+    let formData = new FormData(fsen)
+    superagent
+    .post('/unidades/save')
+    .send(formData)
+    .end(function(err, res){
+      let idtoma = document.getElementById('oculto')
+      //console.log(res.body)
+      idtoma.value = res.body.insertId
+    //  if(res.text == 'Ok') {
+        clearForm(fsen)
+      //} else {
+      //  document.getElementById('errores').innerHTML = res.text
+     // }
+
+    });
+
+
+  });
+
 </script>

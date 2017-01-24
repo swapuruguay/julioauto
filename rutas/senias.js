@@ -25,11 +25,14 @@ function ensureAuth(req, res, next) {
     res.redirect('/login')
 }
 
-router.use(function (req, res, next) {
+router.use(co.wrap(function * (req, res, next) {
       datosVista = {}
+      let db = new Db()
+      datosVista.sucursal = (yield db.getSucursal(req.user.sucursal))[0]
+      db.disconnect()
       datosVista.user = req.user
       next();
-    });
+}));
 
 router.get('/nueva', ensureAuth, function(req, res) {
   var date = new Date()
@@ -72,7 +75,10 @@ router.post('/new', co.wrap(function * (req, res) {
     }
 
     let rs = yield db.saveSenia(senia)
-    console.log(rs)
+    if(senia.tipo == 'U') {
+        yield db.saveUnidadSenia({id_unidad_fk: req.body.oculto, id_senia_fk: rs.insertId})
+    }
+   // console.log(rs)
     db.disconnect()
     res.redirect('/senias/nueva')
 }))
