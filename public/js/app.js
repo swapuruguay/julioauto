@@ -151,11 +151,11 @@ if(fcli) {
     .post('/clientes/save')
     .send(formData)
     .end(function(err, res){
-      if(res.text == 'Ok') {
+      //if(res.text == 'Ok') {
       clearForm(fcli)
-      } else {
-        document.getElementById('errores').innerHTML = res.text
-      }
+      //} else {
+       // document.getElementById('errores').innerHTML = res.text
+     // }
     })
 
 
