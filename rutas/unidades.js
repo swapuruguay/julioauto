@@ -168,7 +168,7 @@ let returnRouter = function(io) {
       if(req.body.vendido) {
         estado = ((req.body.vendido == 'on')? 3 : 1)
       } else {
-        estado = 1
+        estado = 5
       }
       
       let id = (req.body.id == '')? 0 : req.body.id

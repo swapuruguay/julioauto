@@ -25,7 +25,7 @@ function ensureAuth(req, res, next) {
     res.redirect('/login')
 }
 
-router.use(co.wrap(function * (req, res, next) {
+router.use(ensureAuth,co.wrap(function * (req, res, next) {
       datosVista = {}
       let db = new Db()
       datosVista.sucursal = (yield db.getSucursal(req.user.sucursal))[0]
@@ -83,7 +83,7 @@ router.post('/new', co.wrap(function * (req, res) {
     res.redirect('/senias/nueva')
 }))
 
-router.post('/asignar', co.wrap(function * (req, res) {
+router.post('/asignar', ensureAuth, co.wrap(function * (req, res) {
   let db = new Db()
   let unidad = (yield db.getUnidades(` WHERE nro_motor = '${req.body.old}'`))[0]
   unidad.nro_motor = req.body.nromotor.toUpperCase(),

@@ -275,6 +275,11 @@ function imprimeRecibo() {
   unidad.color = document.getElementById('color').value.toUpperCase()
   let cerok = document.getElementById('nuevo')
   let anio = '0KM'
+  let observaciones = document.getElementById('observaciones').value
+  let e = document.getElementById('entrega')
+  let entrega = e.options[e.selectedIndex].innerHTML
+  let n = document.getElementById('negocio')
+  let negocio = n.options[n.selectedIndex].innerHTML
   if(!cerok.checked) {
    anio = '---'
   }
@@ -313,6 +318,7 @@ for(let i = 0; i < 2; i++) {
   dólares americanos ${NumeroALetras(importe)} (U$S ${importe}),
   por un vehículo marca ${unidad.marca}, modelo ${unidad.modelo} año ${unidad.anio}, 
   matrícula ${unidad.matricula}, padrón ${unidad.padron}, color: ${unidad.color}.
+  Venta: ${negocio}, Entrega: ${entrega}. Observaciones: ${observaciones}
 
   La compra deberá ser completada en un plazo máximo de 7 días a partir de hoy. Si el comprador no lo hiciera
   perderá todo derecho al dinero entregado, sin nada que reclamar.`
