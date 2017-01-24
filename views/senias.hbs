@@ -309,8 +309,9 @@ for(let i = 0; i < 2; i++) {
   doc.setFontSize(10)
   doc.setFontType('normal')
   let texto = `En la ciudad de ${sucursal.nombre}, el día ${fecha}, se recibe del Sr/a. ${cliente.nombre} con 
-  CI: ${cliente.documento} domiciliado/a en ${cliente.domicilio} tel: ${cliente.telefono} la suma de dólares americanos ${NumeroALetras(importe)}
-  (U$S ${importe}) por un vehículo marca ${unidad.marca}, modelo ${unidad.modelo} año ${unidad.anio}, 
+  CI: ${cliente.documento} domiciliado/a en ${cliente.domicilio} tel: ${cliente.telefono} la suma de 
+  dólares americanos ${NumeroALetras(importe)} (U$S ${importe}),
+  por un vehículo marca ${unidad.marca}, modelo ${unidad.modelo} año ${unidad.anio}, 
   matrícula ${unidad.matricula}, padrón ${unidad.padron}, color: ${unidad.color}.
 
   La compra deberá ser completada en un plazo máximo de 7 días a partir de hoy. Si el comprador no lo hiciera
@@ -419,6 +420,7 @@ fsen.addEventListener("submit", function(event){
       idtoma.value = res.body.insertId
     //  if(res.text == 'Ok') {
         clearForm(fsen)
+        $('#myModal').modal('hide')
       //} else {
       //  document.getElementById('errores').innerHTML = res.text
      // }

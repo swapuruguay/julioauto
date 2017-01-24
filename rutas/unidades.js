@@ -197,6 +197,7 @@ let returnRouter = function(io) {
            await(db.saveVenta(vnt))
          }
          db.disconnect()
+         result.message = 'Ok'
          res.send(result)
       } catch(err) {
         

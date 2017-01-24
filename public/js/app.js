@@ -129,7 +129,8 @@ if(funi) {
     .post('/unidades/save')
     .send(formData)
     .end(function(err, res){
-      if(res.text == 'Ok') {
+      console.log(res.text)
+      if(res.body) {
         clearForm(funi)
       } else {
         document.getElementById('errores').innerHTML = res.text
