@@ -165,7 +165,7 @@ let returnRouter = function(io) {
       //console.log(req.body)
       let nuevo = ((req.body.nuevo == 'on') ? 1 : 0)
       let estado
-      if(req.body.vendido) {
+      if(req.body.sucursales) {
         estado = ((req.body.vendido == 'on')? 3 : 1)
       } else {
         estado = 5
