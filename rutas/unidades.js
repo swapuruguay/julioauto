@@ -162,16 +162,20 @@ let returnRouter = function(io) {
 
     router.post('/save', async(function(req, res) {
       let db = new Db()
-      //console.log(req.body)
+      console.log(req.body)
+      
       let nuevo = ((req.body.nuevo == 'on') ? 1 : 0)
       let estado
-      if(req.body.sucursales) {
+      if(!req.body.toma) {
         estado = ((req.body.vendido == 'on')? 3 : 1)
       } else {
+        nuevo = 0
         estado = 5
       }
+
       
       let id = (req.body.id == '')? 0 : req.body.id
+   
       let unidad = {
         id_unidad: id,
         marca: req.body.marca.toUpperCase(),

@@ -417,6 +417,7 @@ fsen.addEventListener("submit", function(event){
     event.preventDefault()
 
     let formData = new FormData(fsen)
+      formData.append('toma', 1)
     superagent
     .post('/unidades/save')
     .send(formData)
