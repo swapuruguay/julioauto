@@ -1,4 +1,12 @@
-$('#find-unidad').click(function(evt) {
+let buscaUnidad = $('#find-unidad')
+buscaUnidad.click(function(evt) {
+  buscaU()
+
+})
+
+
+
+function buscaU() {
   var valor = $('#busquedau').val()
   var criterio = $('#criterio').val()
   console.log(valor + ' ' + criterio)
@@ -28,8 +36,7 @@ $('#find-unidad').click(function(evt) {
       elemento += `</table>`
       obj.html(elemento)
   }, 'json')
-
-})
+}
 
 $('#find-cliente').click(function(evt) {
   var valor = $('#busquedac').val()

@@ -375,6 +375,23 @@ class Bd {
         })
         return Promise.resolve(task())
     }
+
+    getVentas(where, order) {
+     let orden = order || ''
+     let cond = where || ''
+     let connection = this.con
+        let task = co.wrap(function * () {
+            let conn = yield connection
+            let list = conn.query(`SELECT * from ventas ${cond} ${orden}`)
+            if(!list) {
+                return Promise.reject(new Error('No existen ventas'))
+            }
+            return Promise.resolve(list)
+        })
+        return Promise.resolve(task())
+    }
  }
+
+ 
 
 module.exports = Bd

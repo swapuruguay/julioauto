@@ -1,0 +1,31 @@
+<div class="row">
+<div class="col col-sm-12">
+  <h1>{{titulo}}</h1>
+</div>
+
+</div>
+
+<p>&nbsp;</p>
+<div id="resultado">
+  <table class="table table-condensed table-responsive">
+    <tr>
+      <th>Fecha</th>
+      <th>Marca</th>
+      <th>Modelo</th>
+      <th>OKM</th>
+      
+    </tr>
+    {{#each datos.ventas}}
+        <tr>
+          <td>{{fecha}}</td>
+          <td>{{unidad.marca}}</td>
+          <td>{{unidad.modelo}}</td>
+          <td>{{unidad.nuevo}}</td>
+          
+        </tr>
+    {{/each}}
+  </table>
+
+</div>
+
+

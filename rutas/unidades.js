@@ -5,6 +5,7 @@ const Db = require('../bd')
 const config = require('../config')
 const async = require('asyncawait/async')
 const await = require('asyncawait/await')
+const co = require('co')
 const request = require('request')
 const formData = require("express-form-data");
 
@@ -293,6 +294,28 @@ let returnRouter = function(io) {
 
       res.render('unidades-traspaso', {titulo: 'Formulario de traspaso de Unidades', datos: datosVista })
       
+    }))
+
+    router.get('/ventas', ensureAuth, admin,  co.wrap(function * (req, res) {
+      let db = new Db()
+      let ventas = yield db.getVentas(' WHERE id_sucursal_fk = 1')
+      let options = {year: "numeric", month: "numeric", day: "numeric"};
+      if(ventas) {
+    yield (ventas.map(co.wrap(function * (item) {
+        item.unidad = (yield db.getUnidad(item.id_unidad_fk))[0]
+        item.unidad.nuevo = item.unidad.nuevo == 1 ? 'Sí' : 'No'
+        let fechin = new Date(item.fecha)
+        let mes = fechin.getMonth()+1 > 9 ? fechin.getMonth()+1 : '0' + (fechin.getMonth()+1)
+        let dia = fechin.getDate() > 9 ? fechin.getDate() : '0' + fechin.getDate()
+        item.fecha = dia + '/' + mes + '/' + fechin.getFullYear()
+        return item
+    })))
+  } else {
+    ventas = []
+  }
+      db.disconnect()
+      datosVista.ventas = ventas
+      res.render('ventas', {datos: datosVista})
     }))
 
     router.get('/accept/:id',ensureAuth, async(function(req, res) {
