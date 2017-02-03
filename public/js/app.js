@@ -1,8 +1,17 @@
 let buscaUnidad = $('#find-unidad')
+
+$('#busquedau').keypress(function(e) {
+  if(e.keyCode == 13) {
+    buscaU()
+    return false
+  }
+})
+
 buscaUnidad.click(function(evt) {
   buscaU()
 
 })
+
 
 
 

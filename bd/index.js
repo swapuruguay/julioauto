@@ -84,7 +84,7 @@ class Bd {
         let connection = this.con
         let task = co.wrap(function * () {
             let conn = yield connection
-            let unidades = yield conn.query('SELECT unidades.*, sucursales.nombre FROM unidades JOIN sucursales ON sucursales.id_sucursal = unidades.sucursal' + cond + orden)
+            let unidades = yield conn.query(`SELECT unidades.*, sucursales.nombre FROM unidades JOIN sucursales ON sucursales.id_sucursal = unidades.sucursal ${cond} ${orden}`)
 
             if (!unidades) {
                 return Promise.reject(new Error(`not found`))

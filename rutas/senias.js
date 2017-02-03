@@ -112,6 +112,9 @@ router.get('/listar', ensureAuth, co.wrap(function * (req, res) {
     //console.log(listado)
     if(listado) {
     yield (listado.map(co.wrap(function * (item) {
+        let mes = item.fecha.getMonth()+1 > 9 ? item.fecha.getMonth()+1 : '0' + (item.fecha.getMonth()+1)
+        let dia = item.fecha.getDate() > 9 ? item.fecha.getDate() : '0' + item.fecha.getDate()
+        item.fecha = `${dia}/${mes}/${item.fecha.getFullYear()}`
         item.cliente = (yield db.getCliente(item.id_cliente_fk))[0]
         item.unidad = (yield db.getUnidad(item.id_unidad_fk))[0]
         item.sucursal = ( yield db.getSucursal(item.sucursal))[0]

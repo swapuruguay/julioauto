@@ -27,3 +27,7 @@ html, body {
 .visto {
   display: inline;
 }
+
+.senias {
+  font-size: 0.9em;
+}

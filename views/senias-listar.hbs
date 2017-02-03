@@ -7,9 +7,11 @@
 
 <p>&nbsp;</p>
 <div id="resultado">
-  <table class="table table-condensed table-responsive">
+  <table class="senias table table-condensed table-responsive">
     <tr>
+      <th>Fecha</th>
       <th>Cliente</th>
+      <th>Ciudad</th>
       <th>Sucursal</th>
       <th>Marca</th>
       <th>Modelo</th>
@@ -18,7 +20,7 @@
         Importe seña
       </th>
       <th>
-        Asignar Seña
+        Asignar
       </th>
       <th>
         Detalle
@@ -26,7 +28,9 @@
     </tr>
     {{#each senias}}
         <tr>
+          <td>{{fecha}}</td>
           <td>{{cliente.nombre}} {{cliente.apellido}}</td>
+          <td>{{cliente.ciudad}}</td>
           <td>{{sucursal.nombre}}</td>
           <td>{{unidad.marca}}</td>
           <td>{{unidad.modelo}}</td>
@@ -34,9 +38,9 @@
           <td>
             {{importe}}
           </td>
-          <td><button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#myModal" data-whatever="{{unidad.nro_motor}}">Asignar</button></td>
+          <td><a type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#myModal" data-whatever="{{unidad.nro_motor}}" title="Asignar"><i class="fa fa-hand-pointer-o"></i></a></td>
           <td>
-            <a href='/senias/{{id_senia}}' class="btn btn-info btn-sm">Ver Detalle</a>
+            <a href='/senias/{{id_senia}}' class="btn btn-info btn-sm" title="Ver Detalle"><i class="fa fa-eye"></i></a>
           </td>
         </tr>
     {{/each}}
