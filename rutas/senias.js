@@ -85,10 +85,25 @@ router.post('/new', co.wrap(function * (req, res) {
 
 router.post('/asignar', ensureAuth, co.wrap(function * (req, res) {
   let db = new Db()
+  let senia = (yield db.getSenia(req.body.idsenia))[0]
+
+  if(senia.tipo == 'U') {
+    senia.seniada = (yield db.getUnidadSeniada(senia.id_senia))[0]
+  }
+
+  let unidadSenia
+
+  if(senia.seniada) {
+    unidadSenia = {id_unidad: senia.seniada.id_unidad_fk, estado: 1}
+    yield db.saveUnidad(unidadSenia)
+  }
+
   let unidad = (yield db.getUnidades(` WHERE nro_motor = '${req.body.old}'`))[0]
   unidad.nro_motor = req.body.nromotor.toUpperCase(),
   unidad.estado= 3
   yield db.saveUnidad(unidad)
+  yield db.saveVenta({id_unidad_fk: unidad.id_unidad, id_sucursal_fk: req.user.sucursal, fecha: new Date().toJSON().slice(0,10)})
+
   res.send('ok')
 }))
 

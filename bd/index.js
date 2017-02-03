@@ -346,6 +346,19 @@ class Bd {
         return Promise.resolve(task())
     }
 
+    getUnidadSeniada(id) {
+      let connection = this.con
+      let task = co.wrap(function * () {
+          let conn = yield connection
+          let list = conn.query(`SELECT * FROM unidades_senias WHERE id_senia_fk = ${id}`)
+          if(!list) {
+              return Promise.reject(new Error('No existen señas'))
+          }
+          return Promise.resolve(list)
+      })
+      return Promise.resolve(task())
+    }
+
     saveSenia(senia) {
         let connection = this.con
         let task = co.wrap(function * () {
@@ -392,6 +405,6 @@ class Bd {
     }
  }
 
- 
+
 
 module.exports = Bd
