@@ -350,6 +350,7 @@ let returnRouter = function(io) {
           padron: fila.padron,
           sucursal: fila.sucursal,
           color: fila.color,
+          toma: req.user.perfil == 1 ? fila.toma : '',
           nuevo: (fila.nuevo == 1)? 'CHECKED': '',
           disabled: ''
         }
