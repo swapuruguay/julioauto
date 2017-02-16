@@ -1,3 +1,177 @@
+commit 163a5c87b4d5ba0f26469804b1beb6d9418d98be
+Author: Walter Sosa <sosa.tizon@gmail.com>
+Date:   Wed Feb 15 23:24:23 2017 -0300
+
+    Observaciones para Julio
+
+commit 5ad21cebbe2173c41638349c3bfd633779dcb60b
+Author: Walter Sosa <sosa.tizon@gmail.com>
+Date:   Tue Feb 7 13:50:43 2017 -0300
+
+    Ocultar precio toma
+
+commit 02b1ce711390b2509c5b5ca4a47b87127c70e8c5
+Author: Walter Sosa <sosa.tizon@gmail.com>
+Date:   Tue Feb 7 13:46:33 2017 -0300
+
+    Ocultar precio toma
+
+commit b5a9bee5f77525b522064d79d2965b1e16d5cb71
+Author: Walter Sosa <sosa.tizon@gmail.com>
+Date:   Fri Feb 3 14:06:45 2017 -0300
+
+    Automatizacion unidades señadas
+
+commit 6ddc7d4e4c2d3814cc5da24c78fb80883aef3040
+Author: Walter Sosa <sosa.tizon@gmail.com>
+Date:   Fri Feb 3 00:39:29 2017 -0300
+
+    Agregado en señas
+
+commit e2577448e42f1a59e45183f0ee03a7ec3646dcf9
+Author: Walter Sosa <sosa.tizon@gmail.com>
+Date:   Thu Feb 2 01:38:28 2017 -0300
+
+    Listado precario de ventas
+
+commit 529b1b8d18041aa70ab7ff87ffbb0dd007993c22
+Author: Walter Sosa <sosa.tizon@gmail.com>
+Date:   Wed Feb 1 16:02:38 2017 -0300
+
+    Quité boton de guardar en edicion señas
+
+commit 6df5ef3c8e9636e1a0a1624eac3b787941f54cd9
+Author: Walter Sosa <sosa.tizon@gmail.com>
+Date:   Tue Jan 31 22:16:16 2017 -0300
+
+    Arreglo de errores
+
+commit 0ed79426ead426c1f7257e1ae1e98cc32b38fce7
+Author: Walter Sosa <sosa.tizon@gmail.com>
+Date:   Wed Jan 25 20:27:33 2017 -0300
+
+    Arreglo error en unidades
+
+commit d195d9a601088329354867aad818abab628a21b8
+Author: Walter Sosa <sosa.tizon@gmail.com>
+Date:   Tue Jan 24 13:43:43 2017 -0300
+
+    Agregado a señas
+
+commit b0bf3d81f40959c06bfc539d396e24a8ecd8e587
+Author: Walter Sosa <sosa.tizon@gmail.com>
+Date:   Tue Jan 24 12:18:21 2017 -0300
+
+    Arreglo en clientes
+
+commit 062ab64121aa507be2788fb4ad8fd54711de7084
+Author: Walter Sosa <sosa.tizon@gmail.com>
+Date:   Tue Jan 24 01:27:26 2017 -0300
+
+    Señas funcional
+
+commit 383d8eb8b8cea18eb98e072d9d5232196316c853
+Author: Walter Sosa <sosa.tizon@gmail.com>
+Date:   Tue Jan 24 00:52:16 2017 -0300
+
+    Señas funcional
+
+commit 0f4d57425063d375e9e4ff03f404aa43c61a9dd8
+Author: Walter Sosa <sosa.tizon@gmail.com>
+Date:   Wed Jan 18 17:30:45 2017 -0300
+
+    Listado de señas
+
+commit 031ebf1ee20d7e7092f5779c15314ba35f90fe9a
+Author: Walter Sosa <sosa.tizon@gmail.com>
+Date:   Wed Jan 18 17:03:36 2017 -0300
+
+    Listado de señas
+
+commit 4e98b6ab7b998ab1928abe8fb6af65c9a9509d61
+Author: Walter Sosa <sosa.tizon@gmail.com>
+Date:   Mon Jan 16 01:25:23 2017 -0300
+
+    Avance en Señas
+
+commit ccbbcf12c257c36f8425cd485a285ca7f8358e22
+Author: Walter Sosa <sosa.tizon@gmail.com>
+Date:   Fri Jan 13 02:53:59 2017 -0300
+
+    Guardado y listado de señas
+
+commit f4d8366c3eba9b0d5fa2ebb034c6e6a1b69feb2f
+Author: Walter Sosa <sosa.tizon@gmail.com>
+Date:   Sat Jan 7 22:04:07 2017 -0300
+
+    Inhabilitacion traspaso a Ajustes
+
+commit 6f0dc4f92dc8763ac2c392e75b637d2f07e97372
+Author: Walter Sosa <sosa.tizon@gmail.com>
+Date:   Sat Jan 7 21:56:27 2017 -0300
+
+    Adaptacion Retorno
+
+commit 39f84dda6e4d72b85f9990b3972d3fcab343d457
+Author: Walter Sosa <sosa.tizon@gmail.com>
+Date:   Sat Jan 7 17:08:23 2017 -0300
+
+    Agregado de historial de ventas
+
+commit dbef0b61bdfd524cac2b4f18eb65192ce2b0b219
+Author: Walter Sosa <sosa.tizon@gmail.com>
+Date:   Sat Jan 7 12:47:22 2017 -0300
+
+    Arreglo traspasos
+
+commit d6da02697192046301f33e765e4d6eaf4d73cd4b
+Author: Walter Sosa <sosa.tizon@gmail.com>
+Date:   Thu Dec 22 21:07:42 2016 -0300
+
+    Retorno de Unidades
+
+commit bb5b444516389c486e965a9a7244e319e13f2a98
+Author: Walter Sosa <sosa.tizon@gmail.com>
+Date:   Fri Dec 16 00:08:25 2016 -0300
+
+    Arreglo Bugs
+
+commit fecf65a43154c1146475194deda3375df8a311f7
+Author: Walter Sosa <sosa.tizon@gmail.com>
+Date:   Fri Dec 16 00:00:56 2016 -0300
+
+    Corrección conexión Clientes
+
+commit d029e3c918a3e43c11699021e69727f0a46bc1ae
+Author: Walter Sosa <sosa.tizon@gmail.com>
+Date:   Mon Dec 12 11:46:25 2016 -0300
+
+    Arreglo de bugs
+
+commit b54adb73241b7d31ec8e66df54d93ab5e4b055ae
+Author: Walter Sosa <sosa.tizon@gmail.com>
+Date:   Sun Dec 11 16:06:50 2016 -0300
+
+    Arreglos en la conexión Bd y control errores
+
+commit 5f9352e2a8f335666bd6ffe9a5ce9a3820150d0d
+Author: Walter Sosa <sosa.tizon@gmail.com>
+Date:   Tue Dec 6 02:28:12 2016 -0300
+
+    Arreglo pequeño bug
+
+commit eb658ff0ea6c3bebc5a933a2f421110f71bb7baa
+Author: Walter Sosa <sosa.tizon@gmail.com>
+Date:   Tue Dec 6 01:55:31 2016 -0300
+
+    Listado dif. por motos y autos y Socket.io para pendientes
+
+commit ffd3022447f696a73c1f94b97483f69c06e4cb2e
+Author: Walter Sosa <sosa.tizon@gmail.com>
+Date:   Fri Dec 2 15:08:35 2016 -0300
+
+    Arreglo de Bugs y Clientes completado
+
 commit cc6c4ea42bc2ec76c65f48c93fa60a1d9d269da9
 Merge: 3731318 856556f
 Author: Walter Sosa <sosa.tizon@gmail.com>

@@ -15,6 +15,8 @@ const un = require('./rutas/unidades')(io)
 const senias = require('./rutas/senias')
 const bodyParser = require('body-parser')
 const multer = require('multer')
+const Db = require('./bd')
+const co = require('co')
 
 
 app.use(bodyParser.urlencoded({extended:false}))
@@ -64,28 +66,30 @@ app.use('/unidades', un)
 app.use('/clientes', cli)
 app.use('/senias', senias)
 
-app.get('/', ensureAuth, function(req, res) {
-  res.render('index', { titulo: "Julio Automóviles", datos: {user: req.user}})
-})
+app.get('/', ensureAuth, co.wrap(function * (req, res) {
+  let db = new Db()
+  let suc = (yield db.getSucursal(req.user.sucursal))[0]
+  res.render('index', { titulo: suc.alias , datos: {user: req.user}})
+}))
 
 
 
 app.get('/login', function(req, res) {
     res.locals.errors = req.flash();
     console.log(res.locals.errors);
-    res.render('login', { 
+    res.render('login', {
         errors: res.locals.errors, layout: 'login'
     });
     //res.render('login', {layout: 'login'})
 })
 
- 
+
 /*app.post('/login', passport.authenticate('local', { successRedirect: '/',failureRedirect: '/login',failureFlash: 'Invalid username or password.' })
-   
+
 )*/
 
 app.post('/login',
-    passport.authenticate('local', { 
+    passport.authenticate('local', {
         successRedirect: '/',
         failureRedirect: '/login',
         failureFlash: true,
