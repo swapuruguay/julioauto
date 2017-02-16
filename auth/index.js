@@ -11,7 +11,7 @@ exports.strategy = new LocalStrategy( async(function(username, password, done) {
         //console.log(user)
   if(user.length > 0) {
       let hash = bcrypt.hashSync(password)
-      //console.log(hash)
+      console.log(hash)
       //console.log(bcrypt.compareSync(password, hash))
     if(bcrypt.compareSync(password, user[0].password)) {
         if(user[0].perfil > 2) {
@@ -30,15 +30,15 @@ exports.strategy = new LocalStrategy( async(function(username, password, done) {
         } else {
           return done(null, user[0])
         }
-        
+
     } else {
-        
+
             return done(null, false, {message: 'Usuario o Password Incorrecto'})
     }
   } else {
     return done(null, false, {message: 'Usuario o Password Incorrecto'})
   }
-  
+
 }))
 
 

@@ -12,10 +12,12 @@
       <th>Fecha</th>
       <th>Cliente</th>
       <th>Ciudad</th>
+      <th>Celular</th>
       <th>Sucursal</th>
       <th>Marca</th>
       <th>Modelo</th>
       <th>Color</th>
+      <th>Observaciones</th>
       <th>
         Importe seña
       </th>
@@ -23,7 +25,7 @@
         Asignar
       </th>
       <th>
-        Detall
+        Detalles
       </th>
     </tr>
     {{#each senias}}
@@ -31,10 +33,12 @@
           <td>{{fecha}}</td>
           <td>{{cliente.nombre}} {{cliente.apellido}}</td>
           <td>{{cliente.ciudad}}</td>
+          <td>{{cliente.celular}}</td>
           <td>{{sucursal.nombre}}</td>
           <td>{{unidad.marca}}</td>
           <td>{{unidad.modelo}}</td>
           <td>{{unidad.color}}</td>
+          <td>{{observaciones}}</td>
 
           <td>
             {{importe}}
