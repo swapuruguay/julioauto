@@ -103,7 +103,7 @@ router.post('/asignar', ensureAuth, co.wrap(function * (req, res) {
   unidad.estado= 3
   yield db.saveUnidad(unidad)
   yield db.saveVenta({id_unidad_fk: unidad.id_unidad, id_sucursal_fk: req.user.sucursal, fecha: new Date().toJSON().slice(0,10)})
-
+  db.disconnect()
   res.send('ok')
 }))
 
