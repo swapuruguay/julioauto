@@ -29,12 +29,13 @@ function buscaU() {
                 <th>Modelo</th>
                 <th>Matrícula</th>
                 <th>Año</th>
+                <th>Precio</th>
                 <th>Sucursal</th>
                 <th>Traspasar</th></tr>`
 
       res.res.unidades.forEach(function(un) {
         elemento += `<tr><td><a href="/unidades/${un.id_unidad}">${un.id_unidad}</a></td><td>${un.marca}</td><td>${un.modelo}</td>
-        <td>${un.matricula}</td><td>${un.anio}</td><td>${un.nombre}</td>`
+        <td>${un.matricula}</td><td>${un.anio}</td><td>${un.precio}</td><td>${un.nombre}</td>`
         if(un.sucursal == res.res.user.sucursal) {
           elemento += `<td><a href="/unidades/traspaso/${un.id_unidad}">Traspasar</a></td>`
         } else {
