@@ -1,23 +1,23 @@
 <div class="row">
 <div class="col col-sm-12">
 <form class="form-inline">
-          
+
     <div class="form-group">
       <label for="nro_motor">Nro. Motor</label>
         <input type="text" class="form-control" id="nro_motor" name="nro_motor">
-               
-        
+
+
       </div>
-      
-      <input type="button" id="find-traspasos" value="Buscar" class="btn btn-default" onclick="buscar()">  
+
+      <input type="button" id="find-traspasos" value="Buscar" class="btn btn-default" onclick="buscar()">
        <div class="form-group">
       <label for="destino">Destino</label>
         <select class="form-control" id="destino" name="destino">
           {{#each datos.sucursales}}
           <option value="{{id_sucursal}}">{{nombre}}</option>
           {{/each}}
-        </select>       
-        
+        </select>
+
       </div>
 </form>
 </div>
@@ -29,9 +29,9 @@
 
 </div>
 
-<script>  
+<script>
   function buscar() {
-    
+
     let nro = document.getElementById('nro_motor').value
     superagent
       .post('/unidades/retornables')
@@ -46,17 +46,19 @@
                 <th>Marca</th>
                 <th>Modelo</th>
                 <th>Matrícula</th>
-                <th>Nro.Motor</th>
-                
+                <th>Vendido En</th>
+                <th></th>
+
+
                 </tr>`
-                                
+
          if(res.body.uni) {
           elemento += `<tr><td>${res.body.uni.id_unidad}</td><td>${res.body.uni.marca}</td><td>${res.body.uni.modelo}</td>
-          
-          <td>${res.body.uni.matricula}</td><td><button class="btn btn-warning" onclick="retornar()">Retornar</button></td></tr>`
-        
+
+          <td>${res.body.uni.matricula}</td><td>${res.body.uni.suc.nombre}</td><td><button class="btn btn-warning" onclick="retornar()">Retornar</button></td></tr>`
+
               elemento += `</table>`
-         
+
               elemento+= `<input type="hidden" id="id" value="${res.body.uni.id_unidad}">`
                } else {
                   elemento += `</table>`
@@ -75,7 +77,6 @@
     .end(function(err, res) {
       result.innerHTML = res.text
     })
-   
+
   }
 </script>
-
