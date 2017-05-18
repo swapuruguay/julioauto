@@ -106,6 +106,13 @@ let returnRouter = function(io) {
         estado: 1
       }
       await(db.saveUnidad(unidad))
+      let historia = {
+        id_unidad_fk: unidad.id_unidad,
+        id_sucursal_fk: unidad.sucursal,
+        fecha: new Date().toJSON().slice(0,10),
+        operacion: 'Reingreso'
+      }
+      await(db.saveHistorial(historia))
       db.disconnect()
       res.send('Retornado con éxito')
 
@@ -197,12 +204,27 @@ let returnRouter = function(io) {
         tipo: req.body.tipo
       }
       try {
+          //Guarda la unidad
          let result = await(db.saveUnidad(unidad))
+         //console.log(result)
+         //Verifica si es nuevo para guardar en el historial
+         if(req.body.id == '') {
+           let historia = {
+             id_unidad_fk: result.insertId,
+             id_sucursal_fk: unidad.sucursal,
+             fecha: new Date().toJSON().slice(0,10),
+             operacion: 'Ingreso'
+           }
+           await(db.saveHistorial(historia))
+         }
+
+         //Verifica si se vendió para guardar la venta
          if(estado == 3) {
 
            let fecha = new Date().toJSON().slice(0,10)
            let vnt = {id_unidad_fk: id, id_sucursal_fk: req.user.sucursal, fecha: fecha }
            await(db.saveVenta(vnt))
+
          }
          db.disconnect()
          result.message = 'Ok'
@@ -220,6 +242,33 @@ let returnRouter = function(io) {
 
     }
 
+    }))
+
+    router.get('/historial', ensureAuth, (req, res) => {
+      res.render('unidades-historial', {titulo: 'Historial de automóviles'})
+    })
+
+    router.post('/stockfull', async(function(req, res) {
+    //  console.log(req.body.nromotor)
+      let db = new Db()
+      let unidad = await(db.getUnidades(` WHERE nro_motor = '${req.body.nromotor}'`))[0]
+      //console.log(unidad)
+      let historia = await(db.getHistorial(unidad.id_unidad))
+      if(historia) {
+        historia = historia.map(h => {
+          h.sucursal = await(db.getSucursal(h.id_sucursal_fk))[0]
+          let mes = h.fecha.getMonth()+1 > 9 ? h.fecha.getMonth()+1 : '0' + (h.fecha.getMonth()+1)
+          let dia = h.fecha.getDate() > 9 ? h.fecha.getDate() : '0' + h.fecha.getDate()
+          h.fecha = `${dia}/${mes}/${h.fecha.getFullYear()}`
+          return h
+        })
+      }
+
+
+      unidad.historia = historia
+      console.log(unidad)
+      db.disconnect()
+      res.send({unidad})
     }))
 
     router.get('/stock', ensureAuth, async(function(req, res) {
@@ -331,6 +380,15 @@ let returnRouter = function(io) {
 
       await(db.saveUnidad(unidad))
       await(db.delPendiente(req.params.id))
+
+      let historia = {
+        id_unidad_fk: unidad.id_unidad,
+        id_sucursal_fk: unidad.sucursal,
+        fecha: new Date().toJSON().slice(0,10),
+        operacion: 'Traspaso'
+      }
+      await(db.saveHistorial(historia))
+
       db.disconnect()
       res.redirect('/unidades/pendientes')
     }))
@@ -413,10 +471,30 @@ let returnRouter = function(io) {
 
     }))
 
+    router.get('/historial/:id', async(function(req, res) {
+      let db = new Db()
+      let id = req.params.id
+      let historia = await(db.getHistorial(id))
+      historia = historia.map(h => {
+        h.sucursal = await(db.getSucursal(h.id_sucursal_fk))[0]
+        let mes = h.fecha.getMonth()+1 > 9 ? h.fecha.getMonth()+1 : '0' + (h.fecha.getMonth()+1)
+        let dia = h.fecha.getDate() > 9 ? h.fecha.getDate() : '0' + h.fecha.getDate()
+        h.fecha = `${dia}/${mes}/${h.fecha.getFullYear()}`
+        return h
+      })
+      db.disconnect()
+      //console.log(historia)
+
+      //let sucursal = await (db.getSucursal(historia.id_sucursal_fk))[0]
+      //historia.sucursal = sucursal
+      res.send({historia})
+    }))
+
     router.get('/', function(req, res) {
       res.end('Unidades')
     })
-      return router
+
+    return router
 }
 
 

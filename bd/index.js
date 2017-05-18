@@ -403,6 +403,35 @@ class Bd {
         })
         return Promise.resolve(task())
     }
+
+    getHistorial(id) {
+
+      let connection = this.con
+         let task = co.wrap(function * () {
+             let conn = yield connection
+             let list = conn.query(`SELECT * from historial WHERE id_unidad_fk = ${id}`)
+             if(!list) {
+                 return Promise.reject(new Error('No existen registros'))
+             }
+             return Promise.resolve(list)
+         })
+         return Promise.resolve(task())
+    }
+
+    saveHistorial(historial) {
+      let connection = this.con
+      let task = co.wrap(function * () {
+          let conn = yield connection
+          let sql = 'INSERT INTO historial SET ? '
+          let result = conn.query(sql, historial)
+          if(!result) {
+              return Promise.reject(new Error('Hubo un error'))
+          }
+
+          return Promise.resolve(result)
+      })
+      return Promise.resolve(task())
+    }
  }
 
 

@@ -8,6 +8,10 @@
        <div class="col-sm-2">
          <input type="text" class="form-control text-center" id="id" name="id" value="{{ datos.unidad.id_unidad }}" readonly>
        </div>
+       <div class="col-sm-2">
+         <button type="button" name="button" class="btn btn-default" data-toggle="modal" data-target="#myModal" data-id="{{ datos.unidad.id_unidad }}"><i class="fa fa-calendar" aria-hidden="true"></i>
+ Ver Historial</button>
+       </div>
      </div>
      <div class="form-group">
        <label for="marca" class="col-sm-2 control-label">Marca</label>
@@ -58,7 +62,7 @@
          <input type="text" class="form-control" id="toma" name="toma" value="{{ datos.unidad.toma }}">
        </div>
      </div>
-     
+
      <div class="form-group">
        <label for="color" class="col-sm-2 control-label">Color</label>
        <div class="col-sm-4">
@@ -118,3 +122,52 @@
    </form>
   </div>
 </div>
+
+
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModal">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Historial de la Unidad</h4>
+      </div>
+      <form class="form-horizontal" id="unitoma">
+      <div class="modal-body">
+        <div id="resultado"></div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+      </div>
+    </form>
+  </div>
+</div>
+</div>
+<script>
+  let modal = $('#myModal')
+  modal.on('show.bs.modal', function(evt) {
+    let id = $(evt.relatedTarget).data('id')
+    fetch(`/unidades/historial/${id}`, {
+            headers: {
+              'Content-Type': 'application/json'
+        }})
+        .then(function(response) {
+          return response.json()
+        })
+        .then(function(data) {
+            let resultado = document.getElementById('resultado')
+            let texto = `<table class='table table-condensed table-striped'>
+                          <tr><th>Fecha</th><th>Sucursal</th><th>Operación</th></tr>`
+                          data.historia.forEach(function(d) {
+                            texto += `<tr><td>${d.fecha}</td><td>${d.sucursal.nombre}</td><td>${d.operacion}</td></tr>`
+                          })
+                          texto += '</table>'
+            resultado.innerHTML = texto
+            console.log('data = ', data.historia);
+
+      })
+      .catch(function(err) {
+          console.log(err)
+      })
+})
+</script>

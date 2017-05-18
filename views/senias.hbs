@@ -1,4 +1,4 @@
-  <div class="container">
+ i  <div class="container">
     <h1>{{titulo}}</h1>
     <p>&nbsp;</p>
     <div class="row">
@@ -109,10 +109,10 @@
      </form>
      <script src="/js/jspdf.min.js"></script>
      <script src="/js/nros.letras.js"></script>
-     
+
     </div>
   </div>
-  
+
   <!-- Modal -->
   <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModal">
     <div class="modal-dialog" role="document">
@@ -123,7 +123,7 @@
         </div>
         <form class="form-horizontal" id="unitoma">
         <div class="modal-body">
-          
+
 
             <input type="hidden" name="sucursal" id="sucursal" value="{{datos.user.sucursal}}">
             <div class="form-group">
@@ -208,7 +208,7 @@
 
          </div>
 
-          
+
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
@@ -265,7 +265,7 @@ function imprimeRecibo() {
     domicilio: sucu.dataset.domicilio,
     telefono: sucu.dataset.telefono
   }
-  
+
   let date = new Date()
   let fecha = date.getDate()+ ' de ' +meses[date.getMonth()] + ' de ' + date.getFullYear()
   let importe = document.getElementById('importe').value
@@ -286,10 +286,10 @@ function imprimeRecibo() {
   unidad.padron = '---'
   unidad.matricula = '---'
   unidad.anio = anio
-  
+
   var doc = new jsPDF();
-  
-   /* console.log(res.columns)  
+
+   /* console.log(res.columns)
     let columns = [{title: 'ID', dataKey: 'id'}, {title:'Nombre', dataKey: 'nombre'},{ title:'Apellido', dataKey:'apellido'}]
     let rows = [{id: 1, nombre: 'Walter', apellido: 'Sosa'},
                 {id: 2, nombre: 'Fiorella', apellido: 'Sosa'}]
@@ -298,7 +298,7 @@ function imprimeRecibo() {
     columnStyles: {
         id: {fillColor: 0}
     }});*/
-  
+
   let medida = 150
   let via = ['Cliente', 'Archivo']
 for(let i = 0; i < 2; i++) {
@@ -313,10 +313,10 @@ for(let i = 0; i < 2; i++) {
   doc.text('RECIBO DE SEÑA', 70,35+medida*i)
   doc.setFontSize(10)
   doc.setFontType('normal')
-  let texto = `En la ciudad de ${sucursal.nombre}, el día ${fecha}, se recibe del Sr/a. ${cliente.nombre} con 
-  CI: ${cliente.documento} domiciliado/a en ${cliente.domicilio} tel: ${cliente.telefono} la suma de 
+  let texto = `En la ciudad de ${sucursal.nombre}, el día ${fecha}, se recibe del Sr/a. ${cliente.nombre} con
+  CI: ${cliente.documento} domiciliado/a en ${cliente.domicilio} tel: ${cliente.telefono} la suma de
   dólares americanos ${NumeroALetras(importe)} (U$S ${importe}),
-  por un vehículo marca ${unidad.marca}, modelo ${unidad.modelo} año ${unidad.anio}, 
+  por un vehículo marca ${unidad.marca}, modelo ${unidad.modelo} año ${unidad.anio},
   matrícula ${unidad.matricula}, padrón ${unidad.padron}, color: ${unidad.color}.
   Venta: ${negocio}, Entrega: ${entrega}. Observaciones: ${observaciones}
 
