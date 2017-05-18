@@ -245,7 +245,7 @@ let returnRouter = function(io) {
     }))
 
     router.get('/historial', ensureAuth, (req, res) => {
-      res.render('unidades-historial', {titulo: 'Historial de automóviles'})
+      res.render('unidades-historial', {titulo: 'Historial de automóviles', datos: datosVista})
     })
 
     router.post('/stockfull', async(function(req, res) {
