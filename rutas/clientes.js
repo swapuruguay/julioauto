@@ -53,8 +53,12 @@ router.post('/save', async(function(req, res) {
       let db = new Db()
      // console.log(req.body)
      let id = (req.body.id == '')? 0 : req.body.id
-     let fechaNacimiento = req.body.fechanacimiento.split('/')
-     fechaNacimiento = `${fechaNacimiento[2]}-${fechaNacimiento[1]}-${fechaNacimiento[0]}`
+     let fechaNacimiento = null
+     if(req.body.fechanacimiento) {
+       fechaNacimiento = req.body.fechanacimiento.split('/')
+       fechaNacimiento = `${fechaNacimiento[2]}-${fechaNacimiento[1]}-${fechaNacimiento[0]}`
+     }
+
       let cliente = {
         id_cliente: id,
         nombre: req.body.nombre.toUpperCase(),
@@ -65,9 +69,13 @@ router.post('/save', async(function(req, res) {
         celular: req.body.celular,
         ciudad: req.body.ciudad.toUpperCase(),
         aclaraciones: req.body.aclaraciones.toUpperCase(),
-        fecha_nacimiento: fechaNacimiento,
+
         categoria: req.body.categoria.toUpperCase(),
       }
+      if(fechaNacimiento) {
+          cliente.fecha_nacimiento = fechaNacimiento
+      }
+
 
       res.send(await(db.saveCliente(cliente)))
       db.disconnect()
