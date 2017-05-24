@@ -55,7 +55,7 @@ $('#find-cliente').click(function(evt) {
   var data = 'texto=' +valor+'&criterio='+criterio
   $.post('/clientes', data, function(res) {
      var obj = $('#resultado')
-     var elemento = '<table class="table table-striped table-condensed">'
+     var elemento = '<table class="table table-condensed">'
      elemento += `<tr>
                 <th>Id.Cliente</th>
                 <th>Nombre</th>
@@ -65,7 +65,7 @@ $('#find-cliente').click(function(evt) {
                 </tr>`
 
       res.res.clientes.forEach(function(cli) {
-        elemento += `<tr><td><a href="/clientes/${cli.id_cliente}">${cli.id_cliente}</a></td><td>${cli.nombre}</td><td>${cli.apellido}</td>
+        elemento += `<tr class="${cli.clase}"><td><a href="/clientes/${cli.id_cliente}">${cli.id_cliente}</a></td><td>${cli.nombre}</td><td>${cli.apellido}</td>
         <td>${cli.documento}</td><td>${cli.celular}</td></tr>`
 
       })
