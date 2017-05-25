@@ -8,10 +8,10 @@ exports.strategy = new LocalStrategy( async(function(username, password, done) {
   let db = new Db()
   let user = await(db.getUser(` WHERE username = '${username}'`))
   db.disconnect()
-        //console.log(user)
+
   if(user.length > 0) {
       let hash = bcrypt.hashSync(password)
-      console.log(hash)
+    
       //console.log(bcrypt.compareSync(password, hash))
     if(bcrypt.compareSync(password, user[0].password)) {
         if(user[0].perfil > 2) {

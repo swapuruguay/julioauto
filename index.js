@@ -76,7 +76,7 @@ app.get('/', ensureAuth, co.wrap(function * (req, res) {
 
 app.get('/login', function(req, res) {
     res.locals.errors = req.flash();
-    console.log(res.locals.errors);
+  //  console.log(res.locals.errors);
     res.render('login', {
         errors: res.locals.errors, layout: 'login'
     });

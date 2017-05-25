@@ -48,18 +48,15 @@ let returnRouter = function(io) {
 
       socket.on('unir', async(function(sala) {
         let db = new Db()
-        console.log(sala)
         let autos = await (db.getPendientes(sala))
         db.disconnect()
         let regs = autos.length
         socket.emit('devolver', regs)
         socket.join(sala)
-        //console.log(socket.room)
 
       }))
 
-      /*console.log(socket.id) */
-      socket.on('enviar', function(msg) {
+        socket.on('enviar', function(msg) {
         socket.broadcast.to(msg).emit('devolver', 1)
       })
     })
@@ -90,7 +87,6 @@ let returnRouter = function(io) {
     router.post('/retornables', async(function(req, res) {
       let db = new Db()
       let nro = req.body.nro
-     //console.log(nro)
       let uni = await(db.getUnidades(` WHERE (sucursal = 5 OR estado = 3) AND nro_motor = '${nro}'`))[0]
       let sucursal = await(db.getSucursal(uni.sucursal))[0]
       uni.suc = sucursal
@@ -172,8 +168,6 @@ let returnRouter = function(io) {
 
     router.post('/save', async(function(req, res) {
       let db = new Db()
-      console.log(req.body)
-
       let nuevo = ((req.body.nuevo == 'on') ? 1 : 0)
       let estado
       if(!req.body.flagtoma) {
@@ -206,7 +200,6 @@ let returnRouter = function(io) {
       try {
           //Guarda la unidad
          let result = await(db.saveUnidad(unidad))
-         //console.log(result)
          //Verifica si es nuevo para guardar en el historial
          if(req.body.id == '') {
            let historia = {
@@ -220,6 +213,14 @@ let returnRouter = function(io) {
 
          //Verifica si se vendió para guardar la venta
          if(estado == 3) {
+           //Ingresa en el historial que se vendió
+           let historia = {
+             id_unidad_fk: unidad.id_unidad,
+             id_sucursal_fk: unidad.sucursal,
+             fecha: new Date().toJSON().slice(0,10),
+             operacion: 'Venta'
+           }
+           await(db.saveHistorial(historia))
 
            let fecha = new Date().toJSON().slice(0,10)
            let vnt = {id_unidad_fk: id, id_sucursal_fk: req.user.sucursal, fecha: fecha }
@@ -249,10 +250,9 @@ let returnRouter = function(io) {
     })
 
     router.post('/stockfull', async(function(req, res) {
-    //  console.log(req.body.nromotor)
+
       let db = new Db()
       let unidad = await(db.getUnidades(` WHERE nro_motor = '${req.body.nromotor}'`))[0]
-      //console.log(unidad)
       let historia = await(db.getHistorial(unidad.id_unidad))
       if(historia) {
         historia = historia.map(h => {
@@ -266,7 +266,6 @@ let returnRouter = function(io) {
 
 
       unidad.historia = historia
-      console.log(unidad)
       db.disconnect()
       res.send({unidad})
     }))
@@ -329,9 +328,7 @@ let returnRouter = function(io) {
     router.get('/traspaso/:id', ensureAuth, async(function(req, res) {
       let db = new Db()
       let unidad = await(db.getUnidad(req.params.id))[0]
-      //console.log(unidad)
       let sucursal = await(db.getSucursal(req.user.sucursal))[0]
-      console.log(sucursal)
       let sucursales = await(db.getSucursales())
       db.disconnect()
       sucursales = sucursales.filter(function(s) {
@@ -483,10 +480,7 @@ let returnRouter = function(io) {
         return h
       })
       db.disconnect()
-      //console.log(historia)
 
-      //let sucursal = await (db.getSucursal(historia.id_sucursal_fk))[0]
-      //historia.sucursal = sucursal
       res.send({historia})
     }))
 

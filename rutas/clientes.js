@@ -126,6 +126,21 @@ router.get('/:id', ensureAuth,  async(function (req, res) {
   }
 
   db.disconnect()
+  let categorias = [
+    {
+      codigo: 'B',
+      nombre: 'Bueno'
+    },
+    {
+      codigo: 'R',
+      nombre: 'Regular'
+    },
+    {
+      codigo: 'M',
+      nombre: 'Malo'
+    }
+  ]
+
   let cliente = {
     id_cliente: id,
     nombre: row.nombre,
@@ -137,7 +152,14 @@ router.get('/:id', ensureAuth,  async(function (req, res) {
     celular: row.celular,
     ciudad: row.ciudad,
     fechaNacimiento: fecha,
-    categoria: row.categoria
+    categorias: categorias.map(c => {
+      if(c.codigo == row.categoria) {
+        c.selected = 'SELECTED'
+      } else {
+        c.selected = ''
+      }
+      return c
+    })
   }
 
   res.render('clientes-edit', {titulo: 'Formulario de clientes', datos:{cliente: cliente, user: req.user}} )
