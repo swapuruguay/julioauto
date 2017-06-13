@@ -32,10 +32,13 @@ function buscaU() {
                 <th>Precio</th>
                 <th>Sucursal</th>
                 <th>Traspasar</th></tr>`
+      let totPrecio = 0, totUnidades = 0
 
       res.res.unidades.forEach(function(un) {
         elemento += `<tr><td><a href="/unidades/${un.id_unidad}">${un.id_unidad}</a></td><td>${un.marca}</td><td>${un.modelo}</td>
         <td>${un.matricula}</td><td>${un.anio}</td><td>${un.precio}</td><td>${un.nombre}</td>`
+        totPrecio+= un.precio
+        totUnidades++
         if(un.sucursal == res.res.user.sucursal) {
           elemento += `<td><a href="/unidades/traspaso/${un.id_unidad}">Traspasar</a></td>`
         } else {
@@ -44,6 +47,9 @@ function buscaU() {
         elemento += `</tr>`
       })
       elemento += `</table>`
+      if(res.res.user.perfil < 2) {
+        elemento+= `<span>Total de Unidades: ${totUnidades}</span> </span>Total en U$S ${totPrecio}`
+      }
       obj.html(elemento)
   }, 'json')
 }
