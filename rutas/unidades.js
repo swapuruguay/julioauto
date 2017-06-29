@@ -87,8 +87,8 @@ let returnRouter = function(io) {
     router.post('/retornables', async function(req, res) {
       let db = new Db()
       let nro = req.body.nro
-      let uni = await db.getUnidades(` WHERE (sucursal = 5 OR estado = 3) AND nro_motor = '${nro}'`)[0]
-      let sucursal = await db.getSucursal(uni.sucursal)[0]
+      let uni = (await db.getUnidades(` WHERE (sucursal = 5 OR estado = 3) AND nro_motor = '${nro}'`))[0]
+      let sucursal = (await db.getSucursal(uni.sucursal))[0]
       uni.suc = sucursal
       db.disconnect()
       res.send({uni: uni})
@@ -260,7 +260,7 @@ let returnRouter = function(io) {
           let mes = h.fecha.getMonth()+1 > 9 ? h.fecha.getMonth()+1 : '0' + (h.fecha.getMonth()+1)
           let dia = h.fecha.getDate() > 9 ? h.fecha.getDate() : '0' + h.fecha.getDate()
           h.fecha = `${dia}/${mes}/${h.fecha.getFullYear()}`
-      
+
         }
 
       }
