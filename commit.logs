@@ -1,3 +1,69 @@
+commit 00d91798d62f42c255793316a4ae54801faf86ae
+Author: Walter Sosa <sosa.tizon@gmail.com>
+Date:   Tue Jun 13 14:59:47 2017 -0300
+
+    Totalizado de unidades
+
+commit 8109abdfd895bb3452df76fc73935324a525cba6
+Author: Walter Sosa <sosa.tizon@gmail.com>
+Date:   Thu May 25 15:40:18 2017 -0300
+
+    Arreglo en clientes y agregado de venta a historial
+
+commit c7eedd49b7ab1880388838de7ad0fde04738780b
+Author: Walter Sosa <sosa.tizon@gmail.com>
+Date:   Wed May 24 00:52:18 2017 -0300
+
+    Corrección de error
+
+commit b156b50f6a15217baf092eba4ea841d96ff6c834
+Author: Walter Sosa <sosa.tizon@gmail.com>
+Date:   Wed May 24 00:35:52 2017 -0300
+
+    Fecha nacimiento y clearing en clientes
+
+commit c185f975c8ec1402a315d1d8457ec9d70a7a4369
+Author: Walter Sosa <sosa.tizon@gmail.com>
+Date:   Wed May 24 00:35:12 2017 -0300
+
+    Fecha nacimiento y clearing en clientes
+
+commit b23eb2bf2bb4280a71558e3e1f72cc45060e2258
+Author: Walter Sosa <sosa.tizon@gmail.com>
+Date:   Thu May 18 02:01:13 2017 -0300
+
+    Historial de unidades
+
+commit 96299a490b076061b1f1ac189a7ba5107b477f4d
+Author: Walter Sosa <sosa.tizon@gmail.com>
+Date:   Thu May 18 01:47:39 2017 -0300
+
+    Historial de unidades
+
+commit cc90196157308db525d197fea03028c72cc2e887
+Author: Walter Sosa <sosa.tizon@gmail.com>
+Date:   Sat May 13 02:35:47 2017 -0300
+
+    Sucursal en listado retorno
+
+commit 909839711932990079b0d413ada0d766d14efe3f
+Author: Walter Sosa <sosa.tizon@gmail.com>
+Date:   Wed May 10 15:12:03 2017 -0300
+
+    Precio en listado de unidades
+
+commit 8ad9c84302c9f9e38f7c4427d18ea104ae293e2c
+Author: Walter Sosa <sosa.tizon@gmail.com>
+Date:   Wed Mar 15 15:58:07 2017 -0300
+
+    Bordes en listado señas
+
+commit dbb72eaaf79e9b4551890ff80ef58075e8a0501d
+Author: Walter Sosa <sosa.tizon@gmail.com>
+Date:   Thu Feb 16 00:56:18 2017 -0300
+
+    Logo peugeot y alias
+
 commit 163a5c87b4d5ba0f26469804b1beb6d9418d98be
 Author: Walter Sosa <sosa.tizon@gmail.com>
 Date:   Wed Feb 15 23:24:23 2017 -0300

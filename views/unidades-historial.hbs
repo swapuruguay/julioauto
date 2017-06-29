@@ -67,8 +67,10 @@
               <th>Sucursal</th>
               <th>Operación</th>
               </tr>`
+
+
         data.unidad.historia.forEach(h => {
-          elemento+= `<tr><td>${h.fecha}</td><td>${h.sucursal.nombre}</td><td>${h.operacion}</td></tr>`
+          elemento += `<tr><td>${h.fecha}</td><td>${h.sucursal.nombre}</td><td>${h.operacion}</td></tr>`
         })
         elemento += `</table>`
         obj.html(elemento)

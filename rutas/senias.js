@@ -2,8 +2,6 @@ const express = require('express');
 const router = express.Router();
 const Db = require('../bd')
 const co = require('co')
-const async = require('asyncawait/async')
-const await = require('asyncawait/await')
 
 const formData = require("express-form-data");
 

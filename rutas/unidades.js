@@ -3,8 +3,8 @@ const express = require('express');
 const router = express.Router();
 const Db = require('../bd')
 const config = require('../config')
-const async = require('asyncawait/async')
-const await = require('asyncawait/await')
+//const async = require('asyncawait/async')
+//const await = require('asyncawait/await')
 const co = require('co')
 const request = require('request')
 const formData = require('express-form-data');
@@ -46,35 +46,35 @@ let returnRouter = function(io) {
 
     io.on('connection', function(socket) {
 
-      socket.on('unir', async(function(sala) {
+      socket.on('unir', async function(sala) {
         let db = new Db()
-        let autos = await (db.getPendientes(sala))
+        let autos = await db.getPendientes(sala)
         db.disconnect()
         let regs = autos.length
         socket.emit('devolver', regs)
         socket.join(sala)
 
-      }))
+      })
 
         socket.on('enviar', function(msg) {
         socket.broadcast.to(msg).emit('devolver', 1)
       })
     })
 
-    router.get('/nuevo', ensureAuth, async(function(req, res) {
+    router.get('/nuevo', ensureAuth, async function(req, res) {
 
       let nro = ''
       let db = new Db()
 
-      let suc = await(db.getSucursales())
+      let suc = await db.getSucursales()
       db.disconnect()
       datosVista.sucursales = suc
       res.render('unidades', {titulo: 'Formulario de Unidades',datos: datosVista})
-    }))
+    })
 
-    router.get('/retorno', ensureAuth, admin, async(function(req, res) {
+    router.get('/retorno', ensureAuth, admin, async function(req, res) {
       let db = new Db()
-      let sucursales = await(db.getSucursales())
+      let sucursales = await db.getSucursales()
       db.disconnect()
       sucursales = sucursales.filter(function(s) {
         return s.id_sucursal != 5
@@ -82,41 +82,41 @@ let returnRouter = function(io) {
       datosVista.sucursales = sucursales
       res.render('unidades-retorno', {titulo: 'Formulario de Unidades',datos: datosVista})
 
-  }))
+  })
 
-    router.post('/retornables', async(function(req, res) {
+    router.post('/retornables', async function(req, res) {
       let db = new Db()
       let nro = req.body.nro
-      let uni = await(db.getUnidades(` WHERE (sucursal = 5 OR estado = 3) AND nro_motor = '${nro}'`))[0]
-      let sucursal = await(db.getSucursal(uni.sucursal))[0]
+      let uni = await db.getUnidades(` WHERE (sucursal = 5 OR estado = 3) AND nro_motor = '${nro}'`)[0]
+      let sucursal = await db.getSucursal(uni.sucursal)[0]
       uni.suc = sucursal
       db.disconnect()
       res.send({uni: uni})
-    }))
+    })
 
-    router.post('/retornar', ensureAuth, admin, async(function(req, res) {
+    router.post('/retornar', ensureAuth, admin, async function(req, res) {
       let db = new Db()
       let unidad = {
         id_unidad: req.body.id,
         sucursal: req.body.suc,
         estado: 1
       }
-      await(db.saveUnidad(unidad))
+      await db.saveUnidad(unidad)
       let historia = {
         id_unidad_fk: unidad.id_unidad,
         id_sucursal_fk: unidad.sucursal,
         fecha: new Date().toJSON().slice(0,10),
         operacion: 'Reingreso'
       }
-      await(db.saveHistorial(historia))
+      await db.saveHistorial(historia)
       db.disconnect()
       res.send('Retornado con éxito')
 
-    }))
+    })
 
-    router.get('/listar', ensureAuth, async(function(req, res) {
+    router.get('/listar', ensureAuth, async function(req, res) {
       let db = new Db()
-      let sucursales = await(db.getSucursales())
+      let sucursales = await db.getSucursales()
       db.disconnect()
       datosVista.sucursales = sucursales
 
@@ -124,9 +124,9 @@ let returnRouter = function(io) {
      res.render('unidades-listar', {titulo: 'Formulario de Unidades', datos: datosVista})
 
 
-    }))
+    })
 
-    router.post('/traspasar', async(function(req, res) {
+    router.post('/traspasar', async function(req, res) {
       let db = new Db()
       let fecha = new Date().toJSON().slice(0,10)
       let idUnidad = req.body.idunidad
@@ -145,8 +145,8 @@ let returnRouter = function(io) {
         estado: 5
       }
 
-      await(db.saveUnidad(un))
-      await(db.saveTraspaso(datos))
+      await db.saveUnidad(un)
+      await db.saveTraspaso(datos)
 
       db.disconnect()
 
@@ -154,19 +154,19 @@ let returnRouter = function(io) {
 
 
 
-    }))
+    })
 
 
 
-    router.get('/pendientes', ensureAuth, async(function(req, res) {
+    router.get('/pendientes', ensureAuth, async function(req, res) {
       let db = new Db()
-      let pend = await(db.getPendientes(req.user.sucursal))
+      let pend = await db.getPendientes(req.user.sucursal)
       db.disconnect()
       datosVista.pendientes = pend
       res.render('unidades-pendientes', {titulo: 'Unidades en tránsito', datos: datosVista})
-    }))
+    })
 
-    router.post('/save', async(function(req, res) {
+    router.post('/save', async function(req, res) {
       let db = new Db()
       let nuevo = ((req.body.nuevo == 'on') ? 1 : 0)
       let estado
@@ -199,7 +199,7 @@ let returnRouter = function(io) {
       }
       try {
           //Guarda la unidad
-         let result = await(db.saveUnidad(unidad))
+         let result = await db.saveUnidad(unidad)
          //Verifica si es nuevo para guardar en el historial
          if(req.body.id == '') {
            let historia = {
@@ -208,7 +208,7 @@ let returnRouter = function(io) {
              fecha: new Date().toJSON().slice(0,10),
              operacion: 'Ingreso'
            }
-           await(db.saveHistorial(historia))
+           await db.saveHistorial(historia)
          }
 
          //Verifica si se vendió para guardar la venta
@@ -220,11 +220,11 @@ let returnRouter = function(io) {
              fecha: new Date().toJSON().slice(0,10),
              operacion: 'Venta'
            }
-           await(db.saveHistorial(historia))
+           await db.saveHistorial(historia)
 
            let fecha = new Date().toJSON().slice(0,10)
            let vnt = {id_unidad_fk: id, id_sucursal_fk: req.user.sucursal, fecha: fecha }
-           await(db.saveVenta(vnt))
+           await db.saveVenta(vnt)
 
          }
          db.disconnect()
@@ -243,52 +243,53 @@ let returnRouter = function(io) {
 
     }
 
-    }))
+    })
 
     router.get('/historial', ensureAuth, (req, res) => {
       res.render('unidades-historial', {titulo: 'Historial de automóviles', datos: datosVista})
     })
 
-    router.post('/stockfull', async(function(req, res) {
+    router.post('/stockfull', async function(req, res) {
 
       let db = new Db()
-      let unidad = await(db.getUnidades(` WHERE nro_motor = '${req.body.nromotor}'`))[0]
-      let historia = await(db.getHistorial(unidad.id_unidad))
+      let unidad = (await db.getUnidades(` WHERE nro_motor = '${req.body.nromotor}'`))[0]
+      let historia = await db.getHistorial(unidad.id_unidad)
       if(historia) {
-        historia = historia.map(h => {
-          h.sucursal = await(db.getSucursal(h.id_sucursal_fk))[0]
+        for(let h of historia) {
+          h.sucursal = (await db.getSucursal(h.id_sucursal_fk))[0]
           let mes = h.fecha.getMonth()+1 > 9 ? h.fecha.getMonth()+1 : '0' + (h.fecha.getMonth()+1)
           let dia = h.fecha.getDate() > 9 ? h.fecha.getDate() : '0' + h.fecha.getDate()
           h.fecha = `${dia}/${mes}/${h.fecha.getFullYear()}`
-          return h
-        })
+      
+        }
+
       }
 
 
       unidad.historia = historia
       db.disconnect()
       res.send({unidad})
-    }))
+    })
 
-    router.get('/stock', ensureAuth, async(function(req, res) {
+    router.get('/stock', ensureAuth, async function(req, res) {
       let db = new Db()
-      let sucursales = await(db.getSucursales())
+      let sucursales = await db.getSucursales()
       db.disconnect()
       datosVista.sucursales = sucursales
       res.render('unidades-stock', {titulo: 'Stock de Unidades', datos: datosVista})
 
-    }))
+    })
 
-    router.get('/stock/:sucursal/:tipo', ensureAuth, async(function (req, res) {
+    router.get('/stock/:sucursal/:tipo', ensureAuth, async function (req, res) {
       let db = new Db()
       let suc = req.params.sucursal
       let tipo = req.params.tipo
       let operador = (tipo == 1) ? '<' : '>='
 
-      let sucursal = await(db.getSucursal(suc))
+      let sucursal = await db.getSucursal(suc)
       sucursal = sucursal[0]
 
-      var unidades = await (db.getUnidades(` WHERE estado = 1 AND sucursal = ${suc} and tipo ${operador} 4 `, ` ORDER BY nuevo, marca, modelo`))
+      var unidades = await db.getUnidades(` WHERE estado = 1 AND sucursal = ${suc} and tipo ${operador} 4 `, ` ORDER BY nuevo, marca, modelo`)
       db.disconnect()
       let fecha = new Date()
 
@@ -310,26 +311,26 @@ let returnRouter = function(io) {
 
       request(options).pipe(res)
 
-    }))
+    })
 
-    router.post('/trasconfirm', async(function(req, res) {
+    router.post('/trasconfirm', async function(req, res) {
       let db = new Db()
       let id = req.body.id
-      let sucursal = await(db.getSucursal(req.body.destino))[0]
-      let unidad = await(db.getUnidad(id))[0]
+      let sucursal = await db.getSucursal(req.body.destino)[0]
+      let unidad = await db.getUnidad(id)[0]
       db.disconnect()
       datosVista.unidad = unidad
       datosVista.sucursal = sucursal
       res.render('unidades-confirm-traspaso', {titulo: 'Confirmar', datos: datosVista})
-    }))
+    })
 
 
 
-    router.get('/traspaso/:id', ensureAuth, async(function(req, res) {
+    router.get('/traspaso/:id', ensureAuth, async function(req, res) {
       let db = new Db()
-      let unidad = await(db.getUnidad(req.params.id))[0]
-      let sucursal = await(db.getSucursal(req.user.sucursal))[0]
-      let sucursales = await(db.getSucursales())
+      let unidad = await db.getUnidad(req.params.id)[0]
+      let sucursal = await db.getSucursal(req.user.sucursal)[0]
+      let sucursales = await db.getSucursales()
       db.disconnect()
       sucursales = sucursales.filter(function(s) {
 
@@ -343,7 +344,7 @@ let returnRouter = function(io) {
 
       res.render('unidades-traspaso', {titulo: 'Formulario de traspaso de Unidades', datos: datosVista })
 
-    }))
+    })
 
     router.get('/ventas', ensureAuth, admin,  co.wrap(function * (req, res) {
       let db = new Db()
@@ -367,7 +368,7 @@ let returnRouter = function(io) {
       res.render('ventas', {datos: datosVista})
     }))
 
-    router.get('/accept/:id',ensureAuth, async(function(req, res) {
+    router.get('/accept/:id',ensureAuth, async function(req, res) {
       let db = new Db()
       let unidad = {
         id_unidad: req.params.id,
@@ -375,8 +376,8 @@ let returnRouter = function(io) {
         estado: 1
       }
 
-      await(db.saveUnidad(unidad))
-      await(db.delPendiente(req.params.id))
+      await db.saveUnidad(unidad)
+      await db.delPendiente(req.params.id)
 
       let historia = {
         id_unidad_fk: unidad.id_unidad,
@@ -384,16 +385,16 @@ let returnRouter = function(io) {
         fecha: new Date().toJSON().slice(0,10),
         operacion: 'Traspaso'
       }
-      await(db.saveHistorial(historia))
+      await db.saveHistorial(historia)
 
       db.disconnect()
       res.redirect('/unidades/pendientes')
-    }))
+    })
 
-    router.get('/:id', ensureAuth, async(function(req, res) {
+    router.get('/:id', ensureAuth, async function(req, res) {
         let id = req.params.id
         let db = new Db()
-        let rows = await(db.getUnidad(id))
+        let rows = await db.getUnidad(id)
         let fila = rows[0]
 
         let unidad = {
@@ -433,7 +434,7 @@ let returnRouter = function(io) {
         ]
 
 
-        let suc = await(db.getSucursales())
+        let suc = await db.getSucursales()
         db.disconnect()
         suc = suc.map(function(s) {
           s.selected = ''
@@ -451,14 +452,14 @@ let returnRouter = function(io) {
 
         res.render('unidades-edit', {titulo: "Formulario de Unidades", datos: datosVista})
 
-    }))
+    })
 
 
-    router.post('/', async(function(req, res) {
+    router.post('/', async function(req, res) {
       let criterio = req.body.criterio
       let texto = req.body.texto
       let db = new Db()
-      let unidades = await(db.getUnidadesSuc(`WHERE estado = 1 AND sucursal != 5 AND ${criterio} LIKE '${texto}%'`, null))
+      let unidades = await db.getUnidadesSuc(`WHERE estado = 1 AND sucursal != 5 AND ${criterio} LIKE '${texto}%'`, null)
       db.disconnect()
         let resultado = {
           user: req.user,
@@ -466,23 +467,25 @@ let returnRouter = function(io) {
         }
         res.send({res: resultado})
 
-    }))
+    })
 
-    router.get('/historial/:id', async(function(req, res) {
+    router.get('/historial/:id', async function(req, res) {
       let db = new Db()
       let id = req.params.id
-      let historia = await(db.getHistorial(id))
-      historia = historia.map(h => {
-        h.sucursal = await(db.getSucursal(h.id_sucursal_fk))[0]
+      let historia = await db.getHistorial(id)
+
+      for(let h of historia) {
+        h.sucursal = (await db.getSucursal(h.id_sucursal_fk))[0]
         let mes = h.fecha.getMonth()+1 > 9 ? h.fecha.getMonth()+1 : '0' + (h.fecha.getMonth()+1)
         let dia = h.fecha.getDate() > 9 ? h.fecha.getDate() : '0' + h.fecha.getDate()
         h.fecha = `${dia}/${mes}/${h.fecha.getFullYear()}`
-        return h
-      })
+
+      }
+
       db.disconnect()
 
       res.send({historia})
-    }))
+    })
 
     router.get('/', function(req, res) {
       res.end('Unidades')

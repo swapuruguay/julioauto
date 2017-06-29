@@ -26,7 +26,7 @@ class Bd {
 
     disconnect() {
         let connection = this.con
-       let setup = co.wrap(function * () {
+        let setup = co.wrap(function * () {
          //  console.log(mysql)
            let conn = yield connection
            conn.destroy()
@@ -34,6 +34,7 @@ class Bd {
        })
       return Promise.resolve(setup())
     }
+
 
     getUnidad(id) {
         let connection = this.con

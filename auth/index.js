@@ -1,18 +1,17 @@
 var LocalStrategy = require('passport-local').Strategy
 var Db = require('../bd')
 var bcrypt = require('bcrypt-nodejs')
-const async = require('asyncawait/async')
-const await = require('asyncawait/await')
+//const async = require('asyncawait/asy//nc')
+//const await = require('asyncawait/a//wait')
 
-exports.strategy = new LocalStrategy( async(function(username, password, done) {
+exports.strategy = new LocalStrategy( async function(username, password, done) {
   let db = new Db()
-  let user = await(db.getUser(` WHERE username = '${username}'`))
+  let user = await db.getUser(` WHERE username = '${username}'`)
   db.disconnect()
-
+  let hash = bcrypt.hashSync(password)
   if(user.length > 0) {
-      let hash = bcrypt.hashSync(password)
-    
-      //console.log(bcrypt.compareSync(password, hash))
+      hash = bcrypt.hashSync(password)
+    //console.log(bcrypt.compareSync(password, hash))
     if(bcrypt.compareSync(password, user[0].password)) {
         if(user[0].perfil > 2) {
           let rango = new Date()
@@ -39,7 +38,7 @@ exports.strategy = new LocalStrategy( async(function(username, password, done) {
     return done(null, false, {message: 'Usuario o Password Incorrecto'})
   }
 
-}))
+})
 
 
 exports.serialize = function(user, done) {
