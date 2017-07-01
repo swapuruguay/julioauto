@@ -316,8 +316,8 @@ let returnRouter = function(io) {
     router.post('/trasconfirm', async function(req, res) {
       let db = new Db()
       let id = req.body.id
-      let sucursal = await db.getSucursal(req.body.destino)[0]
-      let unidad = await db.getUnidad(id)[0]
+      let sucursal = (await db.getSucursal(req.body.destino))[0]
+      let unidad = (await db.getUnidad(id))[0]
       db.disconnect()
       datosVista.unidad = unidad
       datosVista.sucursal = sucursal
@@ -328,8 +328,8 @@ let returnRouter = function(io) {
 
     router.get('/traspaso/:id', ensureAuth, async function(req, res) {
       let db = new Db()
-      let unidad = await db.getUnidad(req.params.id)[0]
-      let sucursal = await db.getSucursal(req.user.sucursal)[0]
+      let unidad = (await db.getUnidad(req.params.id))[0]
+      let sucursal = (await db.getSucursal(req.user.sucursal))[0]
       let sucursales = await db.getSucursales()
       db.disconnect()
       sucursales = sucursales.filter(function(s) {
