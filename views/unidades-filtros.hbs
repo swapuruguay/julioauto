@@ -1,0 +1,57 @@
+<div class="row">
+  <div class="col col-sm-12">
+    <form class="form-horizontal">
+      <h3>Filtros</h3>
+      <div class="form-group">
+        <label for="marca" class="col-sm-2">Marca</label>
+        <div class="col-sm-4">
+          <input type="text" class="form-control" id="marca" name="marca">
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="precio" class="col-sm-2">Precio <= </label>
+        <div class="col-sm-4">
+          <input type="text" class="form-control" id="precio" name="precio">
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10">
+          <div class="checkbox">
+            <label>
+              <input type="checkbox" id="cero" name="cero"> Nuevo
+            </label>
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="tipo" class="col-sm-2">Tipo</label>
+        <div class="col-sm-4">
+          <select class="form-control" id="tipo" name="tipo">
+            <option value="1">Auto</option>
+            <option value="2">Camioneta</option>
+            <option value="3">Camión</option>
+            <option value="4">Moto</option>
+            <option value="5">Triciclo</option>
+            <option value="6">Cuatriciclo</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="sucursales" class="col-sm-2">Sucursal</label>
+        <div class="col-sm-4">
+          <select name="sucursales" id="sucursales" class="form-control">
+            {{#each datos.sucursales}}
+            <option value="{{ id_sucursal}}">{{ nombre }}</option>
+            {{/each}}
+          </select>
+        </div>
+      </div>
+      <input type="button" id="find-unidad" value="Buscar" class="btn btn-default">
+    </form>
+  </div>
+</div>
+
+<p>&nbsp;</p>
+<div id="resultado">
+
+</div>

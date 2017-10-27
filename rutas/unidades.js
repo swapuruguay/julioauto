@@ -346,9 +346,9 @@ let returnRouter = function(io) {
 
     })
 
-    router.get('/ventas', ensureAuth, admin,  co.wrap(function * (req, res) {
+    router.get('/ventas', ensureAuth,  co.wrap(function * (req, res) {
       let db = new Db()
-      let ventas = yield db.getVentas(' WHERE id_sucursal_fk = 1')
+      let ventas = yield db.getVentas(` WHERE id_sucursal_fk = ${req.user.sucursal} `)
       let options = {year: "numeric", month: "numeric", day: "numeric"};
       if(ventas) {
     yield (ventas.map(co.wrap(function * (item) {
@@ -367,6 +367,10 @@ let returnRouter = function(io) {
       datosVista.ventas = ventas
       res.render('ventas', {datos: datosVista})
     }))
+
+    router.get('/filtrar', function(req, res) {
+      res.render('unidades-filtros')
+    })
 
     router.get('/accept/:id',ensureAuth, async function(req, res) {
       let db = new Db()

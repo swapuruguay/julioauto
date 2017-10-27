@@ -39,6 +39,7 @@
        <ul class="dropdown-menu">
          <li><a href="/unidades/nuevo">Nuevo</a></li>
          <li><a href="/unidades/listar">Listar</a>
+         <li><a href="/unidades/filtrar">Listar con filtros</a></li>
          <li><a href="/unidades/stock">Stock</a></li>
          <li><a href="/unidades/historial">Historial</a></li>
        </ul>
@@ -53,13 +54,14 @@
       <li>
          <a href="/unidades/pendientes">Pendientes <span class="badge" id="pendientes"></span></a>
        </li>
+       <li>
+            <a href="/unidades/ventas">Ventas</a>
+          </li>
        {{#if datos.user.habilitado}}
           <li>
             <a href="/unidades/retorno">Retorno Unidades</a>
           </li>
-          <li>
-            <a href="/unidades/ventas">Ventas</a>
-          </li>
+          
        {{/if}}
 
     </ul>
