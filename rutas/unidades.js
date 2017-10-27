@@ -368,6 +368,26 @@ let returnRouter = function(io) {
       res.render('ventas', {datos: datosVista})
     }))
 
+    router.post('/ventas', async (req, res) => {
+      let db = new Db()
+      let ventas = await db.getVentas(` WHERE id_sucursal_fk = ${req.body.sucursal} AND YEAR(fecha) = ${req.body.anio} AND MONTH(fecha) = ${req.body.mes}`)
+      let options = {year: "numeric", month: "numeric", day: "numeric"};
+      if(ventas) {
+        await Promise.all(ventas.map(async item => {
+            item.unidad = (await db.getUnidad(item.id_unidad_fk))[0]
+            item.unidad.nuevo = item.unidad.nuevo == 1 ? 'Sí' : 'No'
+            let fechin = new Date(item.fecha)
+            let mes = fechin.getMonth()+1 > 9 ? fechin.getMonth()+1 : '0' + (fechin.getMonth()+1)
+            let dia = fechin.getDate() > 9 ? fechin.getDate() : '0' + fechin.getDate()
+            item.fecha = dia + '/' + mes + '/' + fechin.getFullYear()
+            return item
+        }))
+      } else {
+        ventas = []
+      }
+      res.send(ventas)
+    })
+
     router.get('/filtrar', function(req, res) {
       res.render('unidades-filtros')
     })
