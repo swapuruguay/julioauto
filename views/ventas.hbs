@@ -38,7 +38,7 @@
       <th>Marca</th>
       <th>Modelo</th>
       <th>OKM</th>
-      
+
     </tr>
     {{#each datos.ventas}}
         <tr>
@@ -46,7 +46,7 @@
           <td>{{unidad.marca}}</td>
           <td>{{unidad.modelo}}</td>
           <td>{{unidad.nuevo}}</td>
-          
+
         </tr>
     {{/each}}
   </table>
@@ -73,6 +73,8 @@
     })
     let response = await respuesta.json()
     if(response[0] != null) {
+      let precio = 0
+      let uns = 0
       let texto = `<table class="table table-condensed table-responsive">
       <tr>
         <th>Fecha</th>
@@ -81,20 +83,26 @@
         <th>OKM</th>
       </tr>`
     response.forEach(item => {
+      precio+= item.unidad.precio
+      uns++
       texto+= `<tr>
         <td>${item.fecha}</td>
         <td>${item.unidad.marca}</td>
         <td>${item.unidad.modelo}</td>
         <td>${item.unidad.nuevo}</td>
       </tr>`
-      resultado.innerHTML = texto
-       
+
+
+
     })
+    texto+= `<tr>
+    <td colspan=4>Total de unidades ${uns}   Total en U$S ${precio}</td>
+
+    </tr></table>`
+    resultado.innerHTML = texto
     } else {
       resultado.innerHTML = 'No hay datos para la búsqudeda seleccionada'
     }
   })
 
 </script>
-
-
