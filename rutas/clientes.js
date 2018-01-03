@@ -107,7 +107,9 @@ router.post('/', async function(req, res) {
 router.get('/:id', ensureAuth,  async function (req, res) {
   let db = new Db()
   let id = req.params.id
-  let row = await db.getCliente(id)[0]
+  //console.log(id)
+  let row = (await db.getCliente(id))[0]
+  //console.log(row)
 
   let fecha = null
   if(row.fecha_nacimiento) {
@@ -152,8 +154,10 @@ router.get('/:id', ensureAuth,  async function (req, res) {
       return c
     })
   }
+  
 
   res.render('clientes-edit', {titulo: 'Formulario de clientes', datos:{cliente: cliente, user: req.user}} )
+//  res.end()
 
 })
 

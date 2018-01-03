@@ -3,15 +3,21 @@
     <form class="form-horizontal">
       <h3>Filtros</h3>
       <div class="form-group">
-        <label for="marca" class="col-sm-2">Marca</label>
-        <div class="col-sm-4">
-          <input type="text" class="form-control" id="marca" name="marca">
-        </div>
+        <label for="precio" class="col-sm-2">Precio</label>
+        <div class="input-group col-sm-4">
+        <div class="input-group-addon">Desde</div>
+        <input type="text" class="form-control" placeholder="0">
+        <div class="input-group-addon">Hasta</div>
+        <input type="text" class="form-control" placeholder="0">
+      </div>
       </div>
       <div class="form-group">
-        <label for="precio" class="col-sm-2">Precio <= </label>
+        <label for="combustible" class="col-sm-2">Combustible</label>
         <div class="col-sm-4">
-          <input type="text" class="form-control" id="precio" name="precio">
+            <select type="text" name="combustible" id="combustible" class="form-control">
+                <option value="1">Nafta</option>
+                <option value="2">Diesel</option>
+            </select>
         </div>
       </div>
       <div class="form-group">
