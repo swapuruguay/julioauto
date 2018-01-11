@@ -18,8 +18,8 @@ buscaUnidad.click(function(evt) {
 function buscaU() {
   var valor = $('#busquedau').val()
   var criterio = $('#criterio').val()
-  console.log(valor + ' ' + criterio)
-  var data = 'texto=' +valor+'&criterio='+criterio
+  let cero = document.getElementById('cero').checked
+  var data = 'texto=' +valor+'&criterio='+criterio+'&cero='+cero
   $.post('/unidades', data, function(res) {
      var obj = $('#resultado')
      var elemento = '<table class="table table-striped table-condensed">'

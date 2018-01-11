@@ -5,7 +5,7 @@
       <label for="busquedau">Buscar</label>
       <input type="text" class="form-control" id="busquedau" name="busquedau">
     </div>
-    
+
     <div class="form-group">
       <label for="criterio">Criterio de búsqueda</label>
         <select class="form-control" id="criterio" name="criterio" onchange="mostrar()">
@@ -15,6 +15,8 @@
           <option value="matricula">Matrícula</option>
           <option value="anio">Año</option>
         </select>
+        <label for="cero">Cero KM</label>
+        <input type="checkbox" name="cero" id="cero">
         <div class="oculto" id="oculto">
           <select name="sucursales" id="sucursales" class="form-control" onchange="cambiarTexto()">
           {{#each datos.sucursales}}
@@ -22,9 +24,9 @@
           {{/each}}
         </select>
         </div>
-        
+
       </div>
-      <input type="button" id="find-unidad" value="Buscar" class="btn btn-default">  
+      <input type="button" id="find-unidad" value="Buscar" class="btn btn-default">
 </form>
 </div>
 
@@ -34,4 +36,3 @@
 <div id="resultado">
 
 </div>
-

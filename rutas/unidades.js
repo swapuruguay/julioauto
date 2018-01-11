@@ -185,6 +185,7 @@ let returnRouter = function(io) {
         marca: req.body.marca.toUpperCase(),
         modelo: req.body.modelo.toUpperCase(),
         nro_motor: req.body.nromotor.toUpperCase(),
+        nro_chasis: req.body.nrochasis? req.body.nrochasis.toUpperCase() : null,
         anio: req.body.anio,
         matricula: req.body.matricula.toUpperCase(),
         color: req.body.color.toUpperCase(),
@@ -427,6 +428,7 @@ let returnRouter = function(io) {
           marca: fila.marca,
           modelo: fila.modelo,
           nro_motor: fila.nro_motor,
+          nro_chasis: fila.nro_chasis,
           matricula: fila.matricula,
           anio: fila.anio,
           kmts: fila.kmts,
@@ -484,8 +486,10 @@ let returnRouter = function(io) {
     router.post('/', async function(req, res) {
       let criterio = req.body.criterio
       let texto = req.body.texto
+      let nuevo = req.body.cero === 'true' ? 1 :  0
+      let whereNuevo = nuevo ? `nuevo = ${nuevo} AND ` : ''
       let db = new Db()
-      let unidades = await db.getUnidadesSuc(`WHERE estado = 1 AND sucursal != 5 AND ${criterio} LIKE '${texto}%'`, null)
+      let unidades = await db.getUnidadesSuc(`WHERE ${whereNuevo}  estado = 1 AND sucursal != 5 AND ${criterio} LIKE '${texto}%'`, null)
       db.disconnect()
         let resultado = {
           user: req.user,
