@@ -1,22 +1,22 @@
 <div class="row">
   <div class="col col-sm-12">
-    <form class="form-horizontal">
+    <form class="form-horizontal" id="filtros">
       <h3>Filtros</h3>
       <div class="form-group">
         <label for="precio" class="col-sm-2">Precio</label>
         <div class="input-group col-sm-4">
         <div class="input-group-addon">Desde</div>
-        <input type="text" class="form-control" placeholder="0">
+        <input type="text" name="desde" class="form-control" placeholder="0">
         <div class="input-group-addon">Hasta</div>
-        <input type="text" class="form-control" placeholder="0">
+        <input type="text" class="form-control" name="hasta" placeholder="0">
       </div>
       </div>
       <div class="form-group">
         <label for="combustible" class="col-sm-2">Combustible</label>
         <div class="col-sm-4">
             <select type="text" name="combustible" id="combustible" class="form-control">
-                <option value="1">Nafta</option>
-                <option value="2">Diesel</option>
+                <option value="N">Nafta</option>
+                <option value="D">Diesel</option>
             </select>
         </div>
       </div>
@@ -41,18 +41,9 @@
             <option value="6">Cuatriciclo</option>
           </select>
         </div>
-      </div>
-      <div class="form-group">
-        <label for="sucursales" class="col-sm-2">Sucursal</label>
-        <div class="col-sm-4">
-          <select name="sucursales" id="sucursales" class="form-control">
-            {{#each datos.sucursales}}
-            <option value="{{ id_sucursal}}">{{ nombre }}</option>
-            {{/each}}
-          </select>
-        </div>
-      </div>
-      <input type="button" id="find-unidad" value="Buscar" class="btn btn-default">
+      </div>.
+
+      <input type="submit" id="find-unidad" value="Buscar" class="btn btn-default">
     </form>
   </div>
 </div>
@@ -61,3 +52,37 @@
 <div id="resultado">
 
 </div>
+
+<script>
+  let form = document.getElementById('filtros')
+  form.addEventListener('submit', async evt => {
+    evt.preventDefault()
+    let formData = new FormData(form)
+    console.log(formData)
+    let res = await fetch('/unidades/filtrar', {
+      method: 'post',
+      body: formData
+    })
+    let response = await res.json()
+    let texto = `<table class="table table-condensed table-striped">
+                  <tr>
+                    <th>Nro</th>
+                    <th>Marca</th>
+                    <th>Modelo</th>
+                    <th>Año</th>
+                    <th>Precio</th>
+                  <tr>`
+          response.uns.forEach(u => {
+            texto += `<tr>
+                        <td><a href="/unidades/${u.id_unidad}">${u.id_unidad}</a></td>
+                        <td>${u.marca}</td>
+                        <td>${u.modelo}</td>
+                        <td>${u.anio}</td>
+                        <td>${u.precio}</td>
+                      </tr>`
+          })
+          texto += '<table>'
+          document.getElementById('resultado').innerHTML = texto
+    
+  })
+</script>

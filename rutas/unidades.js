@@ -391,7 +391,23 @@ let returnRouter = function(io) {
     })
 
     router.get('/filtrar', function(req, res) {
-      res.render('unidades-filtros')
+      res.render('unidades-filtros', {datos: datosVista})
+    })
+
+    router.post('/filtrar', async (req, res) => {
+      let db = new Db()
+      let hasta = 0, desde = 0
+      hasta = req.body.hasta
+      desde = req.body.desde
+      let where = ` estado = 1 AND tipo = ${req.body.tipo} AND combustible = '${req.body.combustible}'`
+      if(desde) {
+        where+= ` AND precio >= ${desde}`
+      }
+      if(hasta) {
+        where+= ` AND precio <= ${hasta}`
+      }
+      let uns = await db.getUnidades( `WHERE ${where}`)
+      res.send({uns})
     })
 
     router.get('/accept/:id',ensureAuth, async function(req, res) {
