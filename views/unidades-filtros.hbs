@@ -58,7 +58,6 @@
   form.addEventListener('submit', async evt => {
     evt.preventDefault()
     let formData = new FormData(form)
-    console.log(formData)
     let res = await fetch('/unidades/filtrar', {
       method: 'post',
       body: formData
@@ -71,6 +70,7 @@
                     <th>Modelo</th>
                     <th>Año</th>
                     <th>Precio</th>
+                    <th>Sucursal</th>
                   <tr>`
           response.uns.forEach(u => {
             texto += `<tr>
@@ -79,10 +79,11 @@
                         <td>${u.modelo}</td>
                         <td>${u.anio}</td>
                         <td>${u.precio}</td>
+                        <td>${u.suc}</td>
                       </tr>`
           })
           texto += '<table>'
           document.getElementById('resultado').innerHTML = texto
-    
+
   })
 </script>

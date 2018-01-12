@@ -390,7 +390,7 @@ let returnRouter = function(io) {
       res.send(ventas)
     })
 
-    router.get('/filtrar', function(req, res) {
+    router.get('/filtrar', ensureAuth, function(req, res) {
       res.render('unidades-filtros', {datos: datosVista})
     })
 
@@ -399,14 +399,19 @@ let returnRouter = function(io) {
       let hasta = 0, desde = 0
       hasta = req.body.hasta
       desde = req.body.desde
-      let where = ` estado = 1 AND tipo = ${req.body.tipo} AND combustible = '${req.body.combustible}'`
+      let where = ` estado = 1 AND sucursal != 5 AND tipo = ${req.body.tipo} AND combustible = '${req.body.combustible}'`
       if(desde) {
         where+= ` AND precio >= ${desde}`
       }
       if(hasta) {
         where+= ` AND precio <= ${hasta}`
       }
-      let uns = await db.getUnidades( `WHERE ${where}`)
+      let uns = await db.getUnidades( `WHERE ${where}`, ' ORDER BY marca, precio')
+
+      await Promise.all(uns.map( async u => {
+        u.suc = (await db.getSucursal(u.sucursal))[0].nombre
+        return u
+      }))
       res.send({uns})
     })
 
