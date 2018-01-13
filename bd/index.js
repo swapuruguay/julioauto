@@ -40,7 +40,7 @@ class Bd {
         let connection = this.con
         let task = co.wrap(function * () {
             let conn = yield connection
-            let unidad = yield conn.query("SELECT* FROM unidades WHERE id_unidad = " + id)
+            let unidad = yield conn.query(`SELECT * FROM unidades WHERE id_unidad = ${id}`)
 
             if (!unidad) {
                 return Promise.reject(new Error(`Unidad ${id} not found`))
@@ -60,7 +60,9 @@ class Bd {
         let connection = this.con
         let task = co.wrap(function * () {
             let conn = yield connection
-            let unidades = yield conn.query("SELECT * FROM unidades " + cond + orden)
+            let sql = `SELECT * FROM unidades ${cond} ${orden}`
+
+            let unidades = yield conn.query(sql)
 
             if (!unidades) {
                 return Promise.reject(new Error(`not found`))
