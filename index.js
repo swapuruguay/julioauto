@@ -47,8 +47,12 @@ app.use(express.static(__dirname + '/public'))
 function ensureAuth(req, res, next) {
     if(req.isAuthenticated()) {
         if(req.user.perfil == 1) {
-        req.user.habilitado = true
-      }
+          req.user.habilitado = true
+        }
+        
+        if(req.user.id_usuario === 1) {
+          req.user.yo = true
+        }
         return next()
     }
     res.redirect('/login')

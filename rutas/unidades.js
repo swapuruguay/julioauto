@@ -37,6 +37,13 @@ function admin(req, res, next) {
     res.redirect('/')
 }
 
+function yo(req, res, next) {
+    if(req.user.id_usuario === 1) {
+      return next()
+    }
+    res.redirect('/')
+}
+
 let returnRouter = function(io) {
     router.use(function (req, res, next) {
       datosVista = {}
@@ -390,7 +397,7 @@ let returnRouter = function(io) {
       res.send(ventas)
     })
 
-    router.get('/filtrar', function(req, res) {
+    router.get('/filtrar', ensureAuth, yo, function(req, res) {
       res.render('unidades-filtros', {datos: datosVista})
     })
 

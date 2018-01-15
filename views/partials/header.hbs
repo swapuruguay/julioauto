@@ -39,7 +39,12 @@
        <ul class="dropdown-menu">
          <li><a href="/unidades/nuevo">Nuevo</a></li>
          <li><a href="/unidades/listar">Listar</a>
-         <li><a href="/unidades/filtrar">Listar con filtros</a></li>
+           {{#if datos.user.yo}}
+              <li>
+                <a href="/unidades/filtrar">Listar con filtros</a>
+              </li>
+
+           {{/if}}
          <li><a href="/unidades/stock">Stock</a></li>
          <li><a href="/unidades/historial">Historial</a></li>
        </ul>
@@ -61,7 +66,7 @@
           <li>
             <a href="/unidades/retorno">Retorno Unidades</a>
           </li>
-          
+
        {{/if}}
 
     </ul>
