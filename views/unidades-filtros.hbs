@@ -63,6 +63,8 @@
       body: formData
     })
     let response = await res.json()
+    let totUns = 0
+    let totDolares = 0
     let texto = `<table class="table table-condensed table-striped">
                   <tr>
                     <th>Nro</th>
@@ -81,8 +83,10 @@
                         <td>${u.precio}</td>
                         <td>${u.suc}</td>
                       </tr>`
+            totUns++
+            totDolares+= u.precio
           })
-          texto += '<table>'
+          texto += `<tr><td colspan = 6>Total unidades: ${totUns} Total U$S: ${totDolares}</td><table>`
           document.getElementById('resultado').innerHTML = texto
 
   })
