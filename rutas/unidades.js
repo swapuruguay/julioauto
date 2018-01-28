@@ -506,6 +506,12 @@ let returnRouter = function(io) {
         datosVista.unidad = unidad
         datosVista.tipos = tipos
         datosVista.combustibles = combustibles
+        datosVista.isEnabled = ''
+        if(req.user.id_usuario != 1) {
+          datosVista.isEnabled = 'readonly'
+        }
+         
+        
 
         res.render('unidades-edit', {titulo: "Formulario de Unidades", datos: datosVista})
 
