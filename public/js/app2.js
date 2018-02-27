@@ -28,6 +28,8 @@ function buscaU() {
                 <th>Marca</th>
                 <th>Modelo</th>
                 <th>Matrícula</th>
+                <th>Color</th>
+                <th>Chasis</th>
                 <th>Año</th>
                 <th>Precio</th>
                 <th>Sucursal</th>
@@ -36,7 +38,7 @@ function buscaU() {
 
       res.res.unidades.forEach(function(un) {
         elemento += `<tr><td><a href="/unidades/${un.id_unidad}">${un.id_unidad}</a></td><td>${un.marca}</td><td>${un.modelo}</td>
-        <td>${un.matricula}</td><td>${un.anio}</td><td>${un.precio}</td><td>${un.nombre}</td>`
+        <td>${un.matricula}</td><td>${un.color}</td><td>${un.chasis.substr(un.chasis.length-6)}</td><td>${un.anio}</td><td>${un.precio}</td><td>${un.nombre}</td>`
         totPrecio+= un.precio
         totUnidades++
         if(un.sucursal == res.res.user.sucursal) {

@@ -510,8 +510,8 @@ let returnRouter = function(io) {
         if(req.user.id_usuario != 1) {
           datosVista.isEnabled = 'readonly'
         }
-         
-        
+
+
 
         res.render('unidades-edit', {titulo: "Formulario de Unidades", datos: datosVista})
 
@@ -528,7 +528,7 @@ let returnRouter = function(io) {
       db.disconnect()
         let resultado = {
           user: req.user,
-          unidades: unidades
+          unidades
         }
         res.send({res: resultado})
 
