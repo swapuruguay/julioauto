@@ -145,7 +145,7 @@ router.get('/acumula', ensureAuth, admin, async (req, res) => {
         usados = lu.cantidad
       }
     })
-    listado.push({nombre: s.nombre, nuevos, usados})
+    listado.push({nombre: s.nombre, cantidad: nuevos+usados, nuevos, usados})
   })
 
   let sumaUsados = listado.reduce((valorAnterior, valorActual, indice, vector) => { return (indice == 1) ? valorAnterior.usados + valorActual.usados : valorAnterior + valorActual.usados})
@@ -154,7 +154,7 @@ let sumaNuevos = listado.reduce((valorAnterior, valorActual, indice, vector) => 
 
   datosVista.nuevos = sumaNuevos
   datosVista.usados = sumaUsados
-
+  datosVista.cantidad = sumaNuevos + sumaUsados
   datosVista.listado = listado
   res.render('ventas-acumuladas', {titulo: 'Ventas acumuladas del mes', datos: datosVista})
 })

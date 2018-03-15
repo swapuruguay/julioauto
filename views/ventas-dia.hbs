@@ -32,6 +32,7 @@
     let html = `<table class="table table-condensed table-striped">
                 <tr>
                 <th>Sucursal</th>
+                <th>Cantidad</th>
                 <th>Nuevos</th>
                 <th>Usados</th>
                 <tr>
@@ -39,12 +40,12 @@
     let cantidad = 0
     let cantidadU = 0
     respuesta.datos.forEach(r => {
-      html+= `<tr><td>${r.nombre}</td><td>${r.nuevos}</td><td>${r.usados}</td></tr>`
+      html+= `<tr><td>${r.nombre}</td><td>${r.nuevos+r.usados}</td><td>${r.nuevos}</td><td>${r.usados}</td></tr>`
       cantidad+= r.nuevos
       cantidadU+= r.usados
       return r
     })
-    html+= `<tr><td><strong>Total</strong></td><td><strong>${cantidad}</strong></td><td><strong>${cantidadU}</strong></td></tr>`
+    html+= `<tr><td><strong>Total</strong></td><td><strong>${cantidad+cantidadU}</strong></td><td><strong>${cantidad}</strong></td><td><strong>${cantidadU}</strong></td></tr>`
     html+= '</table>'
     let divResultado = document.getElementById('resultado')
     divResultado.innerHTML = html

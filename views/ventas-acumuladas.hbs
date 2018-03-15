@@ -4,18 +4,21 @@
     <table class="table table-condensed table-striped">
       <tr>
         <th>Sucursal</th>
+        <th>Cantidad</th>
         <th>Nuevos</th>
         <th>Usados</th>
       </tr>
       {{#each datos.listado}}
         <tr>
           <td>{{nombre}}</td>
+          <td>{{cantidad}}</td>
           <td>{{nuevos}}</td>
           <td>{{usados}}</td>
         </tr>
       {{/each}}
       <tr>
         <td><strong>Total</strong></td>
+        <td><strong>{{datos.cantidad}}</strong></td>
         <td><strong>{{datos.nuevos}}</strong></td>
         <td><strong>{{datos.usados}}</strong></td>
       </tr>
