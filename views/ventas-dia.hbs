@@ -1,0 +1,53 @@
+<div class="row">
+<div class="col col-sm-12">
+  <h1>{{titulo}}</h1>
+</div>
+<div class="col-sm-12">
+  <form id="busqueda" data-id="{{datos.user.sucursal}}" class="form-inline">
+    <div class="form-group">
+      <label for="mes">Fecha</label>
+      <input type="date" name="fecha" id="fecha">
+    </div>
+
+    <input type="submit" class="btn btn-info" id="boton" value="Buscar">
+  </form>
+</div>
+</div>
+<p>&nbsp;</p>
+<div id="resultado"></div>
+<script>
+  let frm = document.getElementById('busqueda')
+  frm.addEventListener('submit', async evt => {
+    evt.preventDefault()
+    let datos = { fecha: frm.fecha.value}
+    let res = await fetch('/ventas/dia', {
+      method: 'post',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(datos)
+    })
+    let respuesta = await res.json()
+    let html = `<table class="table table-condensed table-striped">
+                <tr>
+                <th>Sucursal</th>
+                <th>Nuevos</th>
+                <th>Usados</th>
+                <tr>
+            `
+    let cantidad = 0
+    let cantidadU = 0
+    respuesta.datos.forEach(r => {
+      html+= `<tr><td>${r.nombre}</td><td>${r.nuevos}</td><td>${r.usados}</td></tr>`
+      cantidad+= r.nuevos
+      cantidadU+= r.usados
+      return r
+    })
+    html+= `<tr><td><strong>Total</strong></td><td><strong>${cantidad}</strong></td><td><strong>${cantidadU}</strong></td></tr>`
+    html+= '</table>'
+    let divResultado = document.getElementById('resultado')
+    divResultado.innerHTML = html
+  })
+
+</script>

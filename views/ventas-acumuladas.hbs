@@ -1,0 +1,24 @@
+<div class="row">
+  <div class="col col-sm-12">
+    <h1>{{titulo}}</h1>
+    <table class="table table-condensed table-striped">
+      <tr>
+        <th>Sucursal</th>
+        <th>Nuevos</th>
+        <th>Usados</th>
+      </tr>
+      {{#each datos.listado}}
+        <tr>
+          <td>{{nombre}}</td>
+          <td>{{nuevos}}</td>
+          <td>{{usados}}</td>
+        </tr>
+      {{/each}}
+      <tr>
+        <td><strong>Total</strong></td>
+        <td><strong>{{datos.nuevos}}</strong></td>
+        <td><strong>{{datos.usados}}</strong></td>
+      </tr>
+    </table>
+  </div>
+</div>

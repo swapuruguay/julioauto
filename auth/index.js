@@ -10,7 +10,7 @@ exports.strategy = new LocalStrategy( async function(username, password, done) {
   db.disconnect()
 
   let hash = bcrypt.hashSync(password)
-  
+
   if(user.length > 0) {
       hash = bcrypt.hashSync(password)
     //console.log(bcrypt.compareSync(password, hash))

@@ -63,7 +63,7 @@
       mes: form.mes.value,
       sucursal: form.dataset.id
     }
-    let respuesta = await fetch('/unidades/ventas', {
+    let respuesta = await fetch('/ventas/listar', {
       method: 'post',
       headers: {
         'Accept': 'application/json',

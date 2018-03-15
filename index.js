@@ -13,6 +13,7 @@ const flash = require('connect-flash');
 const cli = require('./rutas/clientes')
 const un = require('./rutas/unidades')(io)
 const senias = require('./rutas/senias')
+const ventas = require('./rutas/ventas')
 const bodyParser = require('body-parser')
 const multer = require('multer')
 const Db = require('./bd')
@@ -69,6 +70,7 @@ function admin() {
 app.use('/unidades', un)
 app.use('/clientes', cli)
 app.use('/senias', senias)
+app.use('/ventas', ventas)
 
 app.get('/', ensureAuth, co.wrap(function * (req, res) {
   let db = new Db()

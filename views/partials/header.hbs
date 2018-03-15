@@ -59,9 +59,16 @@
       <li>
          <a href="/unidades/pendientes">Pendientes <span class="badge" id="pendientes"></span></a>
        </li>
-       <li>
-            <a href="/unidades/ventas">Ventas</a>
-          </li>
+       <li class="dropdown">
+        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Ventas <span class="caret"></span></a>
+        <ul class="dropdown-menu">
+          <li><a href="/ventas/listar">Listado</a></li>
+          {{#if datos.user.habilitado}}
+            <li><a href="/ventas/dia">Ventas de un día</a></li>
+            <li><a href="/ventas/acumula">Acumuladas del mes en curso</a></li>
+          {{/if}}
+        </ul>
+       </li>
        {{#if datos.user.habilitado}}
           <li>
             <a href="/unidades/retorno">Retorno Unidades</a>

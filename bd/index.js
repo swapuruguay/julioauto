@@ -407,6 +407,24 @@ class Bd {
         return Promise.resolve(task())
     }
 
+    getVentasAgrupadas(where, order) {
+        let orden = order || ''
+        let cond = where || ''
+        let connection = this.con
+           let task = co.wrap(function * () {
+               let conn = yield connection
+               let sql = `SELECT s.nombre, COUNT(*) AS cantidad, u.nuevo from ventas v JOIN
+                         unidades u ON u.id_unidad = v.id_unidad_fk JOIN sucursales s ON s.id_sucursal = v.id_sucursal_fk ${cond}
+                         GROUP BY v.id_sucursal_fk`
+               let list = conn.query(sql)
+               if(!list) {
+                   return Promise.reject(new Error('No existen ventas'))
+               }
+               return Promise.resolve(list)
+           })
+           return Promise.resolve(task())
+       }
+
     getHistorial(id) {
 
       let connection = this.con

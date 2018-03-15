@@ -355,7 +355,7 @@ let returnRouter = function(io) {
 
     })
 
-    router.get('/ventas', ensureAuth,  co.wrap(function * (req, res) {
+    /* router.get('/ventas', ensureAuth,  co.wrap(function * (req, res) {
       let db = new Db()
       let ventas = yield db.getVentas(` WHERE id_sucursal_fk = ${req.user.sucursal} `)
       let options = {year: "numeric", month: "numeric", day: "numeric"};
@@ -395,7 +395,7 @@ let returnRouter = function(io) {
         ventas = []
       }
       res.send(ventas)
-    })
+    }) */
 
     router.get('/filtrar', ensureAuth, yo, function(req, res) {
       res.render('unidades-filtros', {datos: datosVista})
@@ -417,6 +417,7 @@ let returnRouter = function(io) {
       }
       let uns = await db.getUnidades( ` WHERE  ${where}`, ' ORDER BY marca, precio')
       await Promise.all(uns.map( async u => {
+        console.log(u)
         u.suc = (await db.getSucursal(u.sucursal))[0].nombre
         return u
       }))
