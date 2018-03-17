@@ -120,12 +120,14 @@ router.post('/dia', async(req, res) => {
   res.send({ datos })
 })
 
-router.get('/acumula', ensureAuth, admin, async (req, res) => {
+router.get('/acumula', ensureAuth, admin, (req, res) => {
+  res.render('ventas-acumuladas', {titulo: 'Ventas del mes' , datos: datosVista})
+})
+
+router.post('/acumula',  async (req, res) => {
   const db = new Db()
-  const hoy = new Date()
-  const mes = hoy.getMonth() + 1
-  const anio = hoy.getFullYear()
-  //console.log(mes)
+  const {mes, anio} = req.body
+
   let listadoNuevos = await db.getVentasAgrupadas(` WHERE MONTH(fecha) = ${mes} AND YEAR(fecha) = ${anio} AND u.nuevo = 1`)
   let listadoUsados = await db.getVentasAgrupadas(` WHERE MONTH(fecha) = ${mes} AND YEAR(fecha) = ${anio} AND u.nuevo = 0`)
   let contador = 0
@@ -148,15 +150,7 @@ router.get('/acumula', ensureAuth, admin, async (req, res) => {
     listado.push({nombre: s.nombre, cantidad: nuevos+usados, nuevos, usados})
   })
 
-  let sumaUsados = listado.reduce((valorAnterior, valorActual, indice, vector) => { return (indice == 1) ? valorAnterior.usados + valorActual.usados : valorAnterior + valorActual.usados})
-
-let sumaNuevos = listado.reduce((valorAnterior, valorActual, indice, vector) => { return (indice == 1) ? valorAnterior.nuevos + valorActual.nuevos : valorAnterior + valorActual.nuevos})
-
-  datosVista.nuevos = sumaNuevos
-  datosVista.usados = sumaUsados
-  datosVista.cantidad = sumaNuevos + sumaUsados
-  datosVista.listado = listado
-  res.render('ventas-acumuladas', {titulo: 'Ventas acumuladas del mes', datos: datosVista})
+  res.send({listado})
 })
 
 
