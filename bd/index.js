@@ -323,11 +323,12 @@ class Bd {
         return Promise.resolve(task())
     }
 
-    getSenias() {
+    getSenias(where) {
+      let cond = where || ''
         let connection = this.con
         let task = co.wrap(function * () {
             let conn = yield connection
-            let list = conn.query('SELECT senias.* FROM senias JOIN unidades ON senias.id_unidad_fk = unidades.id_unidad WHERE unidades.estado = 2')
+            let list = conn.query(`SELECT senias.* FROM senias JOIN unidades ON senias.id_unidad_fk = unidades.id_unidad WHERE unidades.estado = 2 ${cond}`)
             if(!list) {
                 return Promise.reject(new Error('No existen señas'))
             }

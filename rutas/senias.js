@@ -121,7 +121,10 @@ router.post('/asignar', ensureAuth, co.wrap(function * (req, res) {
 }))*/
 router.get('/listar', ensureAuth, co.wrap(function * (req, res) {
     let db = new Db()
-    let listado = yield db.getSenias()
+
+    let where = (req.user.habilitado) ? '' : ` AND senias.sucursal = ${req.user.sucursal}`
+
+    let listado = yield db.getSenias(where)
     //console.log(listado)
     if(listado) {
     yield (listado.map(co.wrap(function * (item) {
