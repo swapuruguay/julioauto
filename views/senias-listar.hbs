@@ -43,7 +43,7 @@
           <td>
             {{importe}}
           </td>
-          <td><a type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#myModal" data-idsenia={{id_senia}} data-whatever="{{unidad.nro_motor}}" title="Asignar"><i class="fa fa-hand-pointer-o"></i></a></td>
+          <td><a type="button" class="btn btn-info btn-sm eliminar" data-idsenia={{unidad.id_unidad}}  title="Eliminar"><i data-idsenia={{unidad.id_unidad}} class="fa fa-hand-pointer-o eliminar"></i></a></td>
           <td>
             <a href='/senias/{{id_senia}}' class="btn btn-info btn-sm" title="Ver Detalle"><i class="fa fa-eye"></i></a>
           </td>
@@ -53,60 +53,70 @@
 
 </div>
 
-<!-- Modal -->
-<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModal">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="myModalLabel">Asignar Vehículo a Seña</h4>
-      </div>
-      <div class="modal-body">
-        <form>
-          <div class="form-group">
-            <label for="recipient-name" class="control-label">Nro. de motor provisorio:</label>
-            <input type="text" class="form-control ficticio" id="ficticio" readonly="true">
-            <input type="hidden" name="idsenia" id="idsenia" value="">
-          </div>
-          <div class="form-group">
-            <label for="message-text" class="control-label">Nro de motor real:</label>
-            <input type="text" class="form-control" id="motor">
-          </div>
-        </form>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-        <button type="button" id="btn" class="btn btn-primary">Guardar Cambios</button>
-      </div>
-    </div>
-  </div>
-</div>
 <script>
-  $('#myModal').on('show.bs.modal', function (event) {
-  var button = $(event.relatedTarget) // Button that triggered the modal
-  var recipient = button.data('whatever') // Extract info from data-* attributes
-  let idSenia = button.data('idsenia')
-   // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
-  // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
-  var modal = $(this)
-  //modal.find('.modal-title').text('New message to ' + recipient)
-  modal.find('.modal-body .ficticio').val(recipient)
-  modal.find('.modal-body #idsenia').val(idSenia)
-})
+  //const botones = document.querySelectorAll('#resultado .eliminar')
+  const div = document.getElementById('resultado')
+  let texto = ''
+  div.addEventListener('click', async evt => {
 
-  let btn = $('#btn')
-  btn.click(function() {
-    let motor = $('#motor')
+    if(evt.target.classList.contains('eliminar')) {
+      let datos = {
+        idsenia: evt.target.dataset.idsenia
+      }
 
-    let idSenia = $('#idsenia').val()
-    let ficticio = $('#ficticio').val()
-    $('#myModal').modal('hide')
-    superagent
-      .post('/senias/asignar')
-      .send({old: ficticio, nromotor: motor.val(), idsenia: idSenia})
-      .end(function(err, res) {
-        $('#myModal').modal('hide')
-        window.location.replace('/senias/listar')
+      // fetch('/senias/eliminar', {
+      //   method: 'POST',
+      //   body: JSON.stringify({idsenia: evt.target.dataset.idsenia})
+      // }).then(res => {
+      //   return res.json()
+      // }).then(data => {
+      //   console.log(data)
+      // })
+      let formData = new FormData()
+      formData.append('idsenia', evt.target.dataset.idsenia)
+      let res = await fetch('/senias/eliminar/', {
+                  method: 'POST',
+                  body: formData
+                })
+                const result = await res.json()
+                console.log(result)
+                texto+= `<table class="senias table table-condensed table-responsive table-bordered">
+                <tr>
+                  <th>Fecha</th>
+                  <th>Cliente</th>
+                  <th>Ciudad</th>
+                  <th>Celular</th>
+                  <th>Sucursal</th>
+                  <th>Marca</th>
+                  <th>Modelo</th>
+                  <th>Color</th>
+                  <th>Observaciones</th>
+                  <th>
+                    Importe seña
+                  </th>
+                  <th>
+                    Asignar
+                  </th>
+                  <th>
+                    Detalles
+                  </th>
+                </tr>`
+                result.listado.forEach(u => {
+                texto+= `<tr><td>${u.fecha}</td><td>${u.cliente.nombre} ${u.cliente.apellido}</td>
+                        <td>${u.cliente.ciudad}</td><td>${u.cliente.celular}</td><td>${u.sucursal.nombre}</td>
+                        <td>${u.unidad.marca}</td><td>${u.unidad.modelo}</td><td>${u.unidad.color}</td>
+                        <td>${u.observaciones}</td><td>${u.importe}</td>
+                        <td><a type="button" class="btn btn-info btn-sm eliminar"
+                         data-idsenia=${u.unidad.id_unidad} title="Eliminar"><i data-idsenia=${u.unidad.id_unidad}
+                          class="fa fa-trash eliminar"></i></a></td>
+                          <td><a href='/senias/${u.id_senia}' class="btn btn-info btn-sm" title="Ver Detalle"><i class="fa fa-eye"></i></a></td>
+                        </tr>`
+              })
+              texto+= '</table>'
+              div.innerHTML = texto
+              texto = ''
+          }
       })
-  })
+
+
 </script>

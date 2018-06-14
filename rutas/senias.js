@@ -17,20 +17,20 @@ router.use(formData.union());
 
 function ensureAuth(req, res, next) {
     if(req.isAuthenticated()) {
+      if(req.user.perfil == 1) {
+        req.user.habilitado = true
+      }
 
         return next()
     }
     res.redirect('/login')
 }
 
-router.use(ensureAuth,co.wrap(function * (req, res, next) {
-      datosVista = {}
-      let db = new Db()
-      datosVista.sucursal = (yield db.getSucursal(req.user.sucursal))[0]
-      db.disconnect()
-      datosVista.user = req.user
-      next();
-}));
+router.use(function (req, res, next) {
+  datosVista = {}
+  datosVista.user = req.user
+  next();
+});
 
 router.get('/nueva', ensureAuth, function(req, res) {
   var date = new Date()
@@ -38,8 +38,8 @@ router.get('/nueva', ensureAuth, function(req, res) {
   res.render('senias', {titulo: 'Formulario de señas', fecha: fecha, datos: datosVista})
 })
 
-router.post('/new', co.wrap(function * (req, res) {
-    console.log('ok')
+router.post('/new', async (req, res) => {
+
     let db = new Db()
     let fec = new Date()
     let nuevo = ((req.body.nuevo == 'on') ? 1 : 0)
@@ -48,18 +48,17 @@ router.post('/new', co.wrap(function * (req, res) {
         marca: req.body.marca.toUpperCase(),
         modelo: req.body.modelo.toUpperCase(),
         color: req.body.color.toUpperCase(),
-        sucursal: req.user.sucursal,
+        //sucursal: req.user.sucursal,
         combustible: req.body.combustible,
-        estado: 2,
+        //estado: 2,
         nuevo: nuevo,
         tipo: req.body.tipo,
         precio: req.body.precio,
-        nro_motor: 'sen_'+req.user.sucursal+'_'+(fec.getMonth()+1)+fec.getFullYear()+Math.round(Math.random()*1000)
+        //nro_motor: 'sen_'+req.user.sucursal+'_'+(fec.getMonth()+1)+fec.getFullYear()+Math.round(Math.random()*1000)
 
     }
 
-    let result = yield db.saveUnidad(unidad)
-
+    let result = await db.saveUnidadTemp(unidad)
 
     let senia = {
         id_cliente_fk: req.body.id,
@@ -72,38 +71,42 @@ router.post('/new', co.wrap(function * (req, res) {
         fecha:  new Date().toJSON().slice(0,10)
     }
 
-    let rs = yield db.saveSenia(senia)
-    if(senia.tipo == 'U') {
-        yield db.saveUnidadSenia({id_unidad_fk: req.body.oculto, id_senia_fk: rs.insertId})
-    }
+    let rs = await db.saveSenia(senia)
+    // if(senia.tipo == 'U') {
+    //     await db.saveUnidadSenia({id_unidad_fk: req.body.oculto, id_senia_fk: rs.insertId})
+    // }
    // console.log(rs)
     db.disconnect()
     res.redirect('/senias/nueva')
-}))
+})
 
-router.post('/asignar', ensureAuth, co.wrap(function * (req, res) {
+router.post('/eliminar',  async function (req, res)  {
   let db = new Db()
-  let senia = (yield db.getSenia(req.body.idsenia))[0]
+  let id_unidad = req.body.idsenia
 
-  if(senia.tipo == 'U') {
-    senia.seniada = (yield db.getUnidadSeniada(senia.id_senia))[0]
+   await db.eliminarSenia(id_unidad)
+   let where = (req.user.habilitado) ? '' : ` WHERE senias.sucursal = ${req.user.sucursal}`
+
+  let listado = await db.getSenias(where)
+
+  if(listado) {
+    await Promise.all(listado.map(async (item) => {
+      let mes = item.fecha.getMonth()+1 > 9 ? item.fecha.getMonth()+1 : '0' + (item.fecha.getMonth()+1)
+      let dia = item.fecha.getDate() > 9 ? item.fecha.getDate() : '0' + item.fecha.getDate()
+      item.fecha = `${dia}/${mes}/${item.fecha.getFullYear()}`
+      item.cliente = (await db.getCliente(item.id_cliente_fk))[0]
+      item.unidad = (await db.getUnidadTemp(item.id_unidad_fk))[0]
+      item.sucursal = ( await db.getSucursal(item.sucursal))[0]
+      return item
+    }))
+  } else {
+    listado = []
   }
-
-  let unidadSenia
-
-  if(senia.seniada) {
-    unidadSenia = {id_unidad: senia.seniada.id_unidad_fk, estado: 1}
-    yield db.saveUnidad(unidadSenia)
-  }
-
-  let unidad = (yield db.getUnidades(` WHERE nro_motor = '${req.body.old}'`))[0]
-  unidad.nro_motor = req.body.nromotor.toUpperCase(),
-  unidad.estado= 3
-  yield db.saveUnidad(unidad)
-  yield db.saveVenta({id_unidad_fk: unidad.id_unidad, id_sucursal_fk: req.user.sucursal, fecha: new Date().toJSON().slice(0,10)})
+  //console.log(listado)
   db.disconnect()
-  res.send('ok')
-}))
+
+  res.send({listado})
+})
 
 /*router.get('/listar', ensureAuth, async(function  (req, res) {
     let db = new Db()
@@ -119,35 +122,35 @@ router.post('/asignar', ensureAuth, co.wrap(function * (req, res) {
     db.disconnect()
     res.render('senias-listar', {titulo: 'Listado de Señas', datos: datosVista, senias: listado })
 }))*/
-router.get('/listar', ensureAuth, co.wrap(function * (req, res) {
+router.get('/listar', ensureAuth, async (req, res) => {
+
     let db = new Db()
+    let where = (req.user.habilitado) ? '' : ` WHERE senias.sucursal = ${req.user.sucursal}`
 
-    let where = (req.user.habilitado) ? '' : ` AND senias.sucursal = ${req.user.sucursal}`
-
-    let listado = yield db.getSenias(where)
+    let listado = await db.getSenias(where)
     //console.log(listado)
     if(listado) {
-    yield (listado.map(co.wrap(function * (item) {
+    await Promise.all(listado.map(async (item) => {
         let mes = item.fecha.getMonth()+1 > 9 ? item.fecha.getMonth()+1 : '0' + (item.fecha.getMonth()+1)
         let dia = item.fecha.getDate() > 9 ? item.fecha.getDate() : '0' + item.fecha.getDate()
         item.fecha = `${dia}/${mes}/${item.fecha.getFullYear()}`
-        item.cliente = (yield db.getCliente(item.id_cliente_fk))[0]
-        item.unidad = (yield db.getUnidad(item.id_unidad_fk))[0]
-        item.sucursal = ( yield db.getSucursal(item.sucursal))[0]
+        item.cliente = (await db.getCliente(item.id_cliente_fk))[0]
+        item.unidad = (await db.getUnidadTemp(item.id_unidad_fk))[0]
+        item.sucursal = ( await db.getSucursal(item.sucursal))[0]
         return item
-    })))
+    }))
   } else {
     listado = []
   }
     db.disconnect()
     res.render('senias-listar', {titulo: 'Listado de Señas', datos: datosVista, senias: listado })
 
-}))
+})
 
 router.get('/:id', ensureAuth, co.wrap(function * (req, res) {
     let db = new Db()
     let senia = (yield db.getSenia(req.params.id))[0]
-    senia.unidad = (yield db.getUnidad(senia.id_unidad_fk))[0]
+    senia.unidad = (yield db.getUnidadTemp(senia.id_unidad_fk))[0]
     senia.cliente = (yield db.getCliente(senia.id_cliente_fk))[0]
     db.disconnect()
 

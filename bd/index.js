@@ -13,7 +13,8 @@ class Bd {
            host: config.host,
            user: config.user,
            password: config.password,
-           database: config.database
+           database: config.database,
+           //insecureAuth : true
        }
        this.con = mysql.createConnection(datos)
        let connection = this.con
@@ -50,6 +51,21 @@ class Bd {
         })
 
         return Promise.resolve(task())
+
+    }
+
+    async getUnidadTemp(id) {
+        let connection = this.con
+
+            let conn = await connection
+            let unidad = await conn.query(`SELECT * FROM unidades_temp WHERE id_unidad = ${id}`)
+
+            if (!unidad) {
+                return Promise.reject(new Error(`Unidad ${id} not found`))
+            }
+
+            return Promise.resolve(unidad)
+
 
     }
 
@@ -247,6 +263,26 @@ class Bd {
         return Promise.resolve(task())
     }
 
+    async saveUnidadTemp(unidad) {
+      let connection = this.con
+      let conn = await connection
+      let sql;
+      if(unidad.id_unidad == 0) {
+        sql = 'INSERT INTO unidades_temp SET ? '
+      } else {
+        sql = `UPDATE unidades_temp SET ? WHERE id_unidad = ${unidad.id_unidad}`
+      }
+      let result
+      try {
+        result = await conn.query(sql, unidad)
+        return Promise.resolve(result)
+      } catch(err) {
+        console.log(err)
+        return Promise.reject(new Error(err.code))
+      }
+    }
+
+
     saveVenta(venta) {
         let connection = this.con
             let task = co.wrap(function * () {
@@ -323,12 +359,29 @@ class Bd {
         return Promise.resolve(task())
     }
 
+    async eliminarSenia(idUnidad) {
+        let connection = this.con
+
+            let conn = await connection
+            let sql;
+            sql = `DELETE FROM unidades_temp WHERE id_unidad = ${idUnidad}`
+
+            let result = await conn.query(sql)
+
+            if (!result) {
+                return Promise.reject(new Error(`not found`))
+            }
+
+            return Promise.resolve(result)
+
+    }
+
     getSenias(where) {
       let cond = where || ''
         let connection = this.con
         let task = co.wrap(function * () {
             let conn = yield connection
-            let list = conn.query(`SELECT senias.* FROM senias JOIN unidades ON senias.id_unidad_fk = unidades.id_unidad WHERE unidades.estado = 2 ${cond}`)
+            let list = conn.query(`SELECT senias.* FROM senias JOIN unidades_temp ON senias.id_unidad_fk = unidades_temp.id_unidad ${cond}`)
             if(!list) {
                 return Promise.reject(new Error('No existen señas'))
             }
@@ -341,7 +394,7 @@ class Bd {
         let connection = this.con
         let task = co.wrap(function * () {
             let conn = yield connection
-            let list = conn.query(`SELECT senias.* FROM senias JOIN unidades ON senias.id_unidad_fk = unidades.id_unidad WHERE id_senia = ${id} and unidades.estado = 2`)
+            let list = conn.query(`SELECT senias.* FROM senias JOIN unidades_temp ON senias.id_unidad_fk = unidades_temp.id_unidad WHERE id_senia = ${id}`)
             if(!list) {
                 return Promise.reject(new Error('No existen señas'))
             }

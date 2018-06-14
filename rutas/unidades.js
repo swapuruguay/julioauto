@@ -93,6 +93,7 @@ let returnRouter = function(io) {
 
     router.post('/retornables', async function(req, res) {
       let db = new Db()
+      console.log(req.user)
       let nro = req.body.nro
       let uni = (await db.getUnidades(` WHERE (sucursal = 5 OR estado = 3) AND nro_motor = '${nro}'`))[0]
       let sucursal = (await db.getSucursal(uni.sucursal))[0]
@@ -402,6 +403,7 @@ let returnRouter = function(io) {
     })
 
     router.post('/filtrar', async (req, res) => {
+      console.log(req.user.nombre)
       let db = new Db()
       let hasta = req.body.hasta
       let desde = req.body.desde

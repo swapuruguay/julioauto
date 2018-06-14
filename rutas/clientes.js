@@ -1,8 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Db = require('../bd')
-//const async = require('asyncawait/async')
-//const await = require('asyncawait/await')
+
 const formData = require("express-form-data")
 
 // parsing data with connect-multiparty. Result set on req.body and req.files
@@ -16,6 +15,9 @@ router.use(formData.union());
 
 function ensureAuth(req, res, next) {
     if(req.isAuthenticated()) {
+      if(req.user.perfil == 1) {
+        req.user.habilitado = true
+      }
 
         return next()
     }
@@ -81,6 +83,7 @@ router.get('/', function(req, res) {
 })
 
 router.post('/', async function(req, res) {
+    console.log(req.user)
       let criterio = req.body.criterio
       let texto = req.body.texto
       let db = new Db()
@@ -154,7 +157,7 @@ router.get('/:id', ensureAuth,  async function (req, res) {
       return c
     })
   }
-  
+
 
   res.render('clientes-edit', {titulo: 'Formulario de clientes', datos:{cliente: cliente, user: req.user}} )
 //  res.end()
