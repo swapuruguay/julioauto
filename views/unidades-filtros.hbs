@@ -43,7 +43,7 @@
         </div>
       </div>.
 
-      <input type="submit" id="find-unidad" value="Buscar" class="btn btn-default">
+      <input type="submit" id="filtra-unidad" value="Buscar" class="btn btn-default">
     </form>
   </div>
 </div>
@@ -63,6 +63,7 @@
       body: formData
     })
     let response = await res.json()
+
     let totUns = 0
     let totDolares = 0
     let texto = `<table class="table table-condensed table-striped">

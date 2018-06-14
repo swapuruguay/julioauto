@@ -108,27 +108,14 @@ router.post('/eliminar',  async function (req, res)  {
   res.send({listado})
 })
 
-/*router.get('/listar', ensureAuth, async(function  (req, res) {
-    let db = new Db()
-    let listado = await(db.getSenias())
-    //console.log(listado)
-    await(listado.map(function(item) {
-        item.cliente = await(db.getCliente(item.id_cliente_fk))[0]
-        item.unidad = await(db.getUnidad(item.id_unidad_fk))[0]
-        return item
-    }))
-    console.log(listado[0].cliente)
-    //datosVista.senias = listado
-    db.disconnect()
-    res.render('senias-listar', {titulo: 'Listado de Señas', datos: datosVista, senias: listado })
-}))*/
+
 router.get('/listar', ensureAuth, async (req, res) => {
 
     let db = new Db()
     let where = (req.user.habilitado) ? '' : ` WHERE senias.sucursal = ${req.user.sucursal}`
 
     let listado = await db.getSenias(where)
-    //console.log(listado)
+
     if(listado) {
     await Promise.all(listado.map(async (item) => {
         let mes = item.fecha.getMonth()+1 > 9 ? item.fecha.getMonth()+1 : '0' + (item.fecha.getMonth()+1)

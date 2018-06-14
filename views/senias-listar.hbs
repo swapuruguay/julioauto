@@ -80,8 +80,6 @@
       loader.classList.remove('oculto')
       // const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
       // await delay(2000);
-      let formData = new FormData()
-      formData.append('idsenia', evt.target.dataset.idsenia)
       let res = await fetch('/senias/eliminar/', {
                 headers: {
                   'Content-Type': 'application/json'
