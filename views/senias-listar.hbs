@@ -52,10 +52,23 @@
   </table>
 
 </div>
+<div id="loader" class="container oculto">
+  <div class="content has-text-centered">
+    <div class="lds-css ng-scope">
+      <div style="width:100%;height:100%" class="lds-bars">
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+      </div>
+    </div>
+  </div>
+</div>
 
 <script>
   //const botones = document.querySelectorAll('#resultado .eliminar')
   const div = document.getElementById('resultado')
+  const loader = document.getElementById('loader')
   let texto = ''
   div.addEventListener('click', async evt => {
 
@@ -63,23 +76,21 @@
       let datos = {
         idsenia: evt.target.dataset.idsenia
       }
-
-      // fetch('/senias/eliminar', {
-      //   method: 'POST',
-      //   body: JSON.stringify({idsenia: evt.target.dataset.idsenia})
-      // }).then(res => {
-      //   return res.json()
-      // }).then(data => {
-      //   console.log(data)
-      // })
+      div.innerHTML = ""
+      loader.classList.remove('oculto')
+      // const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
+      // await delay(2000);
       let formData = new FormData()
       formData.append('idsenia', evt.target.dataset.idsenia)
       let res = await fetch('/senias/eliminar/', {
+                headers: {
+                  'Content-Type': 'application/json'
+                },
                   method: 'POST',
-                  body: formData
+                  body: JSON.stringify({idsenia: evt.target.dataset.idsenia})
                 })
                 const result = await res.json()
-                console.log(result)
+
                 texto+= `<table class="senias table table-condensed table-responsive table-bordered">
                 <tr>
                   <th>Fecha</th>
@@ -115,6 +126,7 @@
               texto+= '</table>'
               div.innerHTML = texto
               texto = ''
+              loader.classList.add('oculto')
           }
       })
 

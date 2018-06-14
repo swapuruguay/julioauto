@@ -83,7 +83,7 @@ router.get('/', function(req, res) {
 })
 
 router.post('/', async function(req, res) {
-    console.log(req.user)
+    
       let criterio = req.body.criterio
       let texto = req.body.texto
       let db = new Db()
