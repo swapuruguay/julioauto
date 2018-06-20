@@ -79,7 +79,6 @@ app.use('/senias', senias)
 app.use('/ventas', ventas)
 
 app.get('/', ensureAuth, co.wrap(function * (req, res) {
-  console.log(req.user)
   let db = new Db()
   let suc = (yield db.getSucursal(req.user.sucursal))[0]
   res.render('index', { titulo: suc.alias , datos: {user: req.user}})
