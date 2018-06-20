@@ -85,7 +85,8 @@
                   'Content-Type': 'application/json'
                 },
                   method: 'POST',
-                  body: JSON.stringify({idsenia: evt.target.dataset.idsenia})
+                  body: JSON.stringify({idsenia: evt.target.dataset.idsenia}),
+                  credentials: 'same-origin'
                 })
                 const result = await res.json()
 

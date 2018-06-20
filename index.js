@@ -45,12 +45,18 @@ handleb.registerPartial('header', fs.readFileSync(__dirname + '/views/partials/h
 
 app.use(express.static(__dirname + '/public'))
 
+app.use(function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
+});
+
 function ensureAuth(req, res, next) {
     if(req.isAuthenticated()) {
         if(req.user.perfil == 1) {
           req.user.habilitado = true
         }
-        
+
         if(req.user.id_usuario === 1) {
           req.user.yo = true
         }
@@ -73,6 +79,7 @@ app.use('/senias', senias)
 app.use('/ventas', ventas)
 
 app.get('/', ensureAuth, co.wrap(function * (req, res) {
+  console.log(req.user)
   let db = new Db()
   let suc = (yield db.getSucursal(req.user.sucursal))[0]
   res.render('index', { titulo: suc.alias , datos: {user: req.user}})

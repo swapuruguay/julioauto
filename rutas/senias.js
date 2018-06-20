@@ -83,7 +83,6 @@ router.post('/new', async (req, res) => {
 router.post('/eliminar',  async function (req, res)  {
   let db = new Db()
   let id_unidad = req.body.idsenia
-
    await db.eliminarSenia(id_unidad)
    let where = (req.user.habilitado) ? '' : ` WHERE senias.sucursal = ${req.user.sucursal}`
 
@@ -113,7 +112,6 @@ router.get('/listar', ensureAuth, async (req, res) => {
 
     let db = new Db()
     let where = (req.user.habilitado) ? '' : ` WHERE senias.sucursal = ${req.user.sucursal}`
-
     let listado = await db.getSenias(where)
 
     if(listado) {
