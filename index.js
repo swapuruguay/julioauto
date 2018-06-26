@@ -81,7 +81,7 @@ app.use('/ventas', ventas)
 app.get('/', ensureAuth, co.wrap(function * (req, res) {
   let db = new Db()
   let suc = (yield db.getSucursal(req.user.sucursal))[0]
-  res.render('index', { titulo: suc.alias , datos: {user: req.user}})
+  res.render('index', { titulo: suc.alias , datos: {user: req.user, color: 'rgb(65,87,199)'}})
 }))
 
 
