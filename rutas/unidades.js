@@ -151,13 +151,23 @@ let returnRouter = function(io) {
         id_unidad: idUnidad,
         estado: 5
       }
+      try {
+        await db.saveUnidad(un)
+        await db.saveTraspaso(datos)
+        res.render('unidades-ok-traspaso', {datos: datosVista, mensaje: 'Operación exitosa'})
+        db.disconnect()
 
-      await db.saveUnidad(un)
-      await db.saveTraspaso(datos)
+      } catch(err) {
 
-      db.disconnect()
+        if(err.message == 'ER_DUP_ENTRY') {
+          db.disconnect()
+          res.render('unidades-ok-traspaso', {datos: datosVista, mensaje: 'Registro duplicado, ya se hizo este traspaso no se puede volver a enviar'})
+        } else {
+          db.disconnect()
+          res.send('Ocurrió un error, intente de nuevo')
+        }
+    }
 
-        res.render('unidades-ok-traspaso', {datos: datosVista})
 
 
 

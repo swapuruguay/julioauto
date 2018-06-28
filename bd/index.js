@@ -293,7 +293,7 @@ class Bd {
                     result = yield conn.query(sql, venta)
                     return Promise.resolve(result)
                 } catch (err) {
-                    console.log(err)
+                    //console.log(err)
                     return Promise.reject(new Error(err.code))
                 }
 
@@ -308,13 +308,15 @@ class Bd {
             let sql;
             sql = 'INSERT INTO traspasos SET ? '
 
-            let result = yield conn.query(sql, datos)
+            let result
 
-            if (!result) {
-                return Promise.reject(new Error(`not found`))
+            try {
+                result = yield conn.query(sql, datos)
+                return Promise.resolve(result)
+            } catch(err) {
+                //console.log(err)
+                return Promise.reject(new Error(err.code))
             }
-
-            return Promise.resolve(result)
         })
 
         return Promise.resolve(task())
