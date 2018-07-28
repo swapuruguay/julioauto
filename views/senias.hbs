@@ -2,6 +2,7 @@
     <h1>{{titulo}}</h1>
     <p>&nbsp;</p>
     <div class="row">
+      <div id="alerta" style="font-weight: bold; color: red;"></div>
      <form class="form-horizontal" id="nueva-senia">
        <div class="form-group">
          <label for="fecha" class="col-sm-2 control-label">Fecha</label>
@@ -12,7 +13,7 @@
        <div class="form-group">
          <label for="cliente" class="col-sm-2 control-label">Cliente</label>
          <div class="col-sm-4">
-           <input type="text" class="form-control" id="cliente" name="cliente">
+           <input type="text" class="form-control" id="cliente" required name="cliente">
             <div id="res" class="alert-danger"></div>
          </div>
 
@@ -20,7 +21,7 @@
        <div class="form-group">
          <label for="importe" class="col-sm-2 control-label">Importe</label>
          <div class="col-sm-4">
-           <input type="text" class="form-control" id="importe" name="importe">
+           <input type="text" class="form-control" id="importe" required name="importe">
          </div>
        </div>
        <div class="form-group">
@@ -46,13 +47,13 @@
        <div class="form-group">
          <label for="marca" class="col-sm-2 control-label">Marca</label>
          <div class="col-sm-4">
-           <input type="text" class="form-control" id="marca" name="marca">
+           <input type="text" class="form-control" required id="marca" name="marca">
          </div>
        </div>
        <div class="form-group">
          <label for="modelo" class="col-sm-2 control-label">Modelo</label>
          <div class="col-sm-4">
-           <input type="text" class="form-control" id="modelo" name="modelo">
+           <input type="text" class="form-control" required id="modelo" name="modelo">
          </div>
        </div>
        <div class="form-group">
@@ -353,6 +354,10 @@ res.style.display = 'none'
 let formulario = document.getElementById('nueva-senia')
 formulario.addEventListener('submit', function(evt) {
 evt.preventDefault()
+if(!formulario.cliente.dataset.id) {
+  document.getElementById('alerta').innerHTML = 'No se ha elegido un cliente'
+  return
+}
 let formData = new FormData(formulario)
 let id = document.getElementById('cliente').dataset.id
 formData.append("id", id)
