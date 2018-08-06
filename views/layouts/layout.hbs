@@ -167,25 +167,38 @@
 
     @media screen and (max-width: 784px) {
       .overlay {
+        height: 170vh;
+        background: radial-gradient(circle farthest-corner at 35% 15%, transparent 110px, rgba(65,87,199,.7) 110px);
         display: flex;
         flex-direction: column;
         align-items: center;
       }
       .overlay h1 {
-        height: 100vh;
-        font-size: 2em;
-        width: 100%
-        align-self: flex-start;
+        padding-top: 50%;
+        height: 70vh;
+        font-size: 3em;
+        padding-left: 2%;
+        /* width: 100%; */
+
       }
 
       .overlay .imagenes {
-        align-self: flex-end;
 
-
+        align-self: space-between;
+        width: 100%;
+        display: grid;
+        /* border: solid 1px; */
+        grid-template: repeat(3, 1fr) / repeat(3, 1fr);
+        margin-bottom: -15px;
       }
 
-      .overlay .imagenes img {
-        width: 45px;
+      .auto {
+        align-items: flex-start;
+        p
+      }
+
+      .overlay h1 {
+        align-self: center;
 
       }
     }
