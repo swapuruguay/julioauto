@@ -325,7 +325,9 @@ for(let i = 0; i < 2; i++) {
   if(contar > 15) {
     texto+= `Observaciones: ${lineas.slice(0,15).join(' ')}\n`
     texto+= `${lineas.slice(15).join(' ')}\n`
-    }
+  } else {
+    texto+= `Observaciones: ${lineas.join(' ')}\n`
+  }
 
   texto+= `La compra deberá ser completada en un plazo máximo de 7 días a partir de hoy. Si el comprador no lo hiciera
   perderá todo derecho al dinero entregado, sin nada que reclamar.`
