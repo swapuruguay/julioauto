@@ -109,7 +109,7 @@
 
     }
 
-    .overlay h1 {
+    .overlay h2 {
       grid-area: titulo;
 
       font-size: 6em;
@@ -119,8 +119,15 @@
 
     }
 
-    h1 strong {
+    h2 strong {
       font-weight: 900;
+    }
+
+    h1 {
+      font-size: 6em;
+      color: white;
+      font-family: 'Prompt', sans-serif;
+      font-weight: bold;
     }
 
 
@@ -146,7 +153,7 @@
     }
 
     @media screen and (max-width: 1532px) {
-      .overlay h1 {
+      .overlay h2 {
         font-size: 4em;
       }
 
@@ -173,13 +180,19 @@
         flex-direction: column;
         align-items: center;
       }
-      .overlay h1 {
+      .overlay h2 {
         padding-top: 50%;
-        height: 70vh;
+        height: 50vh;
         font-size: 3em;
         padding-left: 2%;
         /* width: 100%; */
 
+      }
+
+      .overlay h1 {
+        position: absolute;
+        top: 0;
+        
       }
 
       .overlay .imagenes {
@@ -197,7 +210,7 @@
         p
       }
 
-      .overlay h1 {
+      .overlay h2 {
         align-self: center;
 
       }

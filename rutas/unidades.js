@@ -271,7 +271,7 @@ let returnRouter = function(io) {
     router.post('/stockfull', async function(req, res) {
 
       let db = new Db()
-      let unidad = (await db.getUnidades(` WHERE nro_motor = '${req.body.nromotor}'`))[0]
+      let unidad = (await db.getUnidades(` WHERE nro_motor = '${req.body.nromotor}' OR nro_chasis = '${req.body.nromotor}'`))[0]
       let historia = await db.getHistorial(unidad.id_unidad)
       if(historia) {
         for(let h of historia) {
