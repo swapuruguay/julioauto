@@ -7,18 +7,24 @@
       <input type="text" name="mes" id="mes" class="form-control">
       <label for="anio">Año</label>
       <input type="text" id="anio" name="anio" class="form-control">
+      <label for="anio">Año</label>
+      <select name="tipo" id="tipo" class="form-control">
+        <option value="1">Auto/Camioneta/Camión</option>
+        <option value="2">Moto/Triciclo/Cuatriciclo</option>
+      </select>
       <input type="submit" value="Buscar" class="btn btn-info">
     </form>
     <p>&nbsp;</p>
     <div id="resultado"></div>
-    
+    <div id="grafica"></div>
   </div>
 </div>
+<script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
 <script>
   let frm = document.getElementById('acumulado')
   frm.addEventListener('submit', async evt => {
     evt.preventDefault()
-    const datos = {mes: frm.mes.value, anio: frm.anio.value}
+    const datos = {mes: frm.mes.value, anio: frm.anio.value, tipo: frm.tipo.value}
     let res = await fetch('/ventas/acumula', {
       method: 'post',
       headers: {
@@ -38,15 +44,88 @@
             `
     let cantidad = 0
     let cantidadU = 0
+    let data = [
+      {
+        type: "pie",
+        legendText: "{indexLabel}",
+        name: "",
+        showInLegend: true,
+        toolTipContent: "{y} - #percent %",
+        yValueFormatString: "#,##0.# Unidades",
+        dataPoints: []
+      }
+    ]
     respuesta.listado.forEach(r => {
       html+= `<tr><td>${r.nombre}</td><td>${r.nuevos+r.usados}</td><td>${r.nuevos}</td><td>${r.usados}</td></tr>`
       cantidad+= r.nuevos
       cantidadU+= r.usados
+      data[0].dataPoints.push({
+        label: r.nombre, indexLabel: r.nombre, y: r.nuevos+r.usados
+      })
       return r
     })
     html+= `<tr><td><strong>Total</strong></td><td><strong>${cantidad+cantidadU}</strong></td><td><strong>${cantidad}</strong></td><td><strong>${cantidadU}</strong></td></tr>`
     html+= '</table>'
     const divResultado = document.getElementById('resultado')
     divResultado.innerHTML = html
+    graficar(data)
   })
+
+  function graficar(data) {
+  //   let obj = {
+  //     exportEnabled: true,
+  //     animationEnabled: true,
+  //     title:{
+  //         text: "Venta de Ravioles"
+  //     },
+  //     axisX: {
+  //         title: "Fechas"
+  //     },
+  //     axisY: {
+  //         title: "Cantidad de ravioles",
+  //         titleFontColor: "#4F81BC",
+  //         lineColor: "#4F81BC",
+  //         labelFontColor: "#4F81BC",
+  //         tickColor: "#4F81BC"
+  //     },
+  //     toolTip: {
+  //         shared: true
+  //     },
+  //     legend: {
+  //         cursor: "pointer"
+  //         //itemclick: toggleDataSeries
+  //     },
+  //     data
+  // }
+  // const chart = new CanvasJS.Chart("resultado", obj);
+  // console.log(obj)
+  // chart.render();
+  var chart = new CanvasJS.Chart("grafica",
+    {
+      theme: "theme2",
+      title:{
+        text: "Ventas por sucursal"
+      },
+      data
+      // data: [
+      // {
+      // 	type: "pie",
+      // 	showInLegend: true,
+      // 	toolTipContent: "{y} - #percent %",
+      // 	yValueFormatString: "#,##0,,.## Million",
+      // 	legendText: "{indexLabel}",
+      //   data
+      // 	dataPoints: [
+      // 		{  y: 4181563, indexLabel: "Verdura" },
+      // 		{  y: 2175498, indexLabel: "JYQ" },
+      // 		{  y: 3125844, indexLabel: "Pollo" },
+      // 		{  y: 1176121, indexLabel: "RYL"}
+      //
+      // 	]
+      // }
+      // ]
+    });
+    chart.render();
+
+}
 </script>

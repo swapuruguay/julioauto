@@ -47,27 +47,27 @@ router.use(function (req, res, next) {
   next();
 })
 
-router.get('/listar', ensureAuth,  co.wrap(function * (req, res) {
+router.get('/listar', ensureAuth,  async (req, res) => {
   let db = new Db()
-  let ventas = yield db.getVentas(` WHERE id_sucursal_fk = ${req.user.sucursal} `)
+  let ventas = await db.getVentas(` WHERE id_sucursal_fk = ${req.user.sucursal} `)
   let options = {year: "numeric", month: "numeric", day: "numeric"};
   if(ventas) {
-    yield (ventas.map(co.wrap(function * (item) {
-      item.unidad = (yield db.getUnidad(item.id_unidad_fk))[0]
+    await Promise.all(ventas.map(async item => {
+      item.unidad = (await db.getUnidad(item.id_unidad_fk))[0]
       item.unidad.nuevo = item.unidad.nuevo == 1 ? 'Sí' : 'No'
       let fechin = new Date(item.fecha)
       let mes = fechin.getMonth()+1 > 9 ? fechin.getMonth()+1 : '0' + (fechin.getMonth()+1)
       let dia = fechin.getDate() > 9 ? fechin.getDate() : '0' + fechin.getDate()
       item.fecha = dia + '/' + mes + '/' + fechin.getFullYear()
       return item
-})))
+}))
 } else {
   ventas = []
 }
   db.disconnect()
   datosVista.ventas = ventas
   res.render('ventas', {datos: datosVista})
-}))
+})
 
 router.post('/listar', async (req, res) => {
   let db = new Db()
@@ -95,8 +95,9 @@ router.get('/dia', ensureAuth, admin, (req, res) => {
 
 router.post('/dia', async(req, res) => {
   let db = new Db()
-  let listadoNuevos = await db.getVentasAgrupadas(` WHERE fecha = '${req.body.fecha}' AND u.nuevo = 1`)
-  let listadoUsados = await db.getVentasAgrupadas(` WHERE fecha = '${req.body.fecha}' AND u.nuevo = 0`)
+  let tipo = req.body.tipo == 1 ? ' tipo < 4': ' tipo > 3'
+  let listadoNuevos = await db.getVentasAgrupadas(` WHERE fecha = '${req.body.fecha}' AND ${tipo} AND u.nuevo = 1`)
+  let listadoUsados = await db.getVentasAgrupadas(` WHERE fecha = '${req.body.fecha}' AND ${tipo} AND u.nuevo = 0`)
   let contador = 0
   let listado = []
   let sucursales = await db.getSucursales()
@@ -127,9 +128,9 @@ router.get('/acumula', ensureAuth, admin, (req, res) => {
 router.post('/acumula',  async (req, res) => {
   const db = new Db()
   const {mes, anio} = req.body
-
-  let listadoNuevos = await db.getVentasAgrupadas(` WHERE MONTH(fecha) = ${mes} AND YEAR(fecha) = ${anio} AND u.nuevo = 1`)
-  let listadoUsados = await db.getVentasAgrupadas(` WHERE MONTH(fecha) = ${mes} AND YEAR(fecha) = ${anio} AND u.nuevo = 0`)
+  let tipo = req.body.tipo == 1 ? ' tipo < 4' : ' tipo > 3'
+  let listadoNuevos = await db.getVentasAgrupadas(` WHERE MONTH(fecha) = ${mes} AND YEAR(fecha) = ${anio} AND ${tipo} AND u.nuevo = 1`)
+  let listadoUsados = await db.getVentasAgrupadas(` WHERE MONTH(fecha) = ${mes} AND YEAR(fecha) = ${anio} AND ${tipo} AND u.nuevo = 0`)
   let contador = 0
   let listado = []
   let sucursales = await db.getSucursales()

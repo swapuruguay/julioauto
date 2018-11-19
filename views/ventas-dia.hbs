@@ -8,6 +8,13 @@
       <label for="mes">Fecha</label>
       <input type="date" name="fecha" id="fecha">
     </div>
+    <div class="form-group">
+      <label for="tipo">Tipo Vehículo</label>
+      <select name="tipo" id="tipo" class="form-control">
+        <option value="1">Auto/Camioneta/Camión</option>
+        <option value="2">Moto/Triciclo/Cuatriciclo</option>
+      </select>
+    </div>
 
     <input type="submit" class="btn btn-info" id="boton" value="Buscar">
   </form>
@@ -19,7 +26,7 @@
   let frm = document.getElementById('busqueda')
   frm.addEventListener('submit', async evt => {
     evt.preventDefault()
-    let datos = { fecha: frm.fecha.value}
+    let datos = { fecha: frm.fecha.value, tipo: frm.tipo.value}
     let res = await fetch('/ventas/dia', {
       method: 'post',
       headers: {
@@ -39,6 +46,7 @@
             `
     let cantidad = 0
     let cantidadU = 0
+
     respuesta.datos.forEach(r => {
       html+= `<tr><td>${r.nombre}</td><td>${r.nuevos+r.usados}</td><td>${r.nuevos}</td><td>${r.usados}</td></tr>`
       cantidad+= r.nuevos
@@ -49,6 +57,9 @@
     html+= '</table>'
     let divResultado = document.getElementById('resultado')
     divResultado.innerHTML = html
+
+
+
   })
 
 </script>
