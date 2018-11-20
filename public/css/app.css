@@ -24,7 +24,7 @@ html, body {
 .login-contenido {
   text-align: center;
   background: #eaeaea;
-  width: 50%;
+  width: 35%;
   min-width: 300px;
   border: solid 1px #aaaaaa;
   border-radius: 5px;
@@ -120,7 +120,7 @@ html, body {
   }
 }
 
-@media screen and (max-width: 680px) {
+@media screen and (max-width: 945px) {
   .login-contenido {
     width: 100%;
     padding: 5px;
