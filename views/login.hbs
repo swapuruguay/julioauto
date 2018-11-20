@@ -5,11 +5,12 @@
       <input type="text" id="username" name="username" placeholder="username" />
       <input type="password" id="userpassword" name="password" placeholder="password" />
       <button class="login-button">Iniciar Sesi&oacute;n <i class="fa fa-sign-in"></i></button>
+      {{#each errors}}
+      <p class="alert alert-warning">{{this}}</p>
+      {{/each}}
     </form>
   </div>
-  {{#each errors}}
-    <p class="alert alert-warning">{{this}}</p>
-  {{/each}}
+  
 </div>
 
 <script>
