@@ -1,0 +1,26 @@
+<div>
+  <p></p>
+  <p></p>
+</div>
+<div class="row">
+  <div class="col-md-offset-3 col-md-5">
+    <div class="form-login">
+      <h4>Bienvenido</h4>
+      <form action="/login" method="post">
+        <input type="text" id="userName" name="username" class="form-control input-sm chat-input" placeholder="username" />
+        </br>
+        <input type="password" id="userPassword" name="password" class="form-control input-sm chat-input" placeholder="password" />
+        </br>
+
+          <span class="group-btn">
+            <button class="btn btn-primary btn-md">Iniciar Sesi&oacute;n <i class="fa fa-sign-in"></i></button>
+          </span>
+       
+      </form>
+      <p>&nbsp;</p>
+      {{#each errors}}
+        <p class="alert alert-warning">{{this}}</p>
+      {{/each}}
+    </div>
+  </div>
+
