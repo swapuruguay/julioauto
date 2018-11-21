@@ -31,7 +31,6 @@ html, body {
   display: grid;
   grid-template: .5fr 1fr / 1fr;
   min-height: 300px;
-  padding: 15px;
   opacity: 0;
   transform: scale(.7);
   transition: 2s ease all;
@@ -51,11 +50,24 @@ html, body {
   justify-content: center;
 }
 
+.login-contenido .input-container {
+  position: relative;
+  }
+.login-contenido .input-container i {
+  position: absolute;
+  font-size: 1.6em;
+  top: 5px;
+  left: 12%;
+  color: #aaaaaa;
+}
+
 .login-contenido form input {
   /*display: block;*/
+  
   text-align: center;
   border: solid 1px rgba(0, 0, 0, .2);
   border-radius: 5px;
+  width: 80%;
   opacity: 0;
   font-size: 1.6em;
   line-height: 1.6em;
@@ -73,7 +85,12 @@ html, body {
   color: white;
   /*font-weight: 700;*/
   font-size: 1.2em;
-  font-family: 'Montserrat', sans-serif
+  font-family: 'Montserrat', sans-serif;
+  transition: .2s linear all;
+}
+
+.login-contenido form button:hover {
+  transform: scale(1.2);
 }
 
 .activo {
@@ -133,5 +150,6 @@ html, body {
   .login-contenido form input {
     font-size: .8em;
     line-height: .8em;
+    min-height: 40px;
   }
 }
