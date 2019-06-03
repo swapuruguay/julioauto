@@ -17,7 +17,6 @@ const ventas = require("./rutas/ventas");
 const bodyParser = require("body-parser");
 const multer = require("multer");
 const Db = require("./bd");
-const co = require("co");
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
@@ -97,6 +96,7 @@ app.get("/", ensureAuth, async function(req, res) {
   let db = new Db();
   await db.connect();
   let suc = (await db.getSucursal(req.user.sucursal))[0];
+  await db.disconnect();
   res.render("index", {
     titulo: suc.alias,
     datos: { user: req.user, color: "rgb(65,87,199)" }

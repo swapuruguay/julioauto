@@ -4,7 +4,6 @@ const Db = require("../bd");
 const config = require("../config");
 const request = require("request");
 const formData = require("express-form-data");
-const co = require("co");
 
 let datosVista = {};
 // parsing data with connect-multiparty. Result set on req.body and req.files
