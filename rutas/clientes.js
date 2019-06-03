@@ -1,8 +1,8 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const Db = require('../bd')
+const Db = require("../bd");
 
-const formData = require("express-form-data")
+const formData = require("express-form-data");
 
 // parsing data with connect-multiparty. Result set on req.body and req.files
 router.use(formData.parse());
@@ -14,128 +14,137 @@ router.use(formData.stream());
 router.use(formData.union());
 
 function ensureAuth(req, res, next) {
-    if(req.isAuthenticated()) {
-      if(req.user.perfil == 1) {
-        req.user.habilitado = true
-      }
-
-        return next()
+  if (req.isAuthenticated()) {
+    if (req.user.perfil == 1) {
+      req.user.habilitado = true;
     }
-    res.redirect('/login')
+
+    return next();
+  }
+  res.redirect("/login");
 }
 
+router.get("/listar", ensureAuth, async function(req, res) {
+  let db = new Db();
+  await db.connect();
+  let clientes = await db.getClientes(null, " ORDER BY apellido, nombre");
+  await db.disconnect();
 
+  res.render("clientes-listar", {
+    titulo: "Formulario de Clientes",
+    datos: { clientes: clientes, user: req.user }
+  });
+});
 
-router.get('/listar', ensureAuth, async function(req, res) {
-  let db = new Db()
+router.get("/nuevo", ensureAuth, function(req, res) {
+  var nro = 0;
+  res.render("clientes", {
+    titulo: "Formulario de Clientes",
+    datos: { user: req.user }
+  });
+});
 
-  let clientes = await db.getClientes(null,' ORDER BY apellido, nombre')
-  db.disconnect()
-
-      res.render('clientes-listar', {titulo: 'Formulario de Clientes', datos:{clientes: clientes, user: req.user}})
-
-
-
-})
-
-router.get('/nuevo', ensureAuth, function(req, res) {
-
-  var nro = 0
-  res.render('clientes', {titulo: 'Formulario de Clientes', datos: {user: req.user}})
-})
-
-router.post('/save', async function(req, res) {
-      let db = new Db()
-     // console.log(req.body)
-     let id = (req.body.id == '')? 0 : req.body.id
-     let fechaNacimiento = null
-     if(req.body.fechanacimiento) {
-       fechaNacimiento = req.body.fechanacimiento.split('/')
-       fechaNacimiento = `${fechaNacimiento[2]}-${fechaNacimiento[1]}-${fechaNacimiento[0]}`
-     }
-
-      let cliente = {
-        id_cliente: id,
-        nombre: req.body.nombre.toUpperCase(),
-        apellido: req.body.apellido.toUpperCase(),
-        documento: req.body.documento.toUpperCase(),
-        domicilio: req.body.domicilio.toUpperCase(),
-        telefono: req.body.telefono,
-        celular: req.body.celular,
-        ciudad: req.body.ciudad.toUpperCase(),
-        aclaraciones: req.body.aclaraciones.toUpperCase(),
-
-        categoria: req.body.categoria.toUpperCase(),
-      }
-      if(fechaNacimiento) {
-          cliente.fecha_nacimiento = fechaNacimiento
-      }
-
-
-      res.send(await db.saveCliente(cliente))
-      db.disconnect()
-
-    })
-
-
-router.get('/', function(req, res) {
-  res.end("Con router")
-})
-
-router.post('/', async function(req, res) {
-    
-      let criterio = req.body.criterio
-      let texto = req.body.texto
-      let db = new Db()
-      let clientes = await db.getClientes(` WHERE ${criterio} LIKE '${texto}%'`, null)
-      db.disconnect()
-        clientes = clientes.map(c => {
-          if(c.categoria == 'M') {
-            c.clase = 'danger'
-          } else if(c.categoria == 'R') {
-            c.clase = 'warning'
-          } else {
-            c.clase = ''
-          }
-          return c
-        })
-        let resultado = {
-          clientes
-        }
-        res.send({res: resultado})
-
-    })
-
-
-router.get('/:id', ensureAuth,  async function (req, res) {
-  let db = new Db()
-  let id = req.params.id
-  //console.log(id)
-  let row = (await db.getCliente(id))[0]
-  //console.log(row)
-
-  let fecha = null
-  if(row.fecha_nacimiento) {
-    fecha = new Intl.NumberFormat("es-UY", {minimumIntegerDigits: 2}).format(row.fecha_nacimiento.getDate()) + '/'
-                + new Intl.NumberFormat("es-UY", {minimumIntegerDigits: 2}).format((row.fecha_nacimiento.getMonth() + 1)) + '/' + row.fecha_nacimiento.getFullYear()
-
+router.post("/save", async function(req, res) {
+  let db = new Db();
+  await db.connect();
+  // console.log(req.body)
+  let id = req.body.id == "" ? 0 : req.body.id;
+  let fechaNacimiento = null;
+  if (req.body.fechanacimiento) {
+    fechaNacimiento = req.body.fechanacimiento.split("/");
+    fechaNacimiento = `${fechaNacimiento[2]}-${fechaNacimiento[1]}-${
+      fechaNacimiento[0]
+    }`;
   }
 
-  db.disconnect()
+  let cliente = {
+    id_cliente: id,
+    nombre: req.body.nombre.toUpperCase(),
+    apellido: req.body.apellido.toUpperCase(),
+    documento: req.body.documento.toUpperCase(),
+    domicilio: req.body.domicilio.toUpperCase(),
+    telefono: req.body.telefono,
+    celular: req.body.celular,
+    ciudad: req.body.ciudad.toUpperCase(),
+    aclaraciones: req.body.aclaraciones.toUpperCase(),
+
+    categoria: req.body.categoria.toUpperCase()
+  };
+  if (fechaNacimiento) {
+    cliente.fecha_nacimiento = fechaNacimiento;
+  }
+
+  res.send(await db.saveCliente(cliente));
+  await db.disconnect();
+});
+
+router.get("/", function(req, res) {
+  res.end("Con router");
+});
+
+router.post("/", async function(req, res) {
+  let criterio = req.body.criterio;
+  let texto = req.body.texto;
+  let db = new Db();
+  await db.connect();
+  let clientes = await db.getClientes(
+    ` WHERE ${criterio} LIKE '${texto}%'`,
+    null
+  );
+  await db.disconnect();
+  clientes = clientes.map(c => {
+    if (c.categoria == "M") {
+      c.clase = "danger";
+    } else if (c.categoria == "R") {
+      c.clase = "warning";
+    } else {
+      c.clase = "";
+    }
+    return c;
+  });
+  let resultado = {
+    clientes
+  };
+  res.send({ res: resultado });
+});
+
+router.get("/:id", ensureAuth, async function(req, res) {
+  let db = new Db();
+  await db.connect();
+  let id = req.params.id;
+  //console.log(id)
+  let row = (await db.getCliente(id))[0];
+  //console.log(row)
+
+  let fecha = null;
+  if (row.fecha_nacimiento) {
+    fecha =
+      new Intl.NumberFormat("es-UY", { minimumIntegerDigits: 2 }).format(
+        row.fecha_nacimiento.getDate()
+      ) +
+      "/" +
+      new Intl.NumberFormat("es-UY", { minimumIntegerDigits: 2 }).format(
+        row.fecha_nacimiento.getMonth() + 1
+      ) +
+      "/" +
+      row.fecha_nacimiento.getFullYear();
+  }
+
+  await db.disconnect();
   let categorias = [
     {
-      codigo: 'B',
-      nombre: 'Bueno'
+      codigo: "B",
+      nombre: "Bueno"
     },
     {
-      codigo: 'R',
-      nombre: 'Regular'
+      codigo: "R",
+      nombre: "Regular"
     },
     {
-      codigo: 'M',
-      nombre: 'Malo'
+      codigo: "M",
+      nombre: "Malo"
     }
-  ]
+  ];
 
   let cliente = {
     id_cliente: id,
@@ -149,19 +158,20 @@ router.get('/:id', ensureAuth,  async function (req, res) {
     ciudad: row.ciudad,
     fechaNacimiento: fecha,
     categorias: categorias.map(c => {
-      if(c.codigo == row.categoria) {
-        c.selected = 'SELECTED'
+      if (c.codigo == row.categoria) {
+        c.selected = "SELECTED";
       } else {
-        c.selected = ''
+        c.selected = "";
       }
-      return c
+      return c;
     })
-  }
+  };
 
+  res.render("clientes-edit", {
+    titulo: "Formulario de clientes",
+    datos: { cliente: cliente, user: req.user }
+  });
+  //  res.end()
+});
 
-  res.render('clientes-edit', {titulo: 'Formulario de clientes', datos:{cliente: cliente, user: req.user}} )
-//  res.end()
-
-})
-
-module.exports = router
+module.exports = router;

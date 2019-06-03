@@ -1,516 +1,376 @@
-const mysql = require('promise-mysql')
-const config = require('../config')
-const co = require('co')
+const mysql = require("promise-mysql");
+const config = require("../config");
 
 class Bd {
+  async connect() {
+    let datos = {
+      host: config.host,
+      user: config.user,
+      password: config.password,
+      database: config.database
+      //insecureAuth : true
+    };
+    try {
+      this.con = await mysql.createPool(datos).getConnection();
+    } catch (error) {
+      console.error(error);
+    }
+  }
 
-    constructor() {
-        this.connect()
+  async disconnect() {
+    await this.con.connection.release();
+  }
+
+  async getUnidad(id) {
+    let unidad = await this.con.query(
+      `SELECT * FROM unidades WHERE id_unidad = ${id}`
+    );
+
+    if (!unidad) {
+      return Promise.reject(new Error(`Unidad ${id} not found`));
     }
 
-    connect() {
-       let datos = {
-           host: config.host,
-           user: config.user,
-           password: config.password,
-           database: config.database,
-           //insecureAuth : true
-       }
-       this.con = mysql.createConnection(datos)
-       let connection = this.con
-       let setup = co.wrap(function *() {
-           let conn = yield connection
-           return conn
-       })
-      return Promise.resolve(setup())
+    return Promise.resolve(unidad);
+  }
+
+  async getUnidadTemp(id) {
+    let unidad = await this.con.query(
+      `SELECT * FROM unidades_temp WHERE id_unidad = ${id}`
+    );
+
+    if (!unidad) {
+      return Promise.reject(new Error(`Unidad ${id} not found`));
     }
 
-    disconnect() {
-        let connection = this.con
-        let setup = co.wrap(function * () {
-         //  console.log(mysql)
-           let conn = yield connection
-           conn.destroy()
-           return conn
-       })
-      return Promise.resolve(setup())
+    return Promise.resolve(unidad);
+  }
+
+  async getUnidades(where, order) {
+    let orden = order || "";
+    let cond = where || "";
+
+    let sql = `SELECT * FROM unidades ${cond} ${orden}`;
+
+    let unidades = await this.con.query(sql);
+
+    if (!unidades) {
+      return Promise.reject(new Error(`not found`));
     }
 
+    return Promise.resolve(unidades);
+  }
 
-    getUnidad(id) {
-        let connection = this.con
-        let task = co.wrap(function * () {
-            let conn = yield connection
-            let unidad = yield conn.query(`SELECT * FROM unidades WHERE id_unidad = ${id}`)
-
-            if (!unidad) {
-                return Promise.reject(new Error(`Unidad ${id} not found`))
-            }
-
-            return Promise.resolve(unidad)
-        })
-
-        return Promise.resolve(task())
-
+  async getUnidadesSuc(where, order) {
+    let orden = "",
+      cond = "";
+    if (where) {
+      cond = where;
     }
 
-    async getUnidadTemp(id) {
-        let connection = this.con
-
-            let conn = await connection
-            let unidad = await conn.query(`SELECT * FROM unidades_temp WHERE id_unidad = ${id}`)
-
-            if (!unidad) {
-                return Promise.reject(new Error(`Unidad ${id} not found`))
-            }
-
-            return Promise.resolve(unidad)
-
-
+    if (order) {
+      orden = order;
     }
 
-    getUnidades(where, order) {
-        let orden = order || ''
-        let cond = where || ''
+    let unidades = await this.con.query(
+      `SELECT unidades.*, ifnull(nro_chasis, '') as chasis, sucursales.nombre FROM unidades JOIN sucursales ON sucursales.id_sucursal = unidades.sucursal ${cond} ${orden}`
+    );
 
-        let connection = this.con
-        let task = co.wrap(function * () {
-            let conn = yield connection
-            let sql = `SELECT * FROM unidades ${cond} ${orden}`
-
-            let unidades = yield conn.query(sql)
-
-            if (!unidades) {
-                return Promise.reject(new Error(`not found`))
-            }
-
-            return Promise.resolve(unidades)
-        })
-
-        return Promise.resolve(task())
-      }
-
-      getUnidadesSuc(where, order) {
-        let orden = '', cond = ''
-        if(where) {
-            cond = where
-        }
-
-        if(order) {
-            orden = order
-        }
-
-        let connection = this.con
-        let task = co.wrap(function * () {
-            let conn = yield connection
-            let unidades = yield conn.query(`SELECT unidades.*, ifnull(nro_chasis, '') as chasis, sucursales.nombre FROM unidades JOIN sucursales ON sucursales.id_sucursal = unidades.sucursal ${cond} ${orden}`)
-
-            if (!unidades) {
-                return Promise.reject(new Error(`not found`))
-            }
-
-            return Promise.resolve(unidades)
-        })
-
-        return Promise.resolve(task())
-      }
-
-
-    getCliente(id) {
-      let connection = this.con
-        let task = co.wrap(function * () {
-            let conn = yield connection
-            let cliente = yield conn.query("SELECT * FROM clientes WHERE id_cliente = " + id)
-
-            if (!cliente) {
-                return Promise.reject(new Error(`Cliente ${id} not found`))
-            }
-
-            return Promise.resolve(cliente)
-        })
-
-        return Promise.resolve(task())
+    if (!unidades) {
+      return Promise.reject(new Error(`not found`));
     }
 
-    getClientes(where, order) {
-        let orden = '', cond = ''
-        if(where) {
-            cond = where
-        }
+    return Promise.resolve(unidades);
+  }
 
-        if(order) {
-            orden = order
-        }
+  async getCliente(id) {
+    let cliente = await this.con.query(
+      "SELECT * FROM clientes WHERE id_cliente = " + id
+    );
 
-        let connection = this.con
-        let task = co.wrap(function * () {
-            let conn = yield connection
-            let clientes = yield conn.query("SELECT * FROM clientes " + cond + orden)
-
-            if (!clientes) {
-                return Promise.reject(new Error(`not found`))
-            }
-
-            return Promise.resolve(clientes)
-        })
-
-        return Promise.resolve(task())
-      }
-
-      saveCliente(cliente) {
-      let connection = this.con
-        let task = co.wrap(function * () {
-            let conn = yield connection
-            let sql;
-            if(cliente.id_cliente == 0) {
-                sql = 'INSERT INTO clientes SET ? '
-            } else {
-                sql = `UPDATE clientes SET ? WHERE id_cliente = ${cliente.id_cliente}`
-            }
-
-            let result = yield conn.query(sql, cliente)
-
-            if (!result) {
-                return Promise.reject(new Error(`not found`))
-            }
-
-            return Promise.resolve(result)
-        })
-
-
-        return Promise.resolve(task())
+    if (!cliente) {
+      return Promise.reject(new Error(`Cliente ${id} not found`));
     }
 
+    return Promise.resolve(cliente);
+  }
 
-    getSucursales() {
-       let connection = this.con
-        let task = co.wrap(function * () {
-            let conn = yield connection
-            let sucursales = yield conn.query("SELECT * FROM sucursales")
-
-            if (!sucursales) {
-                return Promise.reject(new Error(`not found`))
-            }
-
-            return Promise.resolve(sucursales)
-        })
-
-        return Promise.resolve(task())
+  async getClientes(where, order) {
+    let orden = "",
+      cond = "";
+    if (where) {
+      cond = where;
     }
 
-    getSucursal(id) {
-      let connection = this.con
-        let task = co.wrap(function * () {
-            let conn = yield connection
-            let sucursal = yield conn.query(`SELECT * FROM sucursales WHERE id_sucursal = ${id}`)
-
-            if (!sucursal) {
-                return Promise.reject(new Error(`not found`))
-            }
-
-            return Promise.resolve(sucursal)
-        })
-
-        return Promise.resolve(task())
+    if (order) {
+      orden = order;
     }
 
-    getUser(where, order) {
-        let orden = '', cond = ''
-        if(where) {
-            cond = where
-        }
+    let clientes = await this.con.query(
+      "SELECT * FROM clientes " + cond + orden
+    );
 
-        if(order) {
-            orden = order
-        }
-
-        let connection = this.con
-        let task = co.wrap(function * () {
-            let conn = yield connection
-            let user = yield conn.query(`SELECT * FROM usuarios_web  ${cond} ${orden}`)
-
-            if (!user) {
-                return Promise.reject(new Error(`not found`))
-            }
-
-            return Promise.resolve(user)
-        })
-
-        return Promise.resolve(task())
+    if (!clientes) {
+      return Promise.reject(new Error(`not found`));
     }
 
-    saveUnidad(unidad) {
-      let connection = this.con
-        let task = co.wrap(function * () {
-            let conn = yield connection
-            let sql;
-            if(unidad.id_unidad == 0) {
-                sql = 'INSERT INTO unidades SET ? '
-            } else {
-                sql = `UPDATE unidades SET ? WHERE id_unidad = ${unidad.id_unidad}`
-            }
+    return Promise.resolve(clientes);
+  }
 
-            let result
-            try {
-                result = yield conn.query(sql, unidad)
-                return Promise.resolve(result)
-            } catch(err) {
-                console.log(err)
-                return Promise.reject(new Error(err.code))
-            }
-        })
-
-        return Promise.resolve(task())
+  async saveCliente(cliente) {
+    let sql;
+    if (cliente.id_cliente == 0) {
+      sql = "INSERT INTO clientes SET ? ";
+    } else {
+      sql = `UPDATE clientes SET ? WHERE id_cliente = ${cliente.id_cliente}`;
     }
 
-    async saveUnidadTemp(unidad) {
-      let connection = this.con
-      let conn = await connection
-      let sql;
-      if(unidad.id_unidad == 0) {
-        sql = 'INSERT INTO unidades_temp SET ? '
-      } else {
-        sql = `UPDATE unidades_temp SET ? WHERE id_unidad = ${unidad.id_unidad}`
-      }
-      let result
-      try {
-        result = await conn.query(sql, unidad)
-        return Promise.resolve(result)
-      } catch(err) {
-        console.log(err)
-        return Promise.reject(new Error(err.code))
-      }
+    let result = await this.con.query(sql, cliente);
+
+    if (!result) {
+      return Promise.reject(new Error(`not found`));
     }
 
+    return Promise.resolve(result);
+  }
 
-    saveVenta(venta) {
-        let connection = this.con
-            let task = co.wrap(function * () {
-                let conn = yield connection
-                let sql = 'INSERT INTO ventas SET ? '
-                let result
-                try {
-                    result = yield conn.query(sql, venta)
-                    return Promise.resolve(result)
-                } catch (err) {
-                    //console.log(err)
-                    return Promise.reject(new Error(err.code))
-                }
+  async getSucursales() {
+    let sucursales = await this.con.query("SELECT * FROM sucursales");
 
-            })
-            return Promise.resolve(task())
+    if (!sucursales) {
+      return Promise.reject(new Error(`not found`));
     }
 
-    saveTraspaso(datos) {
-      let connection = this.con
-        let task = co.wrap(function * () {
-            let conn = yield connection
-            let sql;
-            sql = 'INSERT INTO traspasos SET ? '
+    return Promise.resolve(sucursales);
+  }
 
-            let result
+  async getSucursal(id) {
+    let sucursal = await this.con.query(
+      `SELECT * FROM sucursales WHERE id_sucursal = ${id}`
+    );
 
-            try {
-                result = yield conn.query(sql, datos)
-                return Promise.resolve(result)
-            } catch(err) {
-                //console.log(err)
-                return Promise.reject(new Error(err.code))
-            }
-        })
-
-        return Promise.resolve(task())
+    if (!sucursal) {
+      return Promise.reject(new Error(`not found`));
     }
 
-    getPendientes(idSucursal) {
+    return Promise.resolve(sucursal);
+  }
 
+  async getUser(where, order) {
+    let orden = "",
+      cond = "";
+    if (where) {
+      cond = where;
+    }
+    if (order) {
+      orden = order;
+    }
 
-        let connection = this.con
-        let task = co.wrap(function * () {
-            let conn = yield connection
-            let user = yield conn.query(`SELECT traspasos.id_unidad_fk, unidades.marca, unidades.modelo, sucursales.nombre FROM traspasos
+    let user = await this.con.query(
+      `SELECT * FROM usuarios_web  ${cond} ${orden}`
+    );
+
+    if (!user) {
+      return Promise.reject(new Error(`not found`));
+    }
+
+    return Promise.resolve(user);
+  }
+
+  async saveUnidad(unidad) {
+    let sql;
+    if (unidad.id_unidad == 0) {
+      sql = "INSERT INTO unidades SET ? ";
+    } else {
+      sql = `UPDATE unidades SET ? WHERE id_unidad = ${unidad.id_unidad}`;
+    }
+
+    let result;
+    try {
+      result = await this.con.query(sql, unidad);
+      return Promise.resolve(result);
+    } catch (err) {
+      console.log(err);
+      return Promise.reject(new Error(err.code));
+    }
+  }
+
+  async saveUnidadTemp(unidad) {
+    let sql;
+    if (unidad.id_unidad == 0) {
+      sql = "INSERT INTO unidades_temp SET ? ";
+    } else {
+      sql = `UPDATE unidades_temp SET ? WHERE id_unidad = ${unidad.id_unidad}`;
+    }
+    let result;
+    try {
+      result = await this.con.query(sql, unidad);
+      return Promise.resolve(result);
+    } catch (err) {
+      console.log(err);
+      return Promise.reject(new Error(err.code));
+    }
+  }
+
+  async saveVenta(venta) {
+    let sql = "INSERT INTO ventas SET ? ";
+    let result;
+    try {
+      result = await this.con.query(sql, venta);
+      return Promise.resolve(result);
+    } catch (err) {
+      //console.log(err)
+      return Promise.reject(new Error(err.code));
+    }
+  }
+
+  async saveTraspaso(datos) {
+    let sql;
+    sql = "INSERT INTO traspasos SET ? ";
+
+    let result;
+
+    try {
+      result = await this.con.query(sql, datos);
+      return Promise.resolve(result);
+    } catch (err) {
+      //console.log(err)
+      return Promise.reject(new Error(err.code));
+    }
+  }
+
+  async getPendientes(idSucursal) {
+    let user = await this.con
+      .query(`SELECT traspasos.id_unidad_fk, unidades.marca, unidades.modelo, sucursales.nombre FROM traspasos
             JOIN unidades ON unidades.id_unidad = traspasos.id_unidad_fk
-            JOIN sucursales ON traspasos.sucursal_origen=sucursales.id_sucursal WHERE sucursal_destino = ${idSucursal}`)
+            JOIN sucursales ON traspasos.sucursal_origen=sucursales.id_sucursal WHERE sucursal_destino = ${idSucursal}`);
 
-            if (!user) {
-                return Promise.reject(new Error(`not found`))
-            }
-
-            return Promise.resolve(user)
-        })
-
-        return Promise.resolve(task())
+    if (!user) {
+      return Promise.reject(new Error(`not found`));
     }
 
-    delPendiente(idUnidad) {
-        let connection = this.con
-        let task = co.wrap(function * () {
-            let conn = yield connection
-            let sql;
-            sql = `DELETE FROM traspasos WHERE id_unidad_fk = ${idUnidad}`
+    return Promise.resolve(user);
+  }
 
-            let result = yield conn.query(sql)
+  async delPendiente(idUnidad) {
+    let sql;
+    sql = `DELETE FROM traspasos WHERE id_unidad_fk = ${idUnidad}`;
 
-            if (!result) {
-                return Promise.reject(new Error(`not found`))
-            }
+    let result = await this.con.query(sql);
 
-            return Promise.resolve(result)
-        })
-
-        return Promise.resolve(task())
+    if (!result) {
+      return Promise.reject(new Error(`not found`));
     }
 
-    async eliminarSenia(idUnidad) {
-        let connection = this.con
+    return Promise.resolve(result);
+  }
 
-            let conn = await connection
-            let sql;
-            sql = `DELETE FROM unidades_temp WHERE id_unidad = ${idUnidad}`
+  async eliminarSenia(idUnidad) {
+    let sql;
+    sql = `DELETE FROM unidades_temp WHERE id_unidad = ${idUnidad}`;
 
-            let result = await conn.query(sql)
+    let result = await this.con.query(sql);
 
-            if (!result) {
-                return Promise.reject(new Error(`not found`))
-            }
-
-            return Promise.resolve(result)
-
+    if (!result) {
+      return Promise.reject(new Error(`not found`));
     }
 
-    getSenias(where) {
-      let cond = where || ''
-        let connection = this.con
-        let task = co.wrap(function * () {
-            let conn = yield connection
-            let list = conn.query(`SELECT senias.* FROM senias JOIN unidades_temp ON senias.id_unidad_fk = unidades_temp.id_unidad ${cond}`)
-            if(!list) {
-                return Promise.reject(new Error('No existen señas'))
-            }
-            return Promise.resolve(list)
-        })
-        return Promise.resolve(task())
+    return Promise.resolve(result);
+  }
+
+  async getSenias(where) {
+    let cond = where || "";
+    let list = await this.con.query(
+      `SELECT senias.* FROM senias JOIN unidades_temp ON senias.id_unidad_fk = unidades_temp.id_unidad ${cond}`
+    );
+    if (!list) {
+      return Promise.reject(new Error("No existen señas"));
+    }
+    return Promise.resolve(list);
+  }
+
+  async getSenia(id) {
+    let list = await this.con.query(
+      `SELECT senias.* FROM senias JOIN unidades_temp ON senias.id_unidad_fk = unidades_temp.id_unidad WHERE id_senia = ${id}`
+    );
+    if (!list) {
+      return Promise.reject(new Error("No existen señas"));
+    }
+    return Promise.resolve(list);
+  }
+
+  async getUnidadSeniada(id) {
+    let list = await this.con.query(
+      `SELECT * FROM unidades_senias WHERE id_senia_fk = ${id}`
+    );
+    if (!list) {
+      return Promise.reject(new Error("No existen señas"));
+    }
+    return Promise.resolve(list);
+  }
+
+  async saveSenia(senia) {
+    let sql = "INSERT INTO senias SET ? ";
+    let result = await this.con.query(sql, senia);
+    if (!result) {
+      return Promise.reject(new Error("No existen señas"));
     }
 
-    getSenia(id) {
-        let connection = this.con
-        let task = co.wrap(function * () {
-            let conn = yield connection
-            let list = conn.query(`SELECT senias.* FROM senias JOIN unidades_temp ON senias.id_unidad_fk = unidades_temp.id_unidad WHERE id_senia = ${id}`)
-            if(!list) {
-                return Promise.reject(new Error('No existen señas'))
-            }
-            return Promise.resolve(list)
-        })
-        return Promise.resolve(task())
+    return Promise.resolve(result);
+  }
+
+  async saveUnidadSenia(senia) {
+    let sql = "INSERT INTO unidades_senias SET ? ";
+    let result = await this.con.query(sql, senia);
+    if (!result) {
+      return Promise.reject(new Error("No existen señas"));
     }
 
-    getUnidadSeniada(id) {
-      let connection = this.con
-      let task = co.wrap(function * () {
-          let conn = yield connection
-          let list = conn.query(`SELECT * FROM unidades_senias WHERE id_senia_fk = ${id}`)
-          if(!list) {
-              return Promise.reject(new Error('No existen señas'))
-          }
-          return Promise.resolve(list)
-      })
-      return Promise.resolve(task())
+    return Promise.resolve(result);
+  }
+
+  async getVentas(where, order) {
+    let orden = order || "";
+    let cond = where || "";
+
+    let list = await this.con.query(`SELECT * from ventas ${cond} ${orden}`);
+    if (!list) {
+      return Promise.reject(new Error("No existen ventas"));
     }
+    return Promise.resolve(list);
+  }
 
-    saveSenia(senia) {
-        let connection = this.con
-        let task = co.wrap(function * () {
-            let conn = yield connection
-            let sql = 'INSERT INTO senias SET ? '
-            let result = conn.query(sql, senia)
-            if(!result) {
-                return Promise.reject(new Error('No existen señas'))
-            }
-
-            return Promise.resolve(result)
-        })
-        return Promise.resolve(task())
-    }
-
-    saveUnidadSenia(senia) {
-        let connection = this.con
-        let task = co.wrap(function * () {
-            let conn = yield connection
-            let sql = 'INSERT INTO unidades_senias SET ? '
-            let result = conn.query(sql, senia)
-            if(!result) {
-                return Promise.reject(new Error('No existen señas'))
-            }
-
-            return Promise.resolve(result)
-        })
-        return Promise.resolve(task())
-    }
-
-    getVentas(where, order) {
-     let orden = order || ''
-     let cond = where || ''
-     let connection = this.con
-        let task = co.wrap(function * () {
-            let conn = yield connection
-            let list = conn.query(`SELECT * from ventas ${cond} ${orden}`)
-            if(!list) {
-                return Promise.reject(new Error('No existen ventas'))
-            }
-            return Promise.resolve(list)
-        })
-        return Promise.resolve(task())
-    }
-
-    getVentasAgrupadas(where, order) {
-        let orden = order || ''
-        let cond = where || ''
-        let connection = this.con
-           let task = co.wrap(function * () {
-               let conn = yield connection
-               let sql = `SELECT s.nombre, COUNT(*) AS cantidad, u.nuevo from ventas v JOIN
+  async getVentasAgrupadas(where, order) {
+    let orden = order || "";
+    let cond = where || "";
+    let sql = `SELECT s.nombre, COUNT(*) AS cantidad, u.nuevo from ventas v JOIN
                          unidades u ON u.id_unidad = v.id_unidad_fk JOIN sucursales s ON s.id_sucursal = v.id_sucursal_fk ${cond}
-                         GROUP BY v.id_sucursal_fk`
-               let list = conn.query(sql)
-               if(!list) {
-                   return Promise.reject(new Error('No existen ventas'))
-               }
-               return Promise.resolve(list)
-           })
-           return Promise.resolve(task())
-       }
+                         GROUP BY v.id_sucursal_fk`;
+    let list = await this.con.query(sql);
+    if (!list) {
+      return Promise.reject(new Error("No existen ventas"));
+    }
+    return Promise.resolve(list);
+  }
 
-    getHistorial(id) {
+  async getHistorial(id) {
+    let list = await this.con.query(
+      `SELECT * from historial WHERE id_unidad_fk = ${id}`
+    );
+    if (!list) {
+      return Promise.reject(new Error("No existen registros"));
+    }
+    return Promise.resolve(list);
+  }
 
-      let connection = this.con
-         let task = co.wrap(function * () {
-             let conn = yield connection
-             let list = conn.query(`SELECT * from historial WHERE id_unidad_fk = ${id}`)
-             if(!list) {
-                 return Promise.reject(new Error('No existen registros'))
-             }
-             return Promise.resolve(list)
-         })
-         return Promise.resolve(task())
+  async saveHistorial(historial) {
+    let sql = "INSERT INTO historial SET ? ";
+    let result = await this.con.query(sql, historial);
+    if (!result) {
+      return Promise.reject(new Error("Hubo un error"));
     }
 
-    saveHistorial(historial) {
-      let connection = this.con
-      let task = co.wrap(function * () {
-          let conn = yield connection
-          let sql = 'INSERT INTO historial SET ? '
-          let result = conn.query(sql, historial)
-          if(!result) {
-              return Promise.reject(new Error('Hubo un error'))
-          }
+    return Promise.resolve(result);
+  }
+}
 
-          return Promise.resolve(result)
-      })
-      return Promise.resolve(task())
-    }
- }
-
-
-
-module.exports = Bd
+module.exports = Bd;
