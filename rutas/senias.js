@@ -1,8 +1,6 @@
 const express = require("express");
 const router = express.Router();
 const Db = require("../bd");
-const co = require("co");
-
 const formData = require("express-form-data");
 
 let datosVista = {};
