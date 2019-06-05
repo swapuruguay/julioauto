@@ -15,7 +15,6 @@ const un = require("./rutas/unidades")(io);
 const senias = require("./rutas/senias");
 const ventas = require("./rutas/ventas");
 const bodyParser = require("body-parser");
-const multer = require("multer");
 const Db = require("./bd");
 
 app.use(bodyParser.urlencoded({ extended: false }));
