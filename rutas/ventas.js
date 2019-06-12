@@ -48,7 +48,7 @@ router.use(function(req, res, next) {
 
 router.get("/listar", ensureAuth, async (req, res) => {
   let db = new Db();
-  await db.connect();
+
   let ventas = await db.getVentas(
     ` WHERE id_sucursal_fk = ${req.user.sucursal} `
   );
@@ -72,14 +72,14 @@ router.get("/listar", ensureAuth, async (req, res) => {
   } else {
     ventas = [];
   }
-  await db.disconnect();
+
   datosVista.ventas = ventas;
   res.render("ventas", { datos: datosVista });
 });
 
 router.post("/listar", async (req, res) => {
   let db = new Db();
-  await db.connect();
+
   let ventas = await db.getVentas(
     ` WHERE id_sucursal_fk = ${req.body.sucursal} AND YEAR(fecha) = ${
       req.body.anio
@@ -105,7 +105,7 @@ router.post("/listar", async (req, res) => {
   } else {
     ventas = [];
   }
-  await db.disconnect();
+
   res.send(ventas);
 });
 
@@ -154,7 +154,7 @@ router.get("/acumula", ensureAuth, admin, (req, res) => {
 
 router.post("/acumula", async (req, res) => {
   const db = new Db();
-  await db.connect();
+
   const { mes, anio } = req.body;
   let tipo = req.body.tipo == 1 ? " tipo < 4" : " tipo > 3";
   let listadoNuevos = await db.getVentasAgrupadas(
@@ -187,7 +187,7 @@ router.post("/acumula", async (req, res) => {
       usados
     });
   });
-  await db.disconnect();
+
   res.send({ listado });
 });
 

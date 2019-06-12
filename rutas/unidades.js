@@ -50,9 +50,7 @@ let returnRouter = function(io) {
   io.on("connection", function(socket) {
     socket.on("unir", async function(sala) {
       let db = new Db();
-      await db.connect();
       let autos = await db.getPendientes(sala);
-      await db.disconnect();
       let regs = autos.length;
       socket.emit("devolver", regs);
       socket.join(sala);
@@ -66,9 +64,7 @@ let returnRouter = function(io) {
   router.get("/nuevo", ensureAuth, async function(req, res) {
     let nro = "";
     let db = new Db();
-    await db.connect();
     let suc = await db.getSucursales();
-    await db.disconnect();
     datosVista.sucursales = suc;
     res.render("unidades", {
       titulo: "Formulario de Unidades",
@@ -78,9 +74,9 @@ let returnRouter = function(io) {
 
   router.get("/retorno", ensureAuth, admin, async function(req, res) {
     let db = new Db();
-    await db.connect();
+
     let sucursales = await db.getSucursales();
-    await db.disconnect();
+
     sucursales = sucursales.filter(function(s) {
       return s.id_sucursal != 5;
     });
@@ -93,20 +89,20 @@ let returnRouter = function(io) {
 
   router.post("/retornables", async function(req, res) {
     let db = new Db();
-    await db.connect();
+
     let nro = req.body.nro;
     let uni = (await db.getUnidades(
       ` WHERE (sucursal = 5 OR estado = 3) AND nro_motor = '${nro}'`
     ))[0];
     let sucursal = (await db.getSucursal(uni.sucursal))[0];
     uni.suc = sucursal;
-    await db.disconnect();
+
     res.send({ uni: uni });
   });
 
   router.post("/retornar", ensureAuth, admin, async function(req, res) {
     let db = new Db();
-    await db.connect();
+
     let unidad = {
       id_unidad: req.body.id,
       sucursal: req.body.suc,
@@ -120,15 +116,15 @@ let returnRouter = function(io) {
       operacion: "Reingreso"
     };
     await db.saveHistorial(historia);
-    await db.disconnect();
+
     res.send("Retornado con éxito");
   });
 
   router.get("/listar", ensureAuth, async function(req, res) {
     let db = new Db();
-    await db.connect();
+
     let sucursales = await db.getSucursales();
-    await db.disconnect();
+
     datosVista.sucursales = sucursales;
 
     res.render("unidades-listar", {
@@ -139,7 +135,7 @@ let returnRouter = function(io) {
 
   router.post("/traspasar", async function(req, res) {
     let db = new Db();
-    await db.connect();
+
     let fecha = new Date().toJSON().slice(0, 10);
     let idUnidad = req.body.idunidad;
     let idSucursal = req.body.idsucursal;
@@ -162,17 +158,14 @@ let returnRouter = function(io) {
         datos: datosVista,
         mensaje: "Operación exitosa"
       });
-      await db.disconnect();
     } catch (err) {
       if (err.message == "ER_DUP_ENTRY") {
-        await db.disconnect();
         res.render("unidades-ok-traspaso", {
           datos: datosVista,
           mensaje:
             "Registro duplicado, ya se hizo este traspaso no se puede volver a enviar"
         });
       } else {
-        await db.disconnect();
         res.send("Ocurrió un error, intente de nuevo");
       }
     }
@@ -180,9 +173,9 @@ let returnRouter = function(io) {
 
   router.get("/pendientes", ensureAuth, async function(req, res) {
     let db = new Db();
-    await db.connect();
+
     let pend = await db.getPendientes(req.user.sucursal);
-    await db.disconnect();
+
     datosVista.pendientes = pend;
     res.render("unidades-pendientes", {
       titulo: "Unidades en tránsito",
@@ -192,7 +185,7 @@ let returnRouter = function(io) {
 
   router.post("/save", async function(req, res) {
     let db = new Db();
-    await db.connect();
+
     let nuevo = req.body.nuevo == "on" ? 1 : 0;
     let estado;
     if (!req.body.flagtoma) {
@@ -256,15 +249,13 @@ let returnRouter = function(io) {
         };
         await db.saveVenta(vnt);
       }
-      await db.disconnect();
+
       result.message = "Ok";
       res.send(result);
     } catch (err) {
       if (err.message == "ER_DUP_ENTRY") {
-        await db.disconnect();
         res.send("Registro duplicado");
       } else {
-        await db.disconnect();
         res.send("Ocurrió un error, intente de nuevo");
       }
     }
@@ -279,7 +270,7 @@ let returnRouter = function(io) {
 
   router.post("/stockfull", async function(req, res) {
     let db = new Db();
-    await db.connect();
+
     let unidad = (await db.getUnidades(
       ` WHERE nro_motor = '${req.body.nromotor}' OR nro_chasis = '${
         req.body.nromotor
@@ -300,15 +291,15 @@ let returnRouter = function(io) {
     }
 
     unidad.historia = historia;
-    await db.disconnect();
+
     res.send({ unidad });
   });
 
   router.get("/stock", ensureAuth, async function(req, res) {
     let db = new Db();
-    await db.connect();
+
     let sucursales = await db.getSucursales();
-    await db.disconnect();
+
     datosVista.sucursales = sucursales;
     res.render("unidades-stock", {
       titulo: "Stock de Unidades",
@@ -318,7 +309,7 @@ let returnRouter = function(io) {
 
   router.get("/stock/:sucursal/:tipo", ensureAuth, async function(req, res) {
     let db = new Db();
-    await db.connect();
+
     let suc = req.params.sucursal;
     let tipo = req.params.tipo;
     let operador = tipo == 1 ? "<" : ">=";
@@ -330,7 +321,7 @@ let returnRouter = function(io) {
       ` WHERE estado = 1 AND sucursal = ${suc} and tipo ${operador} 4 `,
       ` ORDER BY nuevo, marca, modelo`
     );
-    await db.disconnect();
+
     let fecha = new Date();
 
     let data = {
@@ -358,11 +349,11 @@ let returnRouter = function(io) {
 
   router.post("/trasconfirm", async function(req, res) {
     let db = new Db();
-    await db.connect();
+
     let id = req.body.id;
     let sucursal = (await db.getSucursal(req.body.destino))[0];
     let unidad = (await db.getUnidad(id))[0];
-    await db.disconnect();
+
     datosVista.unidad = unidad;
     datosVista.sucursal = sucursal;
     res.render("unidades-confirm-traspaso", {
@@ -373,11 +364,11 @@ let returnRouter = function(io) {
 
   router.get("/traspaso/:id", ensureAuth, async function(req, res) {
     let db = new Db();
-    await db.connect();
+
     let unidad = (await db.getUnidad(req.params.id))[0];
     let sucursal = (await db.getSucursal(req.user.sucursal))[0];
     let sucursales = await db.getSucursales();
-    await db.disconnect();
+
     sucursales = sucursales.filter(function(s) {
       return s.id_sucursal != req.user.sucursal && s.id_sucursal != 5;
     });
@@ -400,7 +391,7 @@ let returnRouter = function(io) {
 
   router.post("/filtrar", async (req, res) => {
     let db = new Db();
-    await db.connect();
+
     let hasta = req.body.hasta;
     let desde = req.body.desde;
 
@@ -425,13 +416,13 @@ let returnRouter = function(io) {
         return u;
       })
     );
-    await db.disconnect();
+
     res.send({ uns });
   });
 
   router.get("/accept/:id", ensureAuth, async function(req, res) {
     let db = new Db();
-    await db.connect();
+
     let unidad = {
       id_unidad: req.params.id,
       sucursal: req.user.sucursal,
@@ -449,14 +440,13 @@ let returnRouter = function(io) {
     };
     await db.saveHistorial(historia);
 
-    await db.disconnect();
     res.redirect("/unidades/pendientes");
   });
 
   router.get("/:id", ensureAuth, async function(req, res) {
     let id = req.params.id;
     let db = new Db();
-    await db.connect();
+
     let rows = await db.getUnidad(id);
     let fila = rows[0];
 
@@ -507,7 +497,7 @@ let returnRouter = function(io) {
     ];
 
     let suc = await db.getSucursales();
-    await db.disconnect();
+
     suc = suc.map(function(s) {
       s.selected = "";
       if (s.id_sucursal == unidad.sucursal) s.selected = "SELECTED";
@@ -536,12 +526,12 @@ let returnRouter = function(io) {
     let nuevo = req.body.cero === "true" ? 1 : 0;
     let whereNuevo = nuevo ? `nuevo = ${nuevo} AND ` : "";
     let db = new Db();
-    await db.connect();
+
     let unidades = await db.getUnidadesSuc(
       `WHERE ${whereNuevo}  estado = 1 AND sucursal != 5 AND ${criterio} LIKE '${texto}%'`,
       null
     );
-    await db.disconnect();
+
     let resultado = {
       user: req.user,
       unidades
@@ -551,7 +541,7 @@ let returnRouter = function(io) {
 
   router.get("/historial/:id", async function(req, res) {
     let db = new Db();
-    await db.connect();
+
     let id = req.params.id;
     let historia = await db.getHistorial(id);
 
@@ -565,8 +555,6 @@ let returnRouter = function(io) {
         h.fecha.getDate() > 9 ? h.fecha.getDate() : "0" + h.fecha.getDate();
       h.fecha = `${dia}/${mes}/${h.fecha.getFullYear()}`;
     }
-
-    await db.disconnect();
 
     res.send({ historia });
   });

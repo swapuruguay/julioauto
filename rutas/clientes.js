@@ -26,9 +26,8 @@ function ensureAuth(req, res, next) {
 
 router.get("/listar", ensureAuth, async function(req, res) {
   let db = new Db();
-  await db.connect();
+
   let clientes = await db.getClientes(null, " ORDER BY apellido, nombre");
-  await db.disconnect();
 
   res.render("clientes-listar", {
     titulo: "Formulario de Clientes",
@@ -46,7 +45,7 @@ router.get("/nuevo", ensureAuth, function(req, res) {
 
 router.post("/save", async function(req, res) {
   let db = new Db();
-  await db.connect();
+
   // console.log(req.body)
   let id = req.body.id == "" ? 0 : req.body.id;
   let fechaNacimiento = null;
@@ -75,7 +74,6 @@ router.post("/save", async function(req, res) {
   }
 
   res.send(await db.saveCliente(cliente));
-  await db.disconnect();
 });
 
 router.get("/", function(req, res) {
@@ -86,12 +84,12 @@ router.post("/", async function(req, res) {
   let criterio = req.body.criterio;
   let texto = req.body.texto;
   let db = new Db();
-  await db.connect();
+
   let clientes = await db.getClientes(
     ` WHERE ${criterio} LIKE '${texto}%'`,
     null
   );
-  await db.disconnect();
+
   clientes = clientes.map(c => {
     if (c.categoria == "M") {
       c.clase = "danger";
@@ -110,7 +108,7 @@ router.post("/", async function(req, res) {
 
 router.get("/:id", ensureAuth, async function(req, res) {
   let db = new Db();
-  await db.connect();
+
   let id = req.params.id;
   //console.log(id)
   let row = (await db.getCliente(id))[0];
@@ -130,7 +128,6 @@ router.get("/:id", ensureAuth, async function(req, res) {
       row.fecha_nacimiento.getFullYear();
   }
 
-  await db.disconnect();
   let categorias = [
     {
       codigo: "B",

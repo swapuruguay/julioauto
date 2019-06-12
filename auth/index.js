@@ -4,9 +4,8 @@ var bcrypt = require("bcrypt-nodejs");
 
 exports.strategy = new LocalStrategy(async function(username, password, done) {
   let db = new Db();
-  await db.connect();
+
   let user = await db.getUser(` WHERE username = '${username}'`);
-  await db.disconnect();
 
   let hash = bcrypt.hashSync(password);
 

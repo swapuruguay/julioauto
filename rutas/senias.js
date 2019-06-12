@@ -51,7 +51,7 @@ router.get("/nueva", ensureAuth, function(req, res) {
 
 router.post("/new", async (req, res) => {
   let db = new Db();
-  await db.connect();
+
   let fec = new Date();
   let nuevo = req.body.nuevo == "on" ? 1 : 0;
   let unidad = {
@@ -86,13 +86,13 @@ router.post("/new", async (req, res) => {
   //     await db.saveUnidadSenia({id_unidad_fk: req.body.oculto, id_senia_fk: rs.insertId})
   // }
   // console.log(rs)
-  await db.disconnect();
+
   res.redirect("/senias/nueva");
 });
 
 router.post("/eliminar", async function(req, res) {
   let db = new Db();
-  await db.connect();
+
   let id_unidad = req.body.idsenia;
   await db.eliminarSenia(id_unidad);
   let where = req.user.habilitado
@@ -123,14 +123,13 @@ router.post("/eliminar", async function(req, res) {
     listado = [];
   }
   //console.log(listado)
-  await db.disconnect();
 
   res.send({ listado });
 });
 
 router.get("/listar", ensureAuth, async (req, res) => {
   let db = new Db();
-  await db.connect();
+
   let where = req.user.habilitado
     ? ""
     : ` WHERE senias.sucursal = ${req.user.sucursal}`;
@@ -157,7 +156,7 @@ router.get("/listar", ensureAuth, async (req, res) => {
   } else {
     listado = [];
   }
-  await db.disconnect();
+
   res.render("senias-listar", {
     titulo: "Listado de Señas",
     datos: datosVista,
@@ -167,11 +166,10 @@ router.get("/listar", ensureAuth, async (req, res) => {
 
 router.get("/:id", ensureAuth, async (req, res) => {
   let db = new Db();
-  await db.connect();
+
   let senia = (await db.getSenia(req.params.id))[0];
   senia.unidad = (await db.getUnidadTemp(senia.id_unidad_fk))[0];
   senia.cliente = (await db.getCliente(senia.id_cliente_fk))[0];
-  await db.disconnect();
 
   let tipos = [
     { id: 1, tipo: "Auto", selected: senia.unidad.tipo == 1 ? "SELECTED" : "" },

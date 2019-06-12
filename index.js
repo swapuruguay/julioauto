@@ -93,9 +93,7 @@ app.use("/ventas", ventas);
 
 app.get("/", ensureAuth, async function(req, res) {
   let db = new Db();
-  await db.connect();
   let suc = (await db.getSucursal(req.user.sucursal))[0];
-  await db.disconnect();
   res.render("index", {
     titulo: suc.alias,
     datos: { user: req.user, color: "rgb(65,87,199)" }
@@ -131,6 +129,6 @@ app.get("/logout", function(req, res) {
   res.redirect("/login");
 });
 
-http.listen(3000, function() {
+http.listen(8080, function() {
   console.log(" Escuchando el puerto 3000");
 });
