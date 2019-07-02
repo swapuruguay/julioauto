@@ -49,8 +49,12 @@ router.use(function(req, res, next) {
 router.get("/listar", ensureAuth, async (req, res) => {
   let db = new Db();
 
+  let fecha = new Date();
   let ventas = await db.getVentas(
-    ` WHERE id_sucursal_fk = ${req.user.sucursal} `
+    ` WHERE id_sucursal_fk = ${
+      req.user.sucursal
+    } AND YEAR(fecha) = ${fecha.getFullYear()} AND MONTH(fecha) = ${fecha.getMonth() +
+      1}`
   );
   let options = { year: "numeric", month: "numeric", day: "numeric" };
   if (ventas) {
