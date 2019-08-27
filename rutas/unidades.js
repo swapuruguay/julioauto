@@ -270,25 +270,26 @@ let returnRouter = function(io) {
 
   router.post("/stockfull", async function(req, res) {
     let db = new Db();
-
-    let unidad = (await db.getUnidades(
+    let unidad = null;
+    unidad = (await db.getUnidades(
       ` WHERE nro_motor = '${req.body.nromotor}' OR nro_chasis = '${req.body.nromotor}' OR padron = '${req.body.nromotor}'`
     ))[0];
-    let historia = await db.getHistorial(unidad.id_unidad);
-    if (historia) {
-      for (let h of historia) {
-        h.sucursal = (await db.getSucursal(h.id_sucursal_fk))[0];
-        let mes =
-          h.fecha.getMonth() + 1 > 9
-            ? h.fecha.getMonth() + 1
-            : "0" + (h.fecha.getMonth() + 1);
-        let dia =
-          h.fecha.getDate() > 9 ? h.fecha.getDate() : "0" + h.fecha.getDate();
-        h.fecha = `${dia}/${mes}/${h.fecha.getFullYear()}`;
+    if (unidad) {
+      let historia = await db.getHistorial(unidad.id_unidad);
+      if (historia) {
+        for (let h of historia) {
+          h.sucursal = (await db.getSucursal(h.id_sucursal_fk))[0];
+          let mes =
+            h.fecha.getMonth() + 1 > 9
+              ? h.fecha.getMonth() + 1
+              : "0" + (h.fecha.getMonth() + 1);
+          let dia =
+            h.fecha.getDate() > 9 ? h.fecha.getDate() : "0" + h.fecha.getDate();
+          h.fecha = `${dia}/${mes}/${h.fecha.getFullYear()}`;
+        }
       }
+      unidad.historia = historia;
     }
-
-    unidad.historia = historia;
 
     res.send({ unidad });
   });

@@ -59,21 +59,26 @@
       .then(data => {
         let obj = $('#resultado')
         let panel = $('#panel-unidad')
-        panel.html(`MARCA: ${data.unidad.marca} - MODELO: ${data.unidad.modelo} - MATRÍCULA: ${data.unidad.matricula} - MOTOR: ${data.unidad.nro_motor}`)
+        if(data.unidad) {
+          panel.html(`MARCA: ${data.unidad.marca} - MODELO: ${data.unidad.modelo} - MATRÍCULA: ${data.unidad.matricula} - MOTOR: ${data.unidad.nro_motor}`)
 
-        var elemento = '<table class="table table-striped table-condensed">'
-        elemento += `<tr>
-              <th>Fecha</th>
-              <th>Sucursal</th>
-              <th>Operación</th>
-              </tr>`
+          var elemento = '<table class="table table-striped table-condensed">'
+          elemento += `<tr>
+                <th>Fecha</th>
+                <th>Sucursal</th>
+                <th>Operación</th>
+                </tr>`
 
 
-        data.unidad.historia.forEach(h => {
-          elemento += `<tr><td>${h.fecha}</td><td>${h.sucursal.nombre}</td><td>${h.operacion}</td></tr>`
-        })
-        elemento += `</table>`
-        obj.html(elemento)
+          data.unidad.historia.forEach(h => {
+            elemento += `<tr><td>${h.fecha}</td><td>${h.sucursal.nombre}</td><td>${h.operacion}</td></tr>`
+          })
+          elemento += `</table>`
+          obj.html(elemento)
+        } else {
+          panel.html('No se encontraron registros')
+        }
+
       })
 
 
