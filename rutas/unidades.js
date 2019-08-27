@@ -272,9 +272,7 @@ let returnRouter = function(io) {
     let db = new Db();
 
     let unidad = (await db.getUnidades(
-      ` WHERE nro_motor = '${req.body.nromotor}' OR nro_chasis = '${
-        req.body.nromotor
-      }'`
+      ` WHERE nro_motor = '${req.body.nromotor}' OR nro_chasis = '${req.body.nromotor}' OR padron = '${req.body.nromotor}'`
     ))[0];
     let historia = await db.getHistorial(unidad.id_unidad);
     if (historia) {
@@ -397,9 +395,7 @@ let returnRouter = function(io) {
 
     let cero = req.body.cero;
     let ceroKm = cero === "on" ? " AND nuevo = 1" : "";
-    let where = ` estado = 1 AND sucursal != 5 AND tipo = '${
-      req.body.tipo
-    }' AND combustible = '${req.body.combustible}' ${ceroKm}`;
+    let where = ` estado = 1 AND sucursal != 5 AND tipo = '${req.body.tipo}' AND combustible = '${req.body.combustible}' ${ceroKm}`;
     if (desde) {
       where += ` AND precio >= ${desde}`;
     }
