@@ -458,6 +458,7 @@ let returnRouter = function(io) {
       anio: fila.anio,
       kmts: fila.kmts,
       precio: fila.precio,
+      llaves: fila.llaves,
       padron: fila.padron,
       sucursal: fila.sucursal,
       color: fila.color,
