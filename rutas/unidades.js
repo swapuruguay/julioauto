@@ -204,6 +204,7 @@ let returnRouter = function(io) {
       nro_motor: req.body.nromotor.toUpperCase(),
       nro_chasis: req.body.nrochasis ? req.body.nrochasis.toUpperCase() : null,
       anio: req.body.anio,
+      llaves: req.body.llaves,
       matricula: req.body.matricula.toUpperCase(),
       color: req.body.color.toUpperCase(),
       sucursal: req.user.sucursal,

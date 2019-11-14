@@ -52,6 +52,12 @@
          <input type="text" class="form-control" id="anio" name="anio">
        </div>
      </div>
+    <div class="form-group">
+      <label for="llaves" class="col-sm-2 control-label">Cantidad llaves</label>
+      <div class="col-sm-4">
+        <input type="number" required class="form-control" id="llaves" name="llaves" value="{{ datos.unidad.llaves }}">
+      </div>
+    </div>
      <div class="form-group">
        <label for="precio" class="col-sm-2 control-label">Precio</label>
        <div class="col-sm-4">
@@ -126,3 +132,19 @@
   </div> <p>&nbsp;</p>
 
 </div>
+<script>
+  onst $llaves = document.querySelector("#llaves")
+    $llaves.onkeypress = evt => {
+      const tecla = evt.keyCode ? evt.keyCode : evt.which
+      if (tecla === 8) {
+        return true
+      }
+      if ($llaves.value.length > 0) {
+        return false
+      }
+      if (tecla < 49 || tecla > 52) {
+        return false
+
+      }
+    }
+</script>
