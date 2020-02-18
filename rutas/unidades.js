@@ -307,6 +307,18 @@ let returnRouter = function(io) {
     });
   });
 
+  router.get("/pedidos", ensureAuth, yo, async function(req, res) {
+    let db = new Db();
+
+    let sucursales = await db.getSucursales();
+
+    datosVista.sucursales = sucursales;
+    res.render("unidades-pedidos", {
+      titulo: "Pedido de unidades Unidades",
+      datos: datosVista
+    });
+  });
+
   router.get("/stock/:sucursal/:tipo", ensureAuth, async function(req, res) {
     let db = new Db();
 

@@ -1,4 +1,4 @@
-var LocalStrategy = require("passport-local").Strategy;
+const LocalStrategy = require("passport-local").Strategy;
 var Db = require("../bd");
 var bcrypt = require("bcrypt-nodejs");
 
@@ -7,10 +7,8 @@ exports.strategy = new LocalStrategy(async function(username, password, done) {
 
   let user = await db.getUser(` WHERE username = '${username}'`);
 
-  let hash = bcrypt.hashSync(password);
-
   if (user.length > 0) {
-    hash = bcrypt.hashSync(password);
+    let hash = bcrypt.hashSync(password);
     //console.log(hash);
     //console.log(bcrypt.compareSync(password, hash))
     if (bcrypt.compareSync(password, user[0].password)) {

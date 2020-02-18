@@ -1,0 +1,106 @@
+<div class="container">
+  <h1>{{titulo}}</h1>
+  <p>&nbsp;</p>
+  <b><i><span class="text-warning" id="errores"></span></i></b>
+  <div class="row">
+    <form class="form-horizontal" action="" id="form-pedidos">
+      <div class="form-group">
+        <label for="cliente" class="col-sm-2 control-label">Cliente</label>
+        <div class="col-sm-4">
+          <input type="text" class="form-control" id="cliente" required name="cliente">
+          <div id="res" class="alert-danger"></div>
+        </div>
+      
+      </div>
+      <div class="form-group">
+        <label for="marca" class="col-sm-2 control-label">Marca</label>
+        <div class="col-sm-4">
+          <input type="text" class="form-control" id="marca" name="marca">
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="modelo" class="col-sm-2 control-label">Modelo</label>
+        <div class="col-sm-4">
+          <input type="text" class="form-control" id="modelo" name="modelo">
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="anio" class="col-sm-2 control-label">Año</label>
+        <div class="col-sm-4">
+          <input type="text" class="form-control" id="anio" name="anio">
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="precio" class="col-sm-2 control-label">Precio</label>
+        <div class="col-sm-4">
+          <input type="text" class="form-control" id="precio" name="precio">
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="combustible" class="col-sm-2 control-label">Combustible</label>
+        <div class="col-sm-4">
+          <select id="combustible" name="combustible" class="form-control">
+            {{#each datos.combustibles}}
+            <option value="{{ id }}" {{ selected }}>{{ comb }}</option>
+            {{/each}}
+          </select>
+        </div>
+      </div>
+        <input type="submit" class="btn btn-default" value="Guardar">
+    </form>
+  </div>
+</div>
+<script> 
+  let cli = document.getElementById('cliente')
+    cli.addEventListener('keyup', async evt => {
+      try {
+        const formData = new FormData()
+        formData.append('criterio', 'apellido')
+        formData.append('texto', cli.value)
+        const response = await fetch('/clientes/', {
+          method: 'post',
+          body: formData
+        })
+        const result = await response.json()
+        let text = ''
+        const divres = document.getElementById('res')
+        divres.innerHTML = ''
+        divres.style.display = 'block'
+        result.res.clientes.forEach(function (el) {
+          const parrafo = document.createElement('p')
+          const texto = document.createTextNode(el.nombre + ' ' + el.apellido)
+          parrafo.appendChild(texto)
+          parrafo.dataset.documento = el.documento
+          parrafo.dataset.domicilio = el.domicilio
+          parrafo.dataset.telefono = el.celular
+          parrafo.dataset.nombre = el.nombre + ' ' + el.apellido
+          parrafo.id = el.id_cliente
+          parrafo.style.cursor = 'pointer'
+          parrafo.addEventListener('click', assign)
+
+          document.getElementById('res').appendChild(parrafo)
+        })
+      } catch(err) {
+        console.log(err)
+      }
+      
+  })
+
+  function assign() {
+      let texto = this.innerHTML
+      let cli = document.getElementById('cliente')
+      cli.value = texto
+      cli.dataset.id = this.id
+      cli.dataset
+      cli.dataset.documento = this.dataset.documento
+      cli.dataset.domicilio = this.dataset.domicilio
+      cli.dataset.telefono = this.dataset.telefono
+      cli.dataset.nombre = this.dataset.nombre
+      console.log(this.dataset)
+      let res = document.getElementById('res')
+      res.innerHTML = ''
+      res.style.display = 'none'
+    }
+  
+</script>
+
