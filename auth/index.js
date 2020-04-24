@@ -1,14 +1,14 @@
 const LocalStrategy = require("passport-local").Strategy;
-var Db = require("../bd");
-var bcrypt = require("bcrypt-nodejs");
+const Db = require("../bd");
+const bcrypt = require("bcrypt-nodejs");
 
-exports.strategy = new LocalStrategy(async function(username, password, done) {
+exports.strategy = new LocalStrategy(async function (username, password, done) {
   let db = new Db();
 
   let user = await db.getUser(` WHERE username = '${username}'`);
 
   if (user.length > 0) {
-    let hash = bcrypt.hashSync(password);
+    //let hash = bcrypt.hashSync(password);
     //console.log(hash);
     //console.log(bcrypt.compareSync(password, hash))
     if (bcrypt.compareSync(password, user[0].password)) {
@@ -36,10 +36,10 @@ exports.strategy = new LocalStrategy(async function(username, password, done) {
   }
 });
 
-exports.serialize = function(user, done) {
+exports.serialize = function (user, done) {
   done(null, user);
 };
 
-exports.deserialize = function(user, done) {
+exports.deserialize = function (user, done) {
   done(null, user);
 };
