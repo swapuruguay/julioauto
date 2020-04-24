@@ -16,8 +16,13 @@
           <option value="matricula">Matrícula</option>
           <option value="anio">Año</option>
         </select>
-        <label for="cero">Cero KM</label>
-        <input type="checkbox" name="cero" id="cero">
+        <label for="estado">Estado de unidad</label>
+        <select class="form-control" name="estado" id="estado">
+          <option value="1">Todos</option>
+          <option value="2">Cero KM</option>
+          <option value="3">Usados</option>
+        </select>
+        
         <div class="oculto" id="oculto">
           <select name="sucursales" id="sucursales" class="form-control" onchange="cambiarTexto()">
           {{#each datos.sucursales}}

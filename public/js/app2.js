@@ -1,25 +1,25 @@
 let buscaUnidad = $("#find-unidad");
 
-$("#busquedau").keypress(function(e) {
+$("#busquedau").keypress(function (e) {
   if (e.keyCode == 13) {
     buscaU();
     return false;
   }
 });
 
-buscaUnidad.click(function(evt) {
+buscaUnidad.click(function (evt) {
   buscaU();
 });
 
 function buscaU() {
-  var valor = $("#busquedau").val();
-  var criterio = $("#criterio").val();
-  let cero = document.getElementById("cero").checked;
-  var data = "texto=" + valor + "&criterio=" + criterio + "&cero=" + cero;
+  let valor = $("#busquedau").val();
+  let criterio = $("#criterio").val();
+  let cero = document.getElementById("estado").value;
+  let data = `texto=${valor}&criterio=${criterio}&cero=${cero}`;
   $.post(
     "/unidades",
     data,
-    function(res) {
+    function (res) {
       var obj = $("#resultado");
       var elemento = '<table class="table table-striped table-condensed">';
       elemento += `<tr>
@@ -36,7 +36,7 @@ function buscaU() {
       let totPrecio = 0,
         totUnidades = 0;
 
-      res.res.unidades.forEach(function(un) {
+      res.res.unidades.forEach(function (un) {
         elemento += `<tr><td><a href="/unidades/${un.id_unidad}">${
           un.id_unidad
         }</a></td><td>${un.marca}</td><td>${un.modelo}</td>
@@ -62,7 +62,7 @@ function buscaU() {
   );
 }
 
-$("#find-cliente").click(function(evt) {
+$("#find-cliente").click(function (evt) {
   var valor = $("#busquedac").val();
   var criterio = $("#criterio").val();
   //console.log(valor + ' ' + criterio)
@@ -70,7 +70,7 @@ $("#find-cliente").click(function(evt) {
   $.post(
     "/clientes",
     data,
-    function(res) {
+    function (res) {
       var obj = $("#resultado");
       var elemento = '<table class="table table-condensed">';
       elemento += `<tr>
@@ -81,7 +81,7 @@ $("#find-cliente").click(function(evt) {
                 <th>Celular </th>
                 </tr>`;
 
-      res.res.clientes.forEach(function(cli) {
+      res.res.clientes.forEach(function (cli) {
         elemento += `<tr class="${cli.clase}"><td><a href="/clientes/${cli.id_cliente}">${cli.id_cliente}</a></td><td>${cli.nombre}</td><td>${cli.apellido}</td>
         <td>${cli.documento}</td><td>${cli.celular}</td></tr>`;
       });
@@ -151,7 +151,7 @@ function clearForm(myFormElement) {
 const funi = document.getElementById("form-unidades");
 const fcli = document.getElementById("form-clientes");
 if (funi) {
-  funi.addEventListener("submit", function(event) {
+  funi.addEventListener("submit", function (event) {
     event.preventDefault();
     const $llaves = document.querySelector("#llaves");
     const patron = /^[1-4]{1,1}$/g;
@@ -167,7 +167,7 @@ if (funi) {
     superagent
       .post("/unidades/save")
       .send(formData)
-      .end(function(err, res) {
+      .end(function (err, res) {
         if (res.body) {
           clearForm(funi);
         } else {
@@ -178,14 +178,14 @@ if (funi) {
 }
 
 if (fcli) {
-  fcli.addEventListener("submit", function(event) {
+  fcli.addEventListener("submit", function (event) {
     event.preventDefault();
 
     let formData = new FormData(fcli);
     superagent
       .post("/clientes/save")
       .send(formData)
-      .end(function(err, res) {
+      .end(function (err, res) {
         //if(res.text == 'Ok') {
         clearForm(fcli);
         //} else {

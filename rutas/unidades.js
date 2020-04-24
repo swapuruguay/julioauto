@@ -40,15 +40,15 @@ function yo(req, res, next) {
   res.redirect("/");
 }
 
-let returnRouter = function(io) {
-  router.use(function(req, res, next) {
+let returnRouter = function (io) {
+  router.use(function (req, res, next) {
     datosVista = {};
     datosVista.user = req.user;
     next();
   });
 
-  io.on("connection", function(socket) {
-    socket.on("unir", async function(sala) {
+  io.on("connection", function (socket) {
+    socket.on("unir", async function (sala) {
       let db = new Db();
       let autos = await db.getPendientes(sala);
       let regs = autos.length;
@@ -56,71 +56,73 @@ let returnRouter = function(io) {
       socket.join(sala);
     });
 
-    socket.on("enviar", function(msg) {
+    socket.on("enviar", function (msg) {
       socket.broadcast.to(msg).emit("devolver", 1);
     });
   });
 
-  router.get("/nuevo", ensureAuth, async function(req, res) {
+  router.get("/nuevo", ensureAuth, async function (req, res) {
     let nro = "";
     let db = new Db();
     let suc = await db.getSucursales();
     datosVista.sucursales = suc;
     res.render("unidades", {
       titulo: "Formulario de Unidades",
-      datos: datosVista
+      datos: datosVista,
     });
   });
 
-  router.get("/retorno", ensureAuth, admin, async function(req, res) {
+  router.get("/retorno", ensureAuth, admin, async function (req, res) {
     let db = new Db();
 
     let sucursales = await db.getSucursales();
 
-    sucursales = sucursales.filter(function(s) {
+    sucursales = sucursales.filter(function (s) {
       return s.id_sucursal != 5;
     });
     datosVista.sucursales = sucursales;
     res.render("unidades-retorno", {
       titulo: "Formulario de Unidades",
-      datos: datosVista
+      datos: datosVista,
     });
   });
 
-  router.post("/retornables", async function(req, res) {
+  router.post("/retornables", async function (req, res) {
     let db = new Db();
 
     let nro = req.body.nro;
-    let uni = (await db.getUnidades(
-      ` WHERE (sucursal = 5 OR estado = 3) AND nro_motor = '${nro}'`
-    ))[0];
+    let uni = (
+      await db.getUnidades(
+        ` WHERE (sucursal = 5 OR estado = 3) AND nro_motor = '${nro}'`
+      )
+    )[0];
     let sucursal = (await db.getSucursal(uni.sucursal))[0];
     uni.suc = sucursal;
 
     res.send({ uni: uni });
   });
 
-  router.post("/retornar", ensureAuth, admin, async function(req, res) {
+  router.post("/retornar", ensureAuth, admin, async function (req, res) {
     let db = new Db();
 
     let unidad = {
       id_unidad: req.body.id,
       sucursal: req.body.suc,
-      estado: 1
+      estado: 1,
     };
     await db.saveUnidad(unidad);
     let historia = {
       id_unidad_fk: unidad.id_unidad,
       id_sucursal_fk: unidad.sucursal,
       fecha: new Date().toJSON().slice(0, 10),
-      operacion: "Reingreso"
+      operacion: "Reingreso",
     };
     await db.saveHistorial(historia);
 
     res.send("Retornado con éxito");
   });
 
-  router.get("/listar", ensureAuth, async function(req, res) {
+  router.get("/listar", ensureAuth, async function (req, res) {
     let db = new Db();
 
     let sucursales = await db.getSucursales();
@@ -129,11 +131,11 @@ let returnRouter = function(io) {
 
     res.render("unidades-listar", {
       titulo: "Formulario de Unidades",
-      datos: datosVista
+      datos: datosVista,
     });
   });
 
-  router.post("/traspasar", async function(req, res) {
+  router.post("/traspasar", async function (req, res) {
     let db = new Db();
 
     let fecha = new Date().toJSON().slice(0, 10);
@@ -144,26 +146,26 @@ let returnRouter = function(io) {
       sucursal_destino: idSucursal,
       sucursal_origen: req.user.sucursal,
       id_usuario_fk: req.user.id_usuario,
-      fecha: fecha
+      fecha: fecha,
     };
 
     let un = {
       id_unidad: idUnidad,
-      estado: 5
+      estado: 5,
     };
     try {
       await db.saveUnidad(un);
       await db.saveTraspaso(datos);
       res.render("unidades-ok-traspaso", {
         datos: datosVista,
-        mensaje: "Operación exitosa"
+        mensaje: "Operación exitosa",
       });
     } catch (err) {
       if (err.message == "ER_DUP_ENTRY") {
         res.render("unidades-ok-traspaso", {
           datos: datosVista,
           mensaje:
-            "Registro duplicado, ya se hizo este traspaso no se puede volver a enviar"
+            "Registro duplicado, ya se hizo este traspaso no se puede volver a enviar",
         });
       } else {
         res.send("Ocurrió un error, intente de nuevo");
@@ -171,7 +173,7 @@ let returnRouter = function(io) {
     }
   });
 
-  router.get("/pendientes", ensureAuth, async function(req, res) {
+  router.get("/pendientes", ensureAuth, async function (req, res) {
     let db = new Db();
 
     let pend = await db.getPendientes(req.user.sucursal);
@@ -179,11 +181,11 @@ let returnRouter = function(io) {
     datosVista.pendientes = pend;
     res.render("unidades-pendientes", {
       titulo: "Unidades en tránsito",
-      datos: datosVista
+      datos: datosVista,
     });
   });
 
-  router.post("/save", async function(req, res) {
+  router.post("/save", async function (req, res) {
     let db = new Db();
 
     let nuevo = req.body.nuevo == "on" ? 1 : 0;
@@ -215,7 +217,7 @@ let returnRouter = function(io) {
       toma: req.body.toma || 0,
       combustible: req.body.combustible,
       estado: estado,
-      tipo: req.body.tipo
+      tipo: req.body.tipo,
     };
     try {
       //Guarda la unidad
@@ -226,7 +228,7 @@ let returnRouter = function(io) {
           id_unidad_fk: result.insertId,
           id_sucursal_fk: unidad.sucursal,
           fecha: new Date().toJSON().slice(0, 10),
-          operacion: "Ingreso"
+          operacion: "Ingreso",
         };
         await db.saveHistorial(historia);
       }
@@ -238,7 +240,7 @@ let returnRouter = function(io) {
           id_unidad_fk: unidad.id_unidad,
           id_sucursal_fk: unidad.sucursal,
           fecha: new Date().toJSON().slice(0, 10),
-          operacion: "Venta"
+          operacion: "Venta",
         };
         await db.saveHistorial(historia);
 
@@ -246,7 +248,7 @@ let returnRouter = function(io) {
         let vnt = {
           id_unidad_fk: id,
           id_sucursal_fk: req.user.sucursal,
-          fecha: fecha
+          fecha: fecha,
         };
         await db.saveVenta(vnt);
       }
@@ -265,16 +267,18 @@ let returnRouter = function(io) {
   router.get("/historial", ensureAuth, (req, res) => {
     res.render("unidades-historial", {
       titulo: "Historial de automóviles",
-      datos: datosVista
+      datos: datosVista,
     });
   });
 
-  router.post("/stockfull", async function(req, res) {
+  router.post("/stockfull", async function (req, res) {
     let db = new Db();
     let unidad = null;
-    unidad = (await db.getUnidades(
-      ` WHERE nro_motor = '${req.body.nromotor}' OR nro_chasis = '${req.body.nromotor}' OR padron = '${req.body.nromotor}'`
-    ))[0];
+    unidad = (
+      await db.getUnidades(
+        ` WHERE nro_motor = '${req.body.nromotor}' OR nro_chasis = '${req.body.nromotor}' OR padron = '${req.body.nromotor}'`
+      )
+    )[0];
     if (unidad) {
       let historia = await db.getHistorial(unidad.id_unidad);
       if (historia) {
@@ -295,7 +299,7 @@ let returnRouter = function(io) {
     res.send({ unidad });
   });
 
-  router.get("/stock", ensureAuth, async function(req, res) {
+  router.get("/stock", ensureAuth, async function (req, res) {
     let db = new Db();
 
     let sucursales = await db.getSucursales();
@@ -303,11 +307,11 @@ let returnRouter = function(io) {
     datosVista.sucursales = sucursales;
     res.render("unidades-stock", {
       titulo: "Stock de Unidades",
-      datos: datosVista
+      datos: datosVista,
     });
   });
 
-  router.get("/pedidos", ensureAuth, yo, async function(req, res) {
+  router.get("/pedidos", ensureAuth, yo, async function (req, res) {
     let db = new Db();
 
     let sucursales = await db.getSucursales();
@@ -315,11 +319,11 @@ let returnRouter = function(io) {
     datosVista.sucursales = sucursales;
     res.render("unidades-pedidos", {
       titulo: "Pedido de unidades Unidades",
-      datos: datosVista
+      datos: datosVista,
     });
   });
 
-  router.get("/stock/:sucursal/:tipo", ensureAuth, async function(req, res) {
+  router.get("/stock/:sucursal/:tipo", ensureAuth, async function (req, res) {
     let db = new Db();
 
     let suc = req.params.sucursal;
@@ -346,20 +350,20 @@ let returnRouter = function(io) {
           "/" +
           fecha.getFullYear(),
         sucursal: sucursal.nombre,
-        unidades
-      }
+        unidades,
+      },
     };
 
     let options = {
       url: "http://localhost:5488/api/report",
       json: data,
-      method: "POST"
+      method: "POST",
     };
 
     request(options).pipe(res);
   });
 
-  router.post("/trasconfirm", async function(req, res) {
+  router.post("/trasconfirm", async function (req, res) {
     let db = new Db();
 
     let id = req.body.id;
@@ -370,34 +374,35 @@ let returnRouter = function(io) {
     datosVista.sucursal = sucursal;
     res.render("unidades-confirm-traspaso", {
       titulo: "Confirmar",
-      datos: datosVista
+      datos: datosVista,
     });
   });
 
-  router.get("/traspaso/:id", ensureAuth, async function(req, res) {
+  router.get("/traspaso/:id", ensureAuth, async function (req, res) {
     let db = new Db();
 
     let unidad = (await db.getUnidad(req.params.id))[0];
     let sucursal = (await db.getSucursal(req.user.sucursal))[0];
     let sucursales = await db.getSucursales();
 
-    sucursales = sucursales.filter(function(s) {
+    sucursales = sucursales.filter(function (s) {
       return s.id_sucursal != req.user.sucursal && s.id_sucursal != 5;
     });
     let fecha = new Date();
     datosVista.suc = sucursal;
     datosVista.sucursales = sucursales;
     datosVista.unidad = unidad;
-    datosVista.fecha = `${fecha.getDate()}/${fecha.getMonth() +
-      1}/${fecha.getFullYear()}`;
+    datosVista.fecha = `${fecha.getDate()}/${
+      fecha.getMonth() + 1
+    }/${fecha.getFullYear()}`;
 
     res.render("unidades-traspaso", {
       titulo: "Formulario de traspaso de Unidades",
-      datos: datosVista
+      datos: datosVista,
     });
   });
 
-  router.get("/filtrar", ensureAuth, yo, function(req, res) {
+  router.get("/filtrar", ensureAuth, yo, function (req, res) {
     res.render("unidades-filtros", { datos: datosVista });
   });
 
@@ -421,7 +426,7 @@ let returnRouter = function(io) {
       " ORDER BY marca, precio"
     );
     await Promise.all(
-      uns.map(async u => {
+      uns.map(async (u) => {
         u.suc = (await db.getSucursal(u.sucursal))[0].nombre;
         return u;
       })
@@ -430,13 +435,13 @@ let returnRouter = function(io) {
     res.send({ uns });
   });
 
-  router.get("/accept/:id", ensureAuth, async function(req, res) {
+  router.get("/accept/:id", ensureAuth, async function (req, res) {
     let db = new Db();
 
     let unidad = {
       id_unidad: req.params.id,
       sucursal: req.user.sucursal,
-      estado: 1
+      estado: 1,
     };
 
     await db.saveUnidad(unidad);
@@ -446,14 +451,14 @@ let returnRouter = function(io) {
       id_unidad_fk: unidad.id_unidad,
       id_sucursal_fk: unidad.sucursal,
       fecha: new Date().toJSON().slice(0, 10),
-      operacion: "Traspaso"
+      operacion: "Traspaso",
     };
     await db.saveHistorial(historia);
 
     res.redirect("/unidades/pendientes");
   });
 
-  router.get("/:id", ensureAuth, async function(req, res) {
+  router.get("/:id", ensureAuth, async function (req, res) {
     let id = req.params.id;
     let db = new Db();
 
@@ -476,7 +481,7 @@ let returnRouter = function(io) {
       color: fila.color,
       toma: req.user.perfil == 1 ? fila.toma : "",
       nuevo: fila.nuevo == 1 ? "CHECKED" : "",
-      disabled: ""
+      disabled: "",
     };
 
     //console.log(unidad)
@@ -491,25 +496,29 @@ let returnRouter = function(io) {
       { id: 3, tipo: "Camión", selected: fila.tipo == 3 ? "SELECTED" : "" },
       { id: 4, tipo: "Moto", selected: fila.tipo == 4 ? "SELECTED" : "" },
       { id: 5, tipo: "Triciclo", selected: fila.tipo == 5 ? "SELECTED" : "" },
-      { id: 6, tipo: "Cuatriciclo", selected: fila.tipo == 6 ? "SELECTED" : "" }
+      {
+        id: 6,
+        tipo: "Cuatriciclo",
+        selected: fila.tipo == 6 ? "SELECTED" : "",
+      },
     ];
 
     let combustibles = [
       {
         id: "N",
         comb: "Nafta",
-        selected: fila.combustible == "N" ? "SELECTED" : ""
+        selected: fila.combustible == "N" ? "SELECTED" : "",
       },
       {
         id: "D",
         comb: "Diesel",
-        selected: fila.combustible == "D" ? "SELECTED" : ""
-      }
+        selected: fila.combustible == "D" ? "SELECTED" : "",
+      },
     ];
 
     let suc = await db.getSucursales();
 
-    suc = suc.map(function(s) {
+    suc = suc.map(function (s) {
       s.selected = "";
       if (s.id_sucursal == unidad.sucursal) s.selected = "SELECTED";
 
@@ -527,15 +536,20 @@ let returnRouter = function(io) {
 
     res.render("unidades-edit", {
       titulo: "Formulario de Unidades",
-      datos: datosVista
+      datos: datosVista,
     });
   });
 
-  router.post("/", async function(req, res) {
+  router.post("/", async function (req, res) {
     let criterio = req.body.criterio;
     let texto = req.body.texto;
-    let nuevo = req.body.cero === "true" ? 1 : 0;
-    let whereNuevo = nuevo ? `nuevo = ${nuevo} AND ` : "";
+    let nuevo = req.body.cero;
+    let whereNuevo = "";
+    if (nuevo == 2) {
+      whereNuevo = "nuevo = 1 AND ";
+    } else if (nuevo == 3) {
+      whereNuevo = "nuevo = 0 AND ";
+    }
     let db = new Db();
 
     let unidades = await db.getUnidadesSuc(
@@ -545,12 +559,12 @@ let returnRouter = function(io) {
 
     let resultado = {
       user: req.user,
-      unidades
+      unidades,
     };
     res.send({ res: resultado });
   });
 
-  router.get("/historial/:id", async function(req, res) {
+  router.get("/historial/:id", async function (req, res) {
     let db = new Db();
 
     let id = req.params.id;
@@ -570,7 +584,7 @@ let returnRouter = function(io) {
     res.send({ historia });
   });
 
-  router.get("/", function(req, res) {
+  router.get("/", function (req, res) {
     res.end("Unidades");
   });
 
