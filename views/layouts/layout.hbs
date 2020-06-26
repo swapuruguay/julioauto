@@ -224,6 +224,20 @@
   <div class="wrapper" style="background: {{datos.color}}">
 
     {{> header }}
+    {{#if datos.dolar}}
+    <div class="dolar"><h4>Cotización del dólar</h4>
+      <table class="table table-responsive table-condensed table-bordered">
+        <tr>
+        <th>Dólar</th>
+        <th>Fecha</th>
+        </tr>
+        <tr>
+        <td>{{datos.dolar.cotizacion}}</td>
+        <td>{{datos.dolar.fecha}}</td>
+        </tr>
+      </table>
+    </div>
+    {{/if}}
     <div class="container" style="position: relative;">
 
       {{{ body }}}

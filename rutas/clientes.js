@@ -24,26 +24,26 @@ function ensureAuth(req, res, next) {
   res.redirect("/login");
 }
 
-router.get("/listar", ensureAuth, async function(req, res) {
+router.get("/listar", ensureAuth, async function (req, res) {
   let db = new Db();
 
   let clientes = await db.getClientes(null, " ORDER BY apellido, nombre");
 
   res.render("clientes-listar", {
     titulo: "Formulario de Clientes",
-    datos: { clientes: clientes, user: req.user }
+    datos: { clientes: clientes, user: req.user },
   });
 });
 
-router.get("/nuevo", ensureAuth, function(req, res) {
+router.get("/nuevo", ensureAuth, function (req, res) {
   var nro = 0;
   res.render("clientes", {
     titulo: "Formulario de Clientes",
-    datos: { user: req.user }
+    datos: { user: req.user },
   });
 });
 
-router.post("/save", async function(req, res) {
+router.post("/save", async function (req, res) {
   let db = new Db();
 
   // console.log(req.body)
@@ -51,9 +51,7 @@ router.post("/save", async function(req, res) {
   let fechaNacimiento = null;
   if (req.body.fechanacimiento) {
     fechaNacimiento = req.body.fechanacimiento.split("/");
-    fechaNacimiento = `${fechaNacimiento[2]}-${fechaNacimiento[1]}-${
-      fechaNacimiento[0]
-    }`;
+    fechaNacimiento = `${fechaNacimiento[2]}-${fechaNacimiento[1]}-${fechaNacimiento[0]}`;
   }
 
   let cliente = {
@@ -67,7 +65,7 @@ router.post("/save", async function(req, res) {
     ciudad: req.body.ciudad.toUpperCase(),
     aclaraciones: req.body.aclaraciones.toUpperCase(),
 
-    categoria: req.body.categoria.toUpperCase()
+    categoria: req.body.categoria.toUpperCase(),
   };
   if (fechaNacimiento) {
     cliente.fecha_nacimiento = fechaNacimiento;
@@ -76,11 +74,11 @@ router.post("/save", async function(req, res) {
   res.send(await db.saveCliente(cliente));
 });
 
-router.get("/", function(req, res) {
+router.get("/", function (req, res) {
   res.end("Con router");
 });
 
-router.post("/", async function(req, res) {
+router.post("/", async function (req, res) {
   let criterio = req.body.criterio;
   let texto = req.body.texto;
   let db = new Db();
@@ -90,7 +88,7 @@ router.post("/", async function(req, res) {
     null
   );
 
-  clientes = clientes.map(c => {
+  clientes = clientes.map((c) => {
     if (c.categoria == "M") {
       c.clase = "danger";
     } else if (c.categoria == "R") {
@@ -101,12 +99,12 @@ router.post("/", async function(req, res) {
     return c;
   });
   let resultado = {
-    clientes
+    clientes,
   };
   res.send({ res: resultado });
 });
 
-router.get("/:id", ensureAuth, async function(req, res) {
+router.get("/:id", ensureAuth, async function (req, res) {
   let db = new Db();
 
   let id = req.params.id;
@@ -131,16 +129,16 @@ router.get("/:id", ensureAuth, async function(req, res) {
   let categorias = [
     {
       codigo: "B",
-      nombre: "Bueno"
+      nombre: "Bueno",
     },
     {
       codigo: "R",
-      nombre: "Regular"
+      nombre: "Regular",
     },
     {
       codigo: "M",
-      nombre: "Malo"
-    }
+      nombre: "Malo",
+    },
   ];
 
   let cliente = {
@@ -154,19 +152,19 @@ router.get("/:id", ensureAuth, async function(req, res) {
     celular: row.celular,
     ciudad: row.ciudad,
     fechaNacimiento: fecha,
-    categorias: categorias.map(c => {
+    categorias: categorias.map((c) => {
       if (c.codigo == row.categoria) {
         c.selected = "SELECTED";
       } else {
         c.selected = "";
       }
       return c;
-    })
+    }),
   };
 
   res.render("clientes-edit", {
     titulo: "Formulario de clientes",
-    datos: { cliente: cliente, user: req.user }
+    datos: { cliente: cliente, user: req.user },
   });
   //  res.end()
 });

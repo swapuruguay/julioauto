@@ -15,8 +15,12 @@ router.use(formData.stream());
 // union body and files
 router.use(formData.union());
 
-function ensureAuth(req, res, next) {
+async function ensureAuth(req, res, next) {
+  const db = new Db();
+  let dolar = (await db.getCotizacion())[0];
+  dolar.fecha = new Intl.DateTimeFormat("es-ES").format(dolar.fecha);
   if (req.isAuthenticated()) {
+    datosVista.dolar = dolar;
     if (req.user.perfil == 1) {
       req.user.habilitado = true;
     }

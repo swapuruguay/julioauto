@@ -1,0 +1,35 @@
+<div class="row">
+<div class="col col-sm-12">
+  <h1>{{ titulo }}</h1>
+<form class="form-inline" id="frm-cotiza">
+
+    <div class="form-group">
+      <label for="">Cotización del dólar</label>
+      <input type="text" name="cotiza" id="cotiza">
+    </div>
+      <input type="submit" value="Ingresar" class="btn btn-default">
+</form>
+</div>
+
+</div>
+
+<p>&nbsp;</p>
+<div id="resultado">
+
+</div>
+
+<script>
+  const form = document.getElementById('frm-cotiza')
+  form.addEventListener('submit', async evt => {
+    evt.preventDefault()
+    const r = await fetch('/ventas/cotiza', {
+      method: 'POST', // or 'PUT'
+      body: JSON.stringify({dolar: parseFloat(form.cotiza.value)}), // data can be `string` or {object}!
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+    const res = await r.json()
+    console.log(res)
+  })
+</script>

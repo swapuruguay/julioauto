@@ -411,6 +411,30 @@ class Bd {
     return Promise.resolve(list);
   }
 
+  async saveCotiza(cotizacion) {
+    const db = new database(config);
+    let sql = "INSERT INTO dolar SET ? ";
+    let result = await db.query(sql, cotizacion);
+    if (!result) {
+      await db.close();
+      return Promise.reject(new Error("Ocurrió un error"));
+    }
+    await db.close();
+    return Promise.resolve(result);
+  }
+
+  async getCotizacion() {
+    const db = new database(config);
+    let sql = "SELECT * FROM dolar ORDER BY id_dolar DESC LIMIT 1";
+    let result = await db.query(sql);
+    if (!result) {
+      await db.close();
+      return Promise.reject(new Error("Ocurrió un error"));
+    }
+    await db.close();
+    return Promise.resolve(result);
+  }
+
   async getHistorial(id) {
     let db = new database(config);
     let list = await db.query(

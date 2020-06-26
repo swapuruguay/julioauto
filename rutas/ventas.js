@@ -4,6 +4,7 @@ const Db = require("../bd");
 const config = require("../config");
 const request = require("request");
 const formData = require("express-form-data");
+const Bd = require("../bd");
 
 let datosVista = {};
 // parsing data with connect-multiparty. Result set on req.body and req.files
@@ -15,8 +16,12 @@ router.use(formData.stream());
 // union body and files
 router.use(formData.union());
 
-function ensureAuth(req, res, next) {
+async function ensureAuth(req, res, next) {
+  const db = new Bd();
+  let dolar = (await db.getCotizacion())[0];
+  dolar.fecha = new Intl.DateTimeFormat("es-ES").format(dolar.fecha);
   if (req.isAuthenticated()) {
+    datosVista.dolar = dolar;
     if (req.user.perfil == 1) {
       req.user.habilitado = true;
     }
@@ -40,7 +45,7 @@ function yo(req, res, next) {
   res.redirect("/");
 }
 
-router.use(function(req, res, next) {
+router.use(function (req, res, next) {
   datosVista = {};
   datosVista.user = req.user;
   next();
@@ -53,13 +58,14 @@ router.get("/listar", ensureAuth, async (req, res) => {
   let ventas = await db.getVentas(
     ` WHERE id_sucursal_fk = ${
       req.user.sucursal
-    } AND YEAR(fecha) = ${fecha.getFullYear()} AND MONTH(fecha) = ${fecha.getMonth() +
-      1}`
+    } AND YEAR(fecha) = ${fecha.getFullYear()} AND MONTH(fecha) = ${
+      fecha.getMonth() + 1
+    }`
   );
   let options = { year: "numeric", month: "numeric", day: "numeric" };
   if (ventas) {
     await Promise.all(
-      ventas.map(async item => {
+      ventas.map(async (item) => {
         item.unidad = (await db.getUnidad(item.id_unidad_fk))[0];
         item.unidad.nuevo = item.unidad.nuevo == 1 ? "Sí" : "No";
         let fechin = new Date(item.fecha);
@@ -85,14 +91,12 @@ router.post("/listar", async (req, res) => {
   let db = new Db();
 
   let ventas = await db.getVentas(
-    ` WHERE id_sucursal_fk = ${req.body.sucursal} AND YEAR(fecha) = ${
-      req.body.anio
-    } AND MONTH(fecha) = ${req.body.mes}`
+    ` WHERE id_sucursal_fk = ${req.body.sucursal} AND YEAR(fecha) = ${req.body.anio} AND MONTH(fecha) = ${req.body.mes}`
   );
   let options = { year: "numeric", month: "numeric", day: "numeric" };
   if (ventas) {
     await Promise.all(
-      ventas.map(async item => {
+      ventas.map(async (item) => {
         item.unidad = (await db.getUnidad(item.id_unidad_fk))[0];
         item.unidad.nuevo = item.unidad.nuevo == 1 ? "Sí" : "No";
         let fechin = new Date(item.fecha);
@@ -113,6 +117,27 @@ router.post("/listar", async (req, res) => {
   res.send(ventas);
 });
 
+router.get("/cotizacion", ensureAuth, admin, async (req, res) => {
+  let db = new Db();
+
+  let sucursales = await db.getSucursales();
+
+  datosVista.sucursales = sucursales;
+
+  res.render("cotizaciones", {
+    titulo: "Ingresar cotización del día",
+    datos: datosVista,
+  });
+});
+
+router.post("/cotiza", async (req, res) => {
+  const db = new Db();
+  const cotizacion = req.body.dolar;
+  const fecha = new Date().toJSON().slice(0, 10);
+  const result = await db.saveCotiza({ cotizacion, fecha });
+  res.send(result);
+});
+
 router.get("/dia", ensureAuth, admin, (req, res) => {
   res.render("ventas-dia", { titulo: "Ventas de un dia", datos: datosVista });
 });
@@ -129,16 +154,16 @@ router.post("/dia", async (req, res) => {
   let contador = 0;
   let listado = [];
   let sucursales = await db.getSucursales();
-  sucursales = sucursales.filter(s => s.id_surusal != 5);
-  sucursales.forEach(s => {
+  sucursales = sucursales.filter((s) => s.id_surusal != 5);
+  sucursales.forEach((s) => {
     let usados = 0;
     let nuevos = 0;
-    listadoNuevos.forEach(ln => {
+    listadoNuevos.forEach((ln) => {
       if (ln.nombre === s.nombre) {
         nuevos = ln.cantidad;
       }
     });
-    listadoUsados.forEach(lu => {
+    listadoUsados.forEach((lu) => {
       if (lu.nombre === s.nombre) {
         usados = lu.cantidad;
       }
@@ -152,7 +177,7 @@ router.post("/dia", async (req, res) => {
 router.get("/acumula", ensureAuth, admin, (req, res) => {
   res.render("ventas-acumuladas", {
     titulo: "Ventas del mes",
-    datos: datosVista
+    datos: datosVista,
   });
 });
 
@@ -170,16 +195,16 @@ router.post("/acumula", async (req, res) => {
   let contador = 0;
   let listado = [];
   let sucursales = await db.getSucursales();
-  sucursales = sucursales.filter(s => s.id_surusal != 5);
-  sucursales.forEach(s => {
+  sucursales = sucursales.filter((s) => s.id_surusal != 5);
+  sucursales.forEach((s) => {
     let usados = 0;
     let nuevos = 0;
-    listadoNuevos.forEach(ln => {
+    listadoNuevos.forEach((ln) => {
       if (ln.nombre === s.nombre) {
         nuevos = ln.cantidad;
       }
     });
-    listadoUsados.forEach(lu => {
+    listadoUsados.forEach((lu) => {
       if (lu.nombre === s.nombre) {
         usados = lu.cantidad;
       }
@@ -188,7 +213,7 @@ router.post("/acumula", async (req, res) => {
       nombre: s.nombre,
       cantidad: nuevos + usados,
       nuevos,
-      usados
+      usados,
     });
   });
 

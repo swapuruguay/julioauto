@@ -24,7 +24,7 @@ app.use(
   session({
     secret: "abc12345",
     resave: false,
-    saveUninitialized: true
+    saveUninitialized: true,
   })
 );
 app.use(flash());
@@ -40,7 +40,7 @@ app.engine(
   hbs({
     extname: "hbs",
     defaultLayout: "layout",
-    layoutsDir: __dirname + "/views/layouts/"
+    layoutsDir: __dirname + "/views/layouts/",
   })
 );
 app.set("view engine", "hbs");
@@ -56,7 +56,7 @@ handleb.registerPartial(
 
 app.use(express.static(__dirname + "/public"));
 
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
   res.header(
     "Access-Control-Allow-Headers",
@@ -91,21 +91,21 @@ app.use("/clientes", cli);
 app.use("/senias", senias);
 app.use("/ventas", ventas);
 
-app.get("/", ensureAuth, async function(req, res) {
+app.get("/", ensureAuth, async function (req, res) {
   let db = new Db();
   let suc = (await db.getSucursal(req.user.sucursal))[0];
   res.render("index", {
     titulo: suc.alias,
-    datos: { user: req.user, color: "rgb(65,87,199)" }
+    datos: { user: req.user, color: "rgb(65,87,199)" },
   });
 });
 
-app.get("/login", function(req, res) {
+app.get("/login", function (req, res) {
   res.locals.errors = req.flash();
   //  console.log(res.locals.errors);
   res.render("login", {
     errors: res.locals.errors,
-    layout: "login"
+    layout: "login",
   });
   //res.render('login', {layout: 'login'})
 });
@@ -119,16 +119,16 @@ app.post(
   passport.authenticate("local", {
     successRedirect: "/",
     failureRedirect: "/login",
-    failureFlash: true
+    failureFlash: true,
     //failureFlash: 'Invalid username or password.'
   })
 );
 
-app.get("/logout", function(req, res) {
+app.get("/logout", function (req, res) {
   req.logout();
   res.redirect("/login");
 });
 
-http.listen(3000, function() {
+http.listen(3000, function () {
   console.log(" Escuchando el puerto 3000");
 });

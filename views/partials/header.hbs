@@ -69,6 +69,9 @@
           {{/if}}
         </ul>
        </li>
+       {{#if datos.user.habilitado}}
+       <li><a href="/ventas/cotizacion">Ingresar cotización de día</a></li>
+       {{/if}}
        {{#if datos.user.yo}}
           <li>
             <a href="/unidades/retorno">Retorno Unidades</a>
@@ -78,6 +81,7 @@
 
     </ul>
      <span style="display:none" id="socket" data-suc="{{ datos.user.sucursal }}" ></span>
+     
 
   </div><!-- /.navbar-collapse -->
 </div><!-- /.container-fluid -->
