@@ -14,8 +14,7 @@ html, body {
 .dolar {
   position: fixed;
   top: 10%;
-  right: 20px;
-  margin-right: 10px;
+  right: 8%;
 }
 
 .login-container {
@@ -148,6 +147,12 @@ html, body {
   .login-contenido {
     width: 100%;
     padding: 5px;
+  }
+
+  .dolar {
+    position: absolute;
+    margin-top: 35px;
+    margin-bottom: 20px;
   }
 
   .login-contenido form button {
