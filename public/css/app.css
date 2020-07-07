@@ -14,7 +14,7 @@ html, body {
 .dolar {
   position: fixed;
   top: 10%;
-  right: 0;
+  right: 20px;
   margin-right: 10px;
 }
 
