@@ -12,9 +12,14 @@ html, body {
 }
 
 .dolar {
-  position: fixed;
+  position: absolute;
+  z-index: 90;
   top: 10%;
   right: 8%;
+}
+
+.dolar td, .dolar th {
+  background-color: white;
 }
 
 .login-container {

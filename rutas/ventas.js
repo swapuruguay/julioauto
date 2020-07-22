@@ -130,6 +130,27 @@ router.get("/cotizacion", ensureAuth, admin, async (req, res) => {
   });
 });
 
+router.get("/editar-cotizacion", ensureAuth, admin, async (req, res) => {
+  let db = new Db();
+
+  let sucursales = await db.getSucursales();
+  let cotizacion = (await db.getCotizacion())[0];
+  datosVista.sucursales = sucursales;
+
+  res.render("editar-cotizacion", {
+    titulo: "Ingresar cotización del día",
+    valor: cotizacion,
+    datos: datosVista,
+  });
+});
+
+router.post("/edit-cotiza", async (req, res) => {
+  const db = new Db();
+  const { dolar, id } = req.body;
+  const result = await db.saveCotiza({ dolar, id });
+  res.send(result);
+});
+
 router.post("/cotiza", async (req, res) => {
   const db = new Db();
   const cotizacion = req.body.dolar;

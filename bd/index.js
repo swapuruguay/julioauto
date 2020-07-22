@@ -412,8 +412,14 @@ class Bd {
   }
 
   async saveCotiza(cotizacion) {
+    let id = cotizacion.id || 0;
     const db = new database(config);
-    let sql = "INSERT INTO dolar SET ? ";
+    let sql = "";
+    if (id == 0) {
+      sql = "INSERT INTO dolar SET ? ";
+    } else {
+      sql = `UPDATE dolar SET cotizacion = ${cotizacion.dolar} WHERE id_dolar = ${id}`;
+    }
     let result = await db.query(sql, cotizacion);
     if (!result) {
       await db.close();
