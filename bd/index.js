@@ -470,7 +470,7 @@ class Bd {
     let db = new database(config);
     let list = await db.query(
       `SELECT crm.fecha, crm.id_crm, crm.texto, tc.tema from crm 
-      JOIN temas_crm tc ON tc.id_tema = crm.tema WHERE id_cliente_fk = ${id}`
+      JOIN temas_crm tc ON tc.id_tema = crm.tema WHERE id_cliente_fk = ${id} ORDER BY id_crm DESC`
     );
     if (!list) {
       await db.close();
