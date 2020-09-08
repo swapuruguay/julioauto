@@ -465,6 +465,32 @@ class Bd {
     await db.close();
     return Promise.resolve(result);
   }
+
+  async getCrm(id) {
+    let db = new database(config);
+    let list = await db.query(
+      `SELECT crm.fecha, crm.id_crm, crm.texto, tc.tema from crm 
+      JOIN temas_crm tc ON tc.id_tema = crm.tema WHERE id_cliente_fk = ${id}`
+    );
+    if (!list) {
+      await db.close();
+      return Promise.reject(new Error("No existen registros"));
+    }
+    await db.close();
+    return Promise.resolve(list);
+  }
+  async saveCrm(crm) {
+    let db = new database(config);
+    sql = "INSERT INTO dolar SET ? ";
+
+    let result = await db.query(sql, crm);
+    if (!result) {
+      await db.close();
+      return Promise.reject(new Error("Ocurrió un error"));
+    }
+    await db.close();
+    return Promise.resolve(result);
+  }
 }
 
 module.exports = Bd;

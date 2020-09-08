@@ -1,3 +1,4 @@
+
 <div class="container">
   <h1>{{titulo}}</h1>
   <p>&nbsp;</p>
@@ -8,6 +9,8 @@
        <div class="col-sm-2">
          <input type="text" class="form-control text-center" id="id" name="id" value="{{ datos.cliente.id_cliente }}" readonly>
        </div>
+      <input id="crm" class="btn btn-warning" type="button" value="Ver CRM">
+      <input id="add" class="btn btn-warning" type="button" value="+ CRM" data-toggle="modal" data-target="#modalCrm">
      </div>
      <div class="form-group">
        <label for="nombre" class="col-sm-2 control-label">Nombre</label>
@@ -77,4 +80,101 @@
      <input type="submit" class="btn btn-default" value="Guardar">
    </form>
   </div>
+  <div id="resultado">
+
+  </div>
 </div>
+<!-- Modal -->
+<div class="modal fade" id="modalCrm" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Ingreso de CRM</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form class="form-horizontal" id="form-crm">
+          <div class="form-group">
+            <label for="fecha" class="col-sm-2 control-label">Fecha</label>
+            <div class="col-sm-2">
+              <input type="text" class="form-control text-center" id="id" name="id" value="{{loud algo}}"
+                readonly>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="nro" class="col-sm-2 control-label">Nro.</label>
+            <div class="col-sm-2">
+              <input type="text" class="form-control text-center" id="id" name="id" value="{{ datos.cliente.id_cliente }}"
+                readonly>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="nombre" class="col-sm-2 control-label">Nombre</label>
+            <div class="col-sm-4 col-md-8">
+              <input type="text" class="form-control" readonly id="nombre" name="nombre" value="{{ datos.cliente.nombre }} {{datos.cliente.apellido}}">
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="texto" class="col-sm-2 control-label">Texto</label>
+            <div class="col-sm-4 col-md-8">
+              <textarea type="text" class="form-control" id="texto" name="texto"></textarea>
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label for="categoria" class="col-sm-2 control-label">Tema</label>
+            <div class="col-sm-4 col-md-8">
+              <select class="form-control" name="tema" id="tema">
+                <option value="1">Consulta</option>
+                <option value="2">Cobrar</option>
+              </select>
+        
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+        <button type="button" class="btn btn-primary" onclick="guardarCrm()">Guardar</button>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+  
+  const idCliente = document.querySelector("#id")
+  const $crm = document.querySelector("#crm")
+  const $frm = document.querySelector("#form-clientes")
+  const $divResultado = document.querySelector("#resultado")
+  $crm.addEventListener("click", async evt => {
+    const request = await fetch(`/clientes/crm/${$frm.id.value}`)
+    const resp = await request.json()
+    let inner = `<table class="table table-striped table-condensed table-responsive">
+                    <tr>
+                      <th>Fecha</th><th>Tema</th><th>Texto</th>
+                    <tr>`
+    resp.forEach(f => {
+      inner+=`
+            <tr>
+              <td>${ new Intl.DateTimeFormat("es-UY", {
+                month: "2-digit",
+                day: "2-digit",
+                year: "numeric",
+              }).format(Date.parse(f.fecha))}</td>
+              <td>${f.tema}</td>
+              <td>${f.texto}</td>
+            </tr>
+      `
+    })
+
+    inner+='</table>'
+    $divResultado.innerHTML = inner
+
+  }) 
+  function guardarCrm() {
+    $('#modalCrm').modal('hide')
+  }
+</script>

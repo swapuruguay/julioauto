@@ -169,4 +169,27 @@ router.get("/:id", ensureAuth, async function (req, res) {
   //  res.end()
 });
 
+router.get("/crm/:id", async (req, res) => {
+  let db = new Db();
+
+  let id = req.params.id;
+  //console.log(id)
+  let filas = await db.getCrm(id);
+  //console.log(row)
+
+  res.send(filas);
+});
+
+router.post("/crm", async (req, res) => {
+  const db = new Db();
+  let { id, texto, tema, fecha } = req.body;
+  let crm = {
+    id_cliente_fk: id,
+    texto,
+    tema,
+    fecha,
+  };
+
+  res.send(await db.saveCrm(crm));
+});
 module.exports = router;
