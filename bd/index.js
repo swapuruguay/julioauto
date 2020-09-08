@@ -481,7 +481,7 @@ class Bd {
   }
   async saveCrm(crm) {
     let db = new database(config);
-    sql = "INSERT INTO dolar SET ? ";
+    let sql = "INSERT INTO crm SET ? ";
 
     let result = await db.query(sql, crm);
     if (!result) {

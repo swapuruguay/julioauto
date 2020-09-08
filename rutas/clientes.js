@@ -164,7 +164,15 @@ router.get("/:id", ensureAuth, async function (req, res) {
 
   res.render("clientes-edit", {
     titulo: "Formulario de clientes",
-    datos: { cliente: cliente, user: req.user },
+    datos: {
+      cliente: cliente,
+      fecha: new Intl.DateTimeFormat("es-UY", {
+        month: "2-digit",
+        day: "2-digit",
+        year: "numeric",
+      }).format(new Date()),
+      user: req.user,
+    },
   });
   //  res.end()
 });
@@ -183,11 +191,13 @@ router.get("/crm/:id", async (req, res) => {
 router.post("/crm", async (req, res) => {
   const db = new Db();
   let { id, texto, tema, fecha } = req.body;
+  let f = fecha.split("/");
+  let fechin = `${f[2]}-${f[1]}-${f[0]}`;
   let crm = {
     id_cliente_fk: id,
     texto,
     tema,
-    fecha,
+    fecha: fechin,
   };
 
   res.send(await db.saveCrm(crm));

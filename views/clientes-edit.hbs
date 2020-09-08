@@ -99,8 +99,8 @@
         <form class="form-horizontal" id="form-crm">
           <div class="form-group">
             <label for="fecha" class="col-sm-2 control-label">Fecha</label>
-            <div class="col-sm-2">
-              <input type="text" class="form-control text-center" id="id" name="id" value="{{loud algo}}"
+            <div class="col-sm-4">
+              <input type="text" class="form-control text-center" id="fecha" name="fecha" value="{{datos.fecha}}"
                 readonly>
             </div>
           </div>
@@ -120,7 +120,7 @@
           <div class="form-group">
             <label for="texto" class="col-sm-2 control-label">Texto</label>
             <div class="col-sm-4 col-md-8">
-              <textarea type="text" class="form-control" id="texto" name="texto"></textarea>
+              <textarea class="form-control" id="texto" rows="10" name="texto"></textarea>
             </div>
           </div>
           
@@ -174,7 +174,16 @@
     $divResultado.innerHTML = inner
 
   }) 
-  function guardarCrm() {
+  async function guardarCrm() {
+    const $frm2 = document.querySelector("#form-crm")
+    const formData = new FormData($frm2)
+    const response = await fetch('/clientes/crm', {
+      method: 'post',
+      body: formData
+    })
+    const res = await response.json()
+    document.querySelector("#texto").innerHTML = ""
+    $frm2.texto.value = ''
     $('#modalCrm').modal('hide')
   }
 </script>
