@@ -149,11 +149,11 @@
   const $crm = document.querySelector("#crm")
   
   const $frm = document.querySelector("#form-clientes")
-  $crm.addEventListener("click", getCrm.bind(null, $frm)) 
+  $crm.addEventListener("click", getCrm) 
 
-  async function getCrm($form, evt) {
+  async function getCrm() {
     const $divResultado = document.querySelector("#resultado")
-    const request = await fetch(`/clientes/crm/${$form.id.value}`)
+    const request = await fetch(`/clientes/crm/${$frm.id.value}`)
     const resp = await request.json()
     let inner = `<table class="table table-striped table-condensed table-responsive">
                     <tr>
