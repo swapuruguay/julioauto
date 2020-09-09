@@ -149,7 +149,8 @@
   const $crm = document.querySelector("#crm")
   
   const $frm = document.querySelector("#form-clientes")
-  $crm.addEventListener("click", evt => {
+  $crm.addEventListener("click", async evt => {
+    console.log("pasa algo")
     const $divResultado = document.querySelector("#resultado")
     const request = await fetch(`/clientes/crm/${$frm.id.value}`)
     const resp = await request.json()
