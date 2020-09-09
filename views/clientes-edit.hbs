@@ -144,42 +144,16 @@
   </div>
 </div>
 <script>
-  
+  'use strict'
   const idCliente = document.querySelector("#id")
   const $crm = document.querySelector("#crm")
   
   const $frm = document.querySelector("#form-clientes")
-  $crm.addEventListener("click", async evt => {
-    console.log("pasa algo")
-    const $divResultado = document.querySelector("#resultado")
-    const request = await fetch(`/clientes/crm/${$frm.id.value}`)
-    const resp = await request.json()
-    let inner = `<table class="table table-striped table-condensed table-responsive">
-                    <tr>
-                      <th>Fecha</th><th>Tema</th><th>Texto</th><th>Eliminar</th>
-                    <tr>`
-    resp.forEach(f => {
-      inner += `
-            <tr>
-              <td>${ new Intl.DateTimeFormat("es-UY", {
-        month: "2-digit",
-        day: "2-digit",
-        year: "numeric",
-      }).format(Date.parse(f.fecha))}</td>
-              <td>${f.tema}</td>
-              <td>${f.texto}</td>
-              <td class="eliminador"><i data-id="${f.id_crm}" class="fa fa-trash" style="cursor: pointer; padding: 5px;"></i></td>
-            </tr>
-      `
-    })
+  $crm.addEventListener("click", getCrm.bind(null, $frm)) 
 
-    inner += '</table>'
-    $divResultado.innerHTML = inner
-  }) 
-
- /* async function getCrm() {
+ async function getCrm($form) {
     const $divResultado = document.querySelector("#resultado")
-    const request = await fetch(`/clientes/crm/${$frm.id.value}`)
+    const request = await fetch(`/clientes/crm/${$form.id.value}`)
     const resp = await request.json()
     let inner = `<table class="table table-striped table-condensed table-responsive">
                     <tr>
@@ -236,5 +210,5 @@
     })
     const res = await response.json()
    
-  }*/
+  }
 </script>
