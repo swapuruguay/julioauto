@@ -147,33 +147,46 @@
   
   const idCliente = document.querySelector("#id")
   const $crm = document.querySelector("#crm")
+  
   const $frm = document.querySelector("#form-clientes")
-  const $divResultado = document.querySelector("#resultado")
-  $crm.addEventListener("click", async evt => {
-    const request = await fetch(`/clientes/crm/${$frm.id.value}`)
+  $crm.addEventListener("click", getCrm.bind(null, $frm)) 
+
+  async function getCrm($form, evt) {
+    const $divResultado = document.querySelector("#resultado")
+    const request = await fetch(`/clientes/crm/${$form.id.value}`)
     const resp = await request.json()
     let inner = `<table class="table table-striped table-condensed table-responsive">
                     <tr>
-                      <th>Fecha</th><th>Tema</th><th>Texto</th>
+                      <th>Fecha</th><th>Tema</th><th>Texto</th><th>Eliminar</th>
                     <tr>`
     resp.forEach(f => {
-      inner+=`
+      inner += `
             <tr>
               <td>${ new Intl.DateTimeFormat("es-UY", {
-                month: "2-digit",
-                day: "2-digit",
-                year: "numeric",
-              }).format(Date.parse(f.fecha))}</td>
+        month: "2-digit",
+        day: "2-digit",
+        year: "numeric",
+      }).format(Date.parse(f.fecha))}</td>
               <td>${f.tema}</td>
               <td>${f.texto}</td>
+              <td class="eliminador"><i data-id="${f.id_crm}" class="fa fa-trash" style="cursor: pointer; padding: 5px;"></i></td>
             </tr>
       `
     })
 
-    inner+='</table>'
+    inner += '</table>'
     $divResultado.innerHTML = inner
+    const escuchas = document.querySelectorAll(".eliminador")
+    escuchas.forEach(e => {
+      e.addEventListener('click', async ev => {
+        if(ev.target.classList.contains('fa-trash')) {
+          await eliminar(ev.target.dataset.id)
+          await getCrm($frm)
+        }
+      })
+    })
+  }
 
-  }) 
   async function guardarCrm() {
     const $frm2 = document.querySelector("#form-crm")
     const formData = new FormData($frm2)
@@ -185,5 +198,17 @@
     document.querySelector("#texto").innerHTML = ""
     $frm2.texto.value = ''
     $('#modalCrm').modal('hide')
+    await getCrm($frm)
+  }
+
+  async function eliminar(id) {
+    const formData = new FormData()
+    formData.append('id', id)
+    const response = await fetch('/clientes/crm', {
+      method: 'delete',
+      body: formData
+    })
+    const res = await response.json()
+   
   }
 </script>

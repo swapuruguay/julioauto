@@ -202,4 +202,10 @@ router.post("/crm", async (req, res) => {
 
   res.send(await db.saveCrm(crm));
 });
+router.delete("/crm", async (req, res) => {
+  const db = new Db();
+  let { id } = req.body;
+
+  res.send(await db.deleteCrm(id));
+});
 module.exports = router;

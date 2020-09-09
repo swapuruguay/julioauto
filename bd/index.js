@@ -491,6 +491,17 @@ class Bd {
     await db.close();
     return Promise.resolve(result);
   }
+  async deleteCrm(id) {
+    let db = new database(config);
+    let sql = `DELETE FROM crm WHERE id_crm = ${id}`;
+    let result = await db.query(sql);
+    if (!result) {
+      await db.close();
+      return Promise.reject(new Error("Ocurrió un error"));
+    }
+    await db.close();
+    return Promise.resolve(result);
+  }
 }
 
 module.exports = Bd;

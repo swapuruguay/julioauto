@@ -62,7 +62,8 @@ function buscaU() {
   );
 }
 
-$("#find-cliente").click(function (evt) {
+$("#form-cli-listar").submit(function (evt) {
+  evt.preventDefault();
   var valor = $("#busquedac").val();
   var criterio = $("#criterio").val();
   //console.log(valor + ' ' + criterio)
