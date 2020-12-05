@@ -81,6 +81,7 @@ function ensureAuth(req, res, next) {
 
 function admin() {
   if (req.user.perfil == 1) {
+    req.user.admin = true;
     return next();
   }
   res.redirect("/");
