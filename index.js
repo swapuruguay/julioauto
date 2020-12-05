@@ -71,6 +71,10 @@ function ensureAuth(req, res, next) {
       req.user.habilitado = true;
     }
 
+    if (req.user.perfil == 1) {
+      req.user.admin = true;
+    }
+
     if (req.user.id_usuario === 1) {
       req.user.yo = true;
     }
