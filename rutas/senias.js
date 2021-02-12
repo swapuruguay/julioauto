@@ -33,7 +33,7 @@ router.use(function(req, res, next) {
 router.get("/nueva", ensureAuth, async function(req, res) {
   let db = new Db
   const date = new Date();
-  comments fecha = date.getDate().toString().padStart(2, '0') + "/" + (date.getMonth()+1).toString().padStart(2,'0') + "/" + date.getFullYear();
+  fecha = date.getDate().toString().padStart(2, '0') + "/" + (date.getMonth()+1).toString().padStart(2,'0') + "/" + date.getFullYear();
   let sucursal = (await db.getSucursal(req.user.sucursal))[0]
   res.render("senias", {
     titulo: "Formulario de señas",
