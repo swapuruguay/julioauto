@@ -30,21 +30,15 @@ router.use(function(req, res, next) {
   next();
 });
 
-router.get("/nueva", ensureAuth, function(req, res) {
-  var date = new Date();
-  var fecha =
-    new Intl.NumberFormat("es-UY", { minimumIntegerDigits: 2 }).format(
-      date.getDate()
-    ) +
-    "/" +
-    new Intl.NumberFormat("es-UY", { minimumIntegerDigits: 2 }).format(
-      date.getMonth() + 1
-    ) +
-    "/" +
-    date.getFullYear();
+router.get("/nueva", ensureAuth, async function(req, res) {
+  let db = new Db
+  const date = new Date();
+  comments fecha = date.getDate().toString().padStart(2, '0') + "/" + (date.getMonth()+1).toString().padStart(2,'0') + "/" + date.getFullYear();
+  let sucursal = (await db.getSucursal(req.user.sucursal))[0]
   res.render("senias", {
     titulo: "Formulario de señas",
-    fecha: fecha,
+    fecha,
+    sucursal,
     datos: datosVista
   });
 });
