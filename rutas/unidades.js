@@ -4,7 +4,7 @@ const Db = require("../bd");
 const config = require("../config");
 const request = require("request");
 const formData = require("express-form-data");
-
+const bot = require('../bot')
 let datosVista = {};
 // parsing data with connect-multiparty. Result set on req.body and req.files
 router.use(formData.parse());
@@ -191,7 +191,7 @@ let returnRouter = function (io) {
 
   router.post("/save", async function (req, res) {
     let db = new Db();
-
+    let suc = (await db.getSucursal(req.user.sucursal))[0]
     let nuevo = req.body.nuevo == "on" ? 1 : 0;
     let estado;
     if (!req.body.flagtoma) {
@@ -223,6 +223,8 @@ let returnRouter = function (io) {
       estado: estado,
       tipo: req.body.tipo,
     };
+    
+    let unidadBot = { marca: unidad.marca, modelo: unidad.modelo, anio: unidad.anio, sucursal: suc}
     try {
       //Guarda la unidad
       let result = await db.saveUnidad(unidad);
@@ -235,6 +237,7 @@ let returnRouter = function (io) {
           operacion: "Ingreso",
         };
         await db.saveHistorial(historia);
+        bot.notificar(unidadBot)
       }
 
       //Verifica si se vendió para guardar la venta
@@ -263,7 +266,8 @@ let returnRouter = function (io) {
       if (err.message == "ER_DUP_ENTRY") {
         res.send("Registro duplicado");
       } else {
-        res.send("Ocurrió un error, intente de nuevo");
+        /*res.send("Ocurrió un error, intente de nuevo");*/
+        res.send(err.message)
       }
     }
   });
