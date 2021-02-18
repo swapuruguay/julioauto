@@ -9,7 +9,8 @@ const chatId = 473834914;
 
 module.exports = {
   notificar: function (unidad) {
-            let message = `Se dio de alta ${unidad.marca} ${ unidad.modelo } año ${unidad.anio} en ${unidad.sucursal.nombre}`
+            const {marca, modelo, anio, kmts, combustible, sucursal: {nombre}} = unidad
+            let message = `Se dio de alta ${marca} ${ modelo } año ${anio}, kmts: ${kmts}, combustible: ${combustible} en ${nombre}`
   
             bot.sendMessage(chatId, message);
   

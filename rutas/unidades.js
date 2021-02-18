@@ -4,7 +4,7 @@ const Db = require("../bd");
 const config = require("../config");
 const request = require("request");
 const formData = require("express-form-data");
-const bot = require('../bot')
+const {notificar} = require('../bot')
 let datosVista = {};
 // parsing data with connect-multiparty. Result set on req.body and req.files
 router.use(formData.parse());
@@ -224,7 +224,7 @@ let returnRouter = function (io) {
       tipo: req.body.tipo,
     };
     
-    let unidadBot = { marca: unidad.marca, modelo: unidad.modelo, anio: unidad.anio, sucursal: suc}
+    let unidadBot = { marca: unidad.marca, modelo: unidad.modelo, anio: unidad.anio, sucursal: suc, kmts: unidad.kmts, combustible: unidad.combustible}
     try {
       //Guarda la unidad
       let result = await db.saveUnidad(unidad);
@@ -237,7 +237,7 @@ let returnRouter = function (io) {
           operacion: "Ingreso",
         };
         await db.saveHistorial(historia);
-        bot.notificar(unidadBot)
+        notificar(unidadBot)
       }
 
       //Verifica si se vendió para guardar la venta
