@@ -237,7 +237,7 @@ let returnRouter = function (io) {
           operacion: "Ingreso",
         };
         await db.saveHistorial(historia);
-        notificar(unidadBot)
+       notificar(unidadBot)
       }
 
       //Verifica si se vendió para guardar la venta

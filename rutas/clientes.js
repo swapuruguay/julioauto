@@ -56,8 +56,8 @@ router.post("/save", async function (req, res) {
 
   let cliente = {
     id_cliente: id,
-    nombre: req.body.nombre.toUpperCase(),
-    apellido: req.body.apellido.toUpperCase(),
+    nombre: req.body.nombre.toUpperCase().trim(),
+    apellido: req.body.apellido.toUpperCase().trim(),
     documento: req.body.documento.toUpperCase(),
     domicilio: req.body.domicilio.toUpperCase(),
     telefono: req.body.telefono,
