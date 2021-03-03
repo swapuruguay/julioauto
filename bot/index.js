@@ -1,10 +1,8 @@
 const TelegramBot = require("node-telegram-bot-api");
 const token = "1535889789:AAHQuyeLH9qKvTYXjSw6f1qdG7a13E1qdqM";
 const bot = new TelegramBot(token, { polling: true });
-// const chatId = 886623278;
-// const chat2 = 151423105;
-//const chatId = 473834914;
-const chatId = 151423105;
+
+const chatId = 473834914;
 // let fecha = new Date();
 // let month = fecha.getMonth() + 1;
 // let day = fecha.getDate();

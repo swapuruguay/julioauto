@@ -114,6 +114,9 @@ let returnRouter = function (io) {
       sucursal: req.body.suc,
       estado: 1,
     };
+     let suc = (await db.getSucursal(req.user.sucursal))[0]
+    let uniAux = (await db.getUnidad(unidad.id_unidad))[0]
+    let unidadBot = { marca: uniAux.marca, modelo: uniAux.modelo, anio: uniAux.anio, sucursal: suc, kmts: uniAux.kmts, combustible: uniAux.combustible}
     await db.saveUnidad(unidad);
     let historia = {
       id_unidad_fk: unidad.id_unidad,
@@ -122,6 +125,7 @@ let returnRouter = function (io) {
       operacion: "Reingreso",
     };
     await db.saveHistorial(historia);
+    notificar(unidadBot)
 
     res.send("Retornado con éxito");
   });
