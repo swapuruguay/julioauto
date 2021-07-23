@@ -3,6 +3,7 @@ const token = "1535889789:AAHQuyeLH9qKvTYXjSw6f1qdG7a13E1qdqM";
 const bot = new TelegramBot(token, { polling: true });
 
 const chatId = 473834914;
+const chatId2 = 151423105;
 // let fecha = new Date();
 // let month = fecha.getMonth() + 1;
 // let day = fecha.getDate();
@@ -13,7 +14,7 @@ module.exports = {
             let message = `Se dio de alta ${marca} ${ modelo } año ${anio}, kmts: ${kmts}, combustible: ${combustible} en ${nombre}`
   
             bot.sendMessage(chatId, message);
-            //bot.sendMessage(chat2, message);
+            bot.sendMessage(chatId2, message);
   
   }
 }
@@ -65,14 +66,14 @@ module.exports = {
   });
   bot.sendMessage(chatId, texto);
 });
-
+*/
 bot.on("message", msg => {
   const chatId = msg.chat.id;
   console.log(chatId)
   // send a message to the chat acknowledging receipt of their message
   bot.sendMessage(chatId, "Gracias por darte de alta ");
 });
-*/
+
 // bot.on("message", function(msg) {
 //   // let chatId = msg.chat.id;
 //   //  bot.downloadFile(msg.photo[3].file_id, '.')

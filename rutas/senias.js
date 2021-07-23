@@ -30,6 +30,8 @@ router.use(function(req, res, next) {
   next();
 });
 
+router.get("/", function(req, res) { res.redirect('/senias/listar')})
+
 router.get("/nueva", ensureAuth, async function(req, res) {
   let db = new Db
   const date = new Date();
@@ -84,42 +86,61 @@ router.post("/new", async (req, res) => {
   res.redirect("/senias/nueva");
 });
 
-router.post("/eliminar", async function(req, res) {
-  let db = new Db();
+//router.post("/eliminar", async function(req, res) {
+  // let db = new Db();
 
-  let id_unidad = req.body.idsenia;
+  // let id_unidad = req.body.idsenia;
+  // await db.eliminarSenia(id_unidad);
+  // let where = req.user.habilitado
+  //   ? ""
+  //   : ` WHERE senias.sucursal = ${req.user.sucursal}`;
+
+  // let listado = await db.getSenias(where);
+
+  // if (listado) {
+  //   await Promise.all(
+  //     listado.map(async item => {
+  //       let mes =
+  //         item.fecha.getMonth() + 1 > 9
+  //           ? item.fecha.getMonth() + 1
+  //           : "0" + (item.fecha.getMonth() + 1);
+  //       let dia =
+  //         item.fecha.getDate() > 9
+  //           ? item.fecha.getDate()
+  //           : "0" + item.fecha.getDate();
+  //       item.fecha = `${dia}/${mes}/${item.fecha.getFullYear()}`;
+  //       item.cliente = (await db.getCliente(item.id_cliente_fk))[0];
+  //       item.unidad = (await db.getUnidadTemp(item.id_unidad_fk))[0];
+  //       item.sucursal = (await db.getSucursal(item.sucursal))[0];
+  //       return item;
+  //     })
+  //   );
+  // } else {
+  //   listado = [];
+  // }
+  // //console.log(listado)
+
+  //res.send({ listado });
+//});
+
+router.get('/eliminar/:id', ensureAuth,  (req, res) => {
+  const idSenia = req.params.id
+  res.render('senias-eliminar',
+  {
+    titulo: "Elminar Seña",
+    datos: datosVista,
+    senia: idSenia
+  })
+})
+
+router.post('/eliminar/',  async (req, res) => {
+
+  const db = new Db();
+
+  const id_unidad = req.body.idsenia;
   await db.eliminarSenia(id_unidad);
-  let where = req.user.habilitado
-    ? ""
-    : ` WHERE senias.sucursal = ${req.user.sucursal}`;
-
-  let listado = await db.getSenias(where);
-
-  if (listado) {
-    await Promise.all(
-      listado.map(async item => {
-        let mes =
-          item.fecha.getMonth() + 1 > 9
-            ? item.fecha.getMonth() + 1
-            : "0" + (item.fecha.getMonth() + 1);
-        let dia =
-          item.fecha.getDate() > 9
-            ? item.fecha.getDate()
-            : "0" + item.fecha.getDate();
-        item.fecha = `${dia}/${mes}/${item.fecha.getFullYear()}`;
-        item.cliente = (await db.getCliente(item.id_cliente_fk))[0];
-        item.unidad = (await db.getUnidadTemp(item.id_unidad_fk))[0];
-        item.sucursal = (await db.getSucursal(item.sucursal))[0];
-        return item;
-      })
-    );
-  } else {
-    listado = [];
-  }
-  //console.log(listado)
-
-  res.send({ listado });
-});
+  res.redirect('/senias/listar')
+})
 
 router.get("/listar", ensureAuth, async (req, res) => {
   let db = new Db();

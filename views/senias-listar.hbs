@@ -43,7 +43,7 @@
           <td>
             {{importe}}
           </td>
-          <td><a type="button" class="btn btn-info btn-sm eliminar" data-idsenia={{unidad.id_unidad}}  title="Eliminar"><i data-idsenia={{unidad.id_unidad}} class="fa fa-trash eliminar"></i></a></td>
+          <td><a type="button" href="/senias/eliminar/{{unidad.id_unidad}}"  class="btn btn-info btn-sm eliminar" data-idsenia={{unidad.id_unidad}}  title="Eliminar"><i data-idsenia={{unidad.id_unidad}} class="fa fa-trash eliminar"></i></a></td>
           <td>
             <a href='/senias/{{id_senia}}' class="btn btn-info btn-sm" title="Ver Detalle"><i class="fa fa-eye"></i></a>
           </td>
@@ -71,7 +71,7 @@
   const loader = document.getElementById('loader')
   let texto = ''
   div.addEventListener('click', async evt => {
-
+/*
     if(evt.target.classList.contains('eliminar')) {
       let datos = {
         idsenia: evt.target.dataset.idsenia
@@ -116,7 +116,7 @@
                         <td>${u.cliente.ciudad}</td><td>${u.cliente.celular}</td><td>${u.sucursal.nombre}</td>
                         <td>${u.unidad.marca}</td><td>${u.unidad.modelo}</td><td>${u.unidad.color}</td>
                         <td>${u.observaciones}</td><td>${u.importe}</td>
-                        <td><a type="button" class="btn btn-info btn-sm eliminar"
+                        <td><a href="/senias/eliminar" type="button" class="btn btn-info btn-sm eliminar"
                          data-idsenia=${u.unidad.id_unidad} title="Eliminar"><i data-idsenia=${u.unidad.id_unidad}
                           class="fa fa-trash eliminar"></i></a></td>
                           <td><a href='/senias/${u.id_senia}' class="btn btn-info btn-sm" title="Ver Detalle"><i class="fa fa-eye"></i></a></td>
@@ -126,7 +126,7 @@
               div.innerHTML = texto
               texto = ''
               loader.classList.add('oculto')
-          }
+          }*/
       })
 
 
